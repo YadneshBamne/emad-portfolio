@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import InfiniteGallery from './components/ui/3d-gallery-photography';
 import { AaryaNavigationDrawer } from './components/AaryaNavigationDrawer';
+import { AaryaLensReveal } from './components/AaryaLensReveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,51 +29,11 @@ const sampleImages = [
 
 const AaryaCinematicPortfolio = () => {
   const containerRef = useRef(null);
-  const heroRef = useRef(null);
-  const circleRef = useRef(null);
-  const bgTextTopRef = useRef(null);
-  const bgTextBottomRef = useRef(null);
-  const videoRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     // We create a GSAP context to ensure proper cleanup in React strict mode
     const ctx = gsap.context(() => {
-
-      // The main scroll timeline for Hero
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: 'top top',
-          end: '+=250%', // Pinned for 2.5 viewport heights
-          pin: true,
-          scrub: 0.5, // Smooth scrubbing
-        }
-      });
-
-      // Subtle parallax on the background text as we scroll
-      tl.to(bgTextTopRef.current, { y: '-10vh', ease: 'none', duration: 1 }, 0);
-      tl.to(bgTextBottomRef.current, { y: '10vh', ease: 'none', duration: 1 }, 0);
-
-      // 1. Scale the circle up until it covers the screen and animate blur (camera focus effect)
-      tl.fromTo(circleRef.current,
-        { clipPath: 'circle(15vh at 50% 50%)', filter: 'blur(4px)' },
-        { clipPath: 'circle(150vh at 50% 50%)', filter: 'blur(0px)', ease: 'power1.inOut', duration: 1 },
-        0
-      );
-
-      // 2. Montage effect inside the video container
-      // This happens after the circle expands (time = 1)
-      const images = gsap.utils.toArray('.montage-img');
-      if (images.length > 0) {
-        images.forEach((img, i) => {
-          tl.to(img, { opacity: 1, duration: 0.05, ease: 'none' }, `>`);
-          // Hide it right after, except for the last one
-          if (i < images.length - 1) {
-            tl.to(img, { opacity: 0, duration: 0.05, ease: 'none' }, `>`);
-          }
-        });
-      }
 
       // Cards entrance animations
       const cards = gsap.utils.toArray('.work-card');
@@ -116,87 +77,8 @@ const AaryaCinematicPortfolio = () => {
         </div>
       </nav>
 
-      {/* 2. The Hero Section */}
-      <section ref={heroRef} className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-black z-10">
-
-        {/* Background Text */}
-        <div className="absolute inset-0 p-10 z-0 pointer-events-none select-none text-[#FF0000] font-bold leading-none tracking-tighter" style={{ fontFamily: "'Anton', sans-serif" }}>
-          <h1 ref={bgTextTopRef} className="absolute top-[10%] left-[5%] text-[15vw] md:text-[19vw] uppercase m-0 leading-none">Emad</h1>
-          <h1 ref={bgTextBottomRef} className="absolute bottom-[10%] right-[5%] text-[15vw] md:text-[19vw] uppercase m-0 leading-none">Shaikh </h1>
-        </div>
-
-        {/* The Center Mask (The Lens) */}
-        <div
-          ref={circleRef}
-          className="absolute z-10 w-full h-full flex items-center justify-center"
-        >
-          {/* Default background (video or image) inside the circle */}
-          <div className="relative w-full h-full bg-neutral-900">
-            <video
-              ref={videoRef}
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full h-full object-cover opacity-90"
-            >
-              <source src="https://www.pexels.com/download/video/13082773/" type="video/mp4" />
-            </video>
-
-            {/* Montage Images (Hidden initially) */}
-            <div className="absolute inset-0 w-full h-full pointer-events-none">
-              <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070&auto=format&fit=crop" className="montage-img absolute inset-0 w-full h-full object-cover opacity-0" alt="Montage 1" />
-              <img src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=2070&auto=format&fit=crop" className="montage-img absolute inset-0 w-full h-full object-cover opacity-0" alt="Montage 2" />
-              <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=2070&auto=format&fit=crop" className="montage-img absolute inset-0 w-full h-full object-cover opacity-0" alt="Montage 3" />
-              <img src="https://images.unsplash.com/photo-1470229722913-7c092fb46d69?q=80&w=2070&auto=format&fit=crop" className="montage-img absolute inset-0 w-full h-full object-cover opacity-0" alt="Montage 4" />
-              <img src="https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?q=80&w=2070&auto=format&fit=crop" className="montage-img absolute inset-0 w-full h-full object-cover opacity-0" alt="Montage 5" />
-            </div>
-
-            {/* Overlay to darken the background slightly */}
-            <div className="absolute inset-0 bg-black/20 mix-blend-multiply"></div>
-          </div>
-        </div>
-
-        {/* The Camera UI */}
-        <div className="absolute inset-0 z-20 pointer-events-none font-mono text-[10px] md:text-xs text-white/80 p-6 md:p-10 flex flex-col justify-between" style={{ fontFamily: "'Space Mono', monospace" }}>
-          <div className="flex justify-between items-start">
-            <div className="flex flex-col gap-1">
-              <span>50MM LENS</span>
-              <span>f/1.4 APERTURE</span>
-            </div>
-            <div className="flex items-center gap-2 bg-black/40 px-2 py-1 rounded backdrop-blur-sm">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#FF0000] animate-pulse"></span>
-              <span className="text-[#FF0000] font-bold">[REC]</span>
-            </div>
-          </div>
-
-          <div className="flex justify-between items-end">
-            <div className="flex flex-col gap-1">
-              <span>SHUTTER: 1/2500</span>
-              <span>ISO: 3200</span>
-              <span>AWB: AUTO</span>
-            </div>
-            <div className="text-white/60 tracking-[0.3em] animate-pulse">
-              SCROLL TO FOCUS
-            </div>
-          </div>
-
-          {/* Crosshairs */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40vw] h-[40vw] md:w-[20vw] md:h-[20vw] border border-white/10 rounded-full flex items-center justify-center opacity-50">
-            <div className="w-full h-[1px] bg-white/20 absolute"></div>
-            <div className="h-full w-[1px] bg-white/20 absolute"></div>
-            <div className="w-[120%] h-[120%] border border-white/5 rounded-full absolute"></div>
-            {/* Center dot for focus */}
-            <div className="w-1 h-1 bg-[#FF0000] rounded-full absolute"></div>
-          </div>
-
-          {/* Rule of thirds grid subtle lines */}
-          <div className="absolute top-1/3 left-0 w-full h-[1px] bg-white/5"></div>
-          <div className="absolute top-2/3 left-0 w-full h-[1px] bg-white/5"></div>
-          <div className="absolute left-1/3 top-0 w-[1px] h-full bg-white/5"></div>
-          <div className="absolute left-2/3 top-0 w-[1px] h-full bg-white/5"></div>
-        </div>
-      </section>
+      {/* 2. The Hero Section (Lens Reveal) */}
+      <AaryaLensReveal />
 
       {/* 4. The Navigation / Divider Bar */}
       <div className="w-full border-t border-white/20 bg-[#0a0a0a] py-5 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center text-xs md:text-sm font-mono text-white/80 z-20 relative shadow-2xl" style={{ fontFamily: "'Space Mono', monospace" }}>

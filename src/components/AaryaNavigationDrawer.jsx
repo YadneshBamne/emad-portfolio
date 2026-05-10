@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
 
 const navLinks = [
   { id: 'about', title: 'ABOUT US', href: '#' },
@@ -72,47 +73,37 @@ export function AaryaNavigationDrawer() {
         {/* The Main Toggle Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-3 bg-zinc-900/80 backdrop-blur-md border border-white/10 hover:bg-zinc-800 transition-colors text-zinc-100 px-5 py-3 rounded-full shadow-2xl overflow-hidden group"
+          className="flex items-center justify-center bg-zinc-900/80 backdrop-blur-md border border-white/10 hover:bg-zinc-800 transition-colors text-zinc-100 w-12 h-12 rounded-full shadow-2xl overflow-hidden group"
           aria-label="Toggle Navigation"
         >
-          {/* Menu / Close Text */}
-          <div className="relative w-12 h-5 font-bold uppercase tracking-widest text-sm overflow-hidden flex items-center justify-center">
+          {/* Menu / Close Icon */}
+          <div className="relative flex items-center justify-center">
             <AnimatePresence mode="popLayout">
               {isOpen ? (
-                <motion.span
+                <motion.div
                   key="close"
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -20, opacity: 0 }}
+                  initial={{ scale: 0.5, opacity: 0, rotate: -90 }}
+                  animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                  exit={{ scale: 0.5, opacity: 0, rotate: 90 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                   className="absolute"
                 >
-                  CLOSE
-                </motion.span>
+                  <X className="w-6 h-6" />
+                </motion.div>
               ) : (
-                <motion.span
+                <motion.div
                   key="menu"
-                  initial={{ y: -20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: 20, opacity: 0 }}
+                  initial={{ scale: 0.5, opacity: 0, rotate: 90 }}
+                  animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                  exit={{ scale: 0.5, opacity: 0, rotate: -90 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                   className="absolute"
                 >
-                  MENU
-                </motion.span>
+                  <Menu className="w-6 h-6" />
+                </motion.div>
               )}
             </AnimatePresence>
           </div>
-
-          {/* Plus / Cross Icon */}
-          <motion.div
-            animate={{ rotate: isOpen ? 45 : 0 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            className="flex items-center justify-center w-5 h-5 text-white"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-          </motion.div>
         </button>
       </div>
 
@@ -160,14 +151,14 @@ export function AaryaNavigationDrawer() {
               >
                 <ul className="flex flex-col gap-4">
                   {navLinks.map((link) => (
-                    <motion.li key={link.id} variants={linkVariants} className="overflow-hidden">
+                    <motion.li key={link.id} variants={linkVariants} className="">
                       <a
                         href={link.href}
                         onClick={() => setIsOpen(false)}
                         className="block group relative w-fit"
                       >
                         <motion.span 
-                          className="block text-5xl md:text-7xl lg:text-8xl font-black text-zinc-100 uppercase tracking-tighter leading-[0.85] hover:text-white transition-colors"
+                          className=" text-5xl md:text-7xl lg:text-8xl font-black text-zinc-100 uppercase leading-[0.85] hover:text-white transition-colors"
                           style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}
                           whileHover={{ x: 20 }}
                           transition={{ type: 'spring', stiffness: 400, damping: 25 }}
