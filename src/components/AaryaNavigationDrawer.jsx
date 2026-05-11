@@ -16,10 +16,10 @@ const menuVariants = {
     x: '100%',
     transition: {
       type: 'spring',
-      stiffness: 400,
-      damping: 40,
+      stiffness: 300, // Lower = smoother
+      damping: 30,
       when: 'afterChildren',
-      staggerChildren: 0.05,
+      staggerChildren: 0.02,
       staggerDirection: -1,
     },
   },
@@ -27,10 +27,10 @@ const menuVariants = {
     x: 0,
     transition: {
       type: 'spring',
-      stiffness: 400,
-      damping: 40,
+      stiffness: 300,
+      damping: 30,
       when: 'beforeChildren',
-      staggerChildren: 0.1,
+      staggerChildren: 0.06,
     },
   },
 };
@@ -40,7 +40,7 @@ const linkVariants = {
   open: { 
     y: 0, 
     opacity: 1,
-    transition: { type: 'spring', stiffness: 300, damping: 24 }
+    transition: { type: 'spring', stiffness: 260, damping: 20 }
   },
 };
 
@@ -60,7 +60,7 @@ export function AaryaNavigationDrawer() {
               initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 0.7, x: 0 }}
               exit={{ opacity: 0, x: 10 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.2 }}
               className="text-zinc-400 hidden md:flex items-center gap-2"
               style={{ fontFamily: "'Dancing Script', 'Caveat', cursive", fontSize: '1.2rem' }}
             >
@@ -85,7 +85,7 @@ export function AaryaNavigationDrawer() {
                   initial={{ scale: 0.5, opacity: 0, rotate: -90 }}
                   animate={{ scale: 1, opacity: 1, rotate: 0 }}
                   exit={{ scale: 0.5, opacity: 0, rotate: 90 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                  transition={{ type: 'spring', stiffness: 260, damping: 16 }}
                   className="absolute"
                 >
                   <X className="w-6 h-6" />
@@ -96,7 +96,7 @@ export function AaryaNavigationDrawer() {
                   initial={{ scale: 0.5, opacity: 0, rotate: 90 }}
                   animate={{ scale: 1, opacity: 1, rotate: 0 }}
                   exit={{ scale: 0.5, opacity: 0, rotate: -90 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                  transition={{ type: 'spring', stiffness: 260, damping: 16 }}
                   className="absolute"
                 >
                   <Menu className="w-6 h-6" />
@@ -130,7 +130,7 @@ export function AaryaNavigationDrawer() {
                 initial={{ x: '100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
-                transition={{ type: 'spring', stiffness: 320, damping: 38, delay: 0.06 }}
+                transition={{ type: 'spring', stiffness: 260, damping: 30, delay: 0.04 }}
                 className="absolute top-0 right-0 h-full w-[70%] bg-zinc-700/30 rounded-l-[2rem] z-10"
               />
               {/* Panel 2 — middle */}
@@ -138,7 +138,7 @@ export function AaryaNavigationDrawer() {
                 initial={{ x: '100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
-                transition={{ type: 'spring', stiffness: 340, damping: 38, delay: 0.03 }}
+                transition={{ type: 'spring', stiffness: 280, damping: 32, delay: 0.02 }}
                 className="absolute top-0 right-0 h-full w-[70%] bg-zinc-800/60 rounded-l-[2rem] z-20"
               />
               {/* Panel 1 — front, main nav surface */}
@@ -160,12 +160,12 @@ export function AaryaNavigationDrawer() {
                         <motion.span 
                           className=" text-5xl md:text-7xl lg:text-8xl font-black text-zinc-100 uppercase leading-[0.85] hover:text-white transition-colors"
                           style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}
-                          whileHover={{ x: 20 }}
-                          transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                          whileHover={{ x: 12 }}
+                          transition={{ type: 'spring', stiffness: 320, damping: 18 }}
                         >
                           {link.title}
                         </motion.span>
-                        <span className="absolute -bottom-2 left-0 w-0 h-1 bg-white/30 group-hover:w-full transition-all duration-300 ease-out"></span>
+                        <span className="absolute -bottom-2 left-0 w-0 h-1 bg-white/30 group-hover:w-full transition-all duration-200 ease-out" style={{ willChange: 'width' }}></span>
                       </a>
                     </motion.li>
                   ))}

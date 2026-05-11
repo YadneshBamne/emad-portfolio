@@ -7,7 +7,8 @@ import { AaryaNavigationDrawer } from './components/AaryaNavigationDrawer';
 import { AaryaLensReveal } from './components/AaryaLensReveal';
 
 gsap.registerPlugin(ScrollTrigger);
-
+// Optimize GSAP globally for better performance
+gsap.defaults({ overwrite: 'auto' });
 const sampleImages = [
   { src: 'https://images.unsplash.com/photo-1741332966416-414d8a5b8887?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw2fHx8ZW58MHx8fHx8', alt: 'Image 1' },
   { src: 'https://images.unsplash.com/photo-1754769440490-2eb64d715775?q=80&w=1113&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', alt: 'Image 2' },
@@ -32,24 +33,94 @@ const AaryaCinematicPortfolio = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    let lastScrollY = 0;
+    let isHidden = false;
+    let scrollTimeout;
+    
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const nav = document.querySelector('nav.desktop-nav');
+      
+      if (!nav) return;
+      
+      // Scrolling down - hide navigation
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        if (!isHidden) {
+          gsap.killTweensOf(nav);
+          gsap.to(nav, {
+            y: -120,
+            opacity: 0,
+            pointerEvents: 'none',
+            duration: 0.35,
+            ease: 'sine.out',
+          });
+          isHidden = true;
+        }
+      } 
+      // Scrolling up - show navigation
+      else if (currentScrollY < lastScrollY) {
+        if (isHidden) {
+          gsap.killTweensOf(nav);
+          gsap.to(nav, {
+            y: 0,
+            opacity: 1,
+            pointerEvents: 'auto',
+            duration: 0.35,
+            ease: 'sine.out',
+          });
+          isHidden = false;
+        }
+      }
+      
+      lastScrollY = currentScrollY;
+      
+      // Clear previous timeout
+      clearTimeout(scrollTimeout);
+      // Show nav on scroll stop (after 1 second)
+      scrollTimeout = setTimeout(() => {
+        if (!isHidden) return;
+        gsap.killTweensOf(nav);
+        gsap.to(nav, {
+          y: 0,
+          opacity: 1,
+          pointerEvents: 'auto',
+          duration: 0.35,
+          ease: 'sine.out',
+        });
+        isHidden = false;
+      }, 1000);
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(scrollTimeout);
+    };
+  }, []);
+
+  useEffect(() => {
     // We create a GSAP context to ensure proper cleanup in React strict mode
     const ctx = gsap.context(() => {
 
-      // Cards entrance animations
+      // Cards entrance animations - optimized for performance
       const cards = gsap.utils.toArray('.work-card');
       cards.forEach((card, index) => {
+        gsap.set(card, { willChange: 'transform, opacity' });
         gsap.fromTo(card,
-          { y: 100, opacity: 0, filter: 'blur(10px)' },
+          { y: 100, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            filter: 'blur(0px)',
-            duration: 1.2,
-            ease: 'power3.out',
+            duration: 0.7,
+            ease: 'sine.out',
             scrollTrigger: {
               trigger: card,
-              start: 'top bottom-=50', // Trigger when card comes into view
-              toggleActions: 'play none none reverse'
+              start: 'top bottom-=50',
+              toggleActions: 'play none none reverse',
+              markers: false
+            },
+            onComplete: () => {
+              gsap.set(card, { willChange: 'auto' });
             }
           }
         );
@@ -68,8 +139,8 @@ const AaryaCinematicPortfolio = () => {
         <AaryaNavigationDrawer />
       </div>
 
-      {/* Desktop Navigation */}
-      <nav className="hidden md:flex fixed top-0 left-0 w-full z-50 py-8 px-12 items-center justify-center mix-blend-difference pointer-events-none">
+      {/* Desktop Navigation - Hide on Scroll */}
+      <nav className="desktop-nav hidden md:flex fixed top-0 left-0 w-full z-50 py-8 px-12 items-center justify-center mix-blend-difference pointer-events-auto" style={{ transition: 'none' }}>
         <div className="flex gap-16 font-mono text-sm tracking-[0.2em] uppercase text-white/80 pointer-events-auto">
           <a href="#" className="hover:text-white hover:scale-105 transition-all duration-300">About</a>
           <a href="#" className="hover:text-white hover:scale-105 transition-all duration-300">Work</a>
@@ -91,7 +162,7 @@ const AaryaCinematicPortfolio = () => {
       </div>
 
       {/* 5. The Cards Section */}
-      <section className="relative w-full bg-[#050505] py-24 px-4 md:px-8 z-20 overflow-hidden">
+      <section className="relative w-full bg-[#050505] py-24 px-4 md:px-8 z-20 overflow-hidden" style={{ backfaceVisibility: 'hidden' }}>
 
         {/* Filmstrip Top Border */}
         <div className="absolute top-0 left-0 w-full h-8 flex items-center overflow-hidden opacity-30 bg-black border-b border-white/10">
@@ -105,47 +176,50 @@ const AaryaCinematicPortfolio = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 max-w-[1400px] mx-auto mt-8 mb-8">
 
           {/* Card 1: Photography */}
-          <div className="work-card group relative h-[60vh] md:h-[75vh] overflow-hidden bg-neutral-900 border border-white/10 flex items-end">
+          <div className="work-card group relative h-[60vh] md:h-[75vh] overflow-hidden bg-neutral-900 border border-white/10 flex items-end" style={{ backfaceVisibility: 'hidden', perspective: 1000 }}>
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Photograph_of_a_Photographer.jpg"
               alt="Photography"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale group-hover:grayscale-0"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover:brightness-100 brightness-75"
+              style={{ willChange: 'transform' }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500"></div>
-            <div className="relative z-10 p-8 w-full transform transition-transform duration-500 group-hover:-translate-y-4">
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500" style={{ willChange: 'opacity' }}></div>
+            <div className="relative z-10 p-8 w-full transform transition-transform duration-500 group-hover:-translate-y-4" style={{ willChange: 'transform' }}>
               <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white tracking-tighter uppercase" style={{ fontFamily: "'Anton', sans-serif" }}>PHOTOGRAPHY</h2>
               <p className="text-white/70 font-mono text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 uppercase tracking-widest">Capturing light & moments</p>
-              <div className="h-[2px] w-0 bg-[#FF0000] mt-4 transition-all duration-500 group-hover:w-full"></div>
+              <div className="h-[2px] w-0 bg-[#FF0000] mt-4 transition-all duration-500 group-hover:w-full" style={{ willChange: 'width' }}></div>
             </div>
           </div>
 
           {/* Card 2: Videography */}
-          <div className="work-card group relative h-[60vh] md:h-[75vh] overflow-hidden bg-neutral-900 border border-white/10 flex items-end">
+          <div className="work-card group relative h-[60vh] md:h-[75vh] overflow-hidden bg-neutral-900 border border-white/10 flex items-end" style={{ backfaceVisibility: 'hidden', perspective: 1000 }}>
             <img
               src="https://images.pexels.com/photos/34612064/pexels-photo-34612064.jpeg"
               alt="Videography"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale group-hover:grayscale-0"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover:brightness-100 brightness-75"
+              style={{ willChange: 'transform' }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500"></div>
-            <div className="relative z-10 p-8 w-full transform transition-transform duration-500 group-hover:-translate-y-4">
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500" style={{ willChange: 'opacity' }}></div>
+            <div className="relative z-10 p-8 w-full transform transition-transform duration-500 group-hover:-translate-y-4" style={{ willChange: 'transform' }}>
               <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white tracking-tighter uppercase" style={{ fontFamily: "'Anton', sans-serif" }}>VIDEOGRAPHY</h2>
               <p className="text-white/70 font-mono text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 uppercase tracking-widest">Motion & storytelling</p>
-              <div className="h-[2px] w-0 bg-[#FF0000] mt-4 transition-all duration-500 group-hover:w-full"></div>
+              <div className="h-[2px] w-0 bg-[#FF0000] mt-4 transition-all duration-500 group-hover:w-full" style={{ willChange: 'width' }}></div>
             </div>
           </div>
 
           {/* Card 3: Graphic Design */}
-          <div className="work-card group relative h-[60vh] md:h-[75vh] overflow-hidden bg-neutral-900 border border-white/10 flex items-end">
+          <div className="work-card group relative h-[60vh] md:h-[75vh] overflow-hidden bg-neutral-900 border border-white/10 flex items-end" style={{ backfaceVisibility: 'hidden', perspective: 1000 }}>
             <img
               src="https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=2071&auto=format&fit=crop"
               alt="Graphic Design"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale group-hover:grayscale-0"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover:brightness-100 brightness-75"
+              style={{ willChange: 'transform' }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500"></div>
-            <div className="relative z-10 p-8 w-full transform transition-transform duration-500 group-hover:-translate-y-4">
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500" style={{ willChange: 'opacity' }}></div>
+            <div className="relative z-10 p-8 w-full transform transition-transform duration-500 group-hover:-translate-y-4" style={{ willChange: 'transform' }}>
               <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white tracking-tighter uppercase" style={{ fontFamily: "'Anton', sans-serif" }}>GRAPHIC DESIGN</h2>
               <p className="text-white/70 font-mono text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 uppercase tracking-widest">Visual communication</p>
-              <div className="h-[2px] w-0 bg-[#FF0000] mt-4 transition-all duration-500 group-hover:w-full"></div>
+              <div className="h-[2px] w-0 bg-[#FF0000] mt-4 transition-all duration-500 group-hover:w-full" style={{ willChange: 'width' }}></div>
             </div>
           </div>
 

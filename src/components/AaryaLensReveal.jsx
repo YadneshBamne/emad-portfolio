@@ -14,78 +14,93 @@ export function AaryaLensReveal() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
+      // Pre-set GPU acceleration for animated elements
+      gsap.set([lensCapRef.current, videoContainerRef.current, lensUIRef.current, textLeftRef.current, textRightRef.current], {
+        willChange: 'transform, opacity',
+        force3D: true,
+        backfaceVisibility: 'hidden'
+      });
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=200%", // Pin for 2 viewport heights to allow smooth scroll animation
+          end: "+=200%",
           pin: true,
-          scrub: 1,
+          scrub: 3, // Smoother scrolling
+          fastScrollEnd: true,
         }
       });
 
-      // 1. The Pop & Drop of the Lens Cap
+      // 1. The Pop & Drop of the Lens Cap (optimized)
       tl.to(lensCapRef.current, {
-        scale: 1.15,
-        rotationZ: -15,
-        duration: 0.5,
-        ease: "power2.out",
+        scale: 1.12,
+        rotationZ: -12,
+        duration: 0.35,
+        ease: "sine.out",
       })
         .to(lensCapRef.current, {
           y: "150vh",
-          rotationX: 45,
-          rotationY: 35,
-          duration: 1.5,
-          ease: "power2.in",
-        }, "+=0.1")
+          rotationX: 40,
+          rotationY: 30,
+          duration: 1.1,
+          ease: "sine.in",
+        }, "+=0.06")
 
-        // 2. The Reveal (Video container expanding)
+        // 2. The Reveal (Video container expanding - optimized)
         .fromTo(videoContainerRef.current, {
           clipPath: "circle(17.25vmin at 50% 50%)"
         }, {
           clipPath: "circle(150vmin at 50% 50%)",
-          duration: 1.5,
-          ease: "power2.inOut",
-        }, "<0.5") // Start expanding while the cap is dropping
+          duration: 1.1,
+          ease: "sine.inOut",
+        }, "<0.3")
 
-        // 3. The Lens UI scaling up with the circle
+        // 3. The Lens UI scaling up with the circle (optimized)
         .fromTo(lensUIRef.current, {
           scale: 1,
         }, {
-          scale: 8.695, // 150 / 17.25
-          duration: 1.5,
-          ease: "power2.inOut",
+          scale: 8.695,
+          duration: 1.1,
+          ease: "sine.inOut",
         }, "<")
 
-        // 4. Parallax for the giant text (Optional subtle effect)
+        // 4. Parallax for the giant text (optimized)
         .to(textLeftRef.current, {
-          x: "-10vw",
+          x: "-8vw",
           opacity: 0,
-          duration: 1.5,
-          ease: "power2.inOut",
+          duration: 1.1,
+          ease: "sine.inOut",
         }, "<")
         .to(textRightRef.current, {
-          x: "10vw",
+          x: "8vw",
           opacity: 0,
-          duration: 1.5,
-          ease: "power2.inOut",
+          duration: 1.1,
+          ease: "sine.inOut",
         }, "<");
 
-      // 4. Montage effect inside the video container
+      // 4. Optimized montage effect
       const images = gsap.utils.toArray('.montage-img', containerRef.current);
       if (images.length > 0) {
         images.forEach((img, i) => {
-          tl.to(img, { opacity: 1, duration: 0.05, ease: 'none' }, `>`);
-          // Hide it right after, except for the last one
+          gsap.set(img, { willChange: 'opacity' });
+          tl.to(img, { opacity: 1, duration: 0.04, ease: 'none' }, `>`);
           if (i < images.length - 1) {
-            tl.to(img, { opacity: 0, duration: 0.05, ease: 'none' }, `>`);
+            tl.to(img, { opacity: 0, duration: 0.04, ease: 'none' }, `>`);
           }
         });
       }
 
+      // Cleanup willChange after animation
+      tl.eventCallback("onComplete", () => {
+        gsap.set([lensCapRef.current, videoContainerRef.current, lensUIRef.current, textLeftRef.current, textRightRef.current], {
+          willChange: 'auto'
+        });
+      });
+
     }, containerRef);
 
-    return () => ctx.revert(); // Cleanup GSAP
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -100,14 +115,22 @@ export function AaryaLensReveal() {
           <h1
             ref={textLeftRef}
             className="absolute top-[10%] left-[2%] text-[24vw] md:text-[17vw] leading-[0.8] font-black text-[#FF0000]"
-            style={{ fontFamily: "'Impact', 'Oswald', 'Anton', sans-serif" }}
+            style={{
+              fontFamily: "'Impact', 'Oswald', 'Anton', sans-serif",
+              filter: 'drop-shadow(0px 0px 12px rgba(255, 0, 0, 0.4)) drop-shadow(0px 0px 25px rgba(255, 0, 0, 0.15))',
+              textShadow: '0px 0px 15px rgba(255, 0, 0, 0.3), 0px 0px 30px rgba(255, 0, 0, 0.1)'
+            }}
           >
             EMAD
           </h1>
           <h1
             ref={textRightRef}
             className="absolute bottom-[10%] right-[2%] text-[24vw] md:text-[17vw] leading-[0.8] font-black text-[#FF0000] text-right"
-            style={{ fontFamily: "'Impact', 'Oswald', 'Anton', sans-serif" }}
+            style={{
+              fontFamily: "'Impact', 'Oswald', 'Anton', sans-serif",
+              filter: 'drop-shadow(0px 0px 12px rgba(255, 0, 0, 0.4)) drop-shadow(0px 0px 25px rgba(255, 0, 0, 0.15))',
+              textShadow: '0px 0px 15px rgba(255, 0, 0, 0.3), 0px 0px 30px rgba(255, 0, 0, 0.1)'
+            }}
           >
             SHAIKH
           </h1>
@@ -176,7 +199,7 @@ export function AaryaLensReveal() {
         {/* --- The New Cinematic Lens UI --- */}
         <div
           ref={lensUIRef}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vmin] h-[60vmin] pointer-events-none z-10"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vmin] h-[50vmin] pointer-events-none z-10"
         >
           <svg viewBox="0 0 800 800" className="w-full h-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
             <defs>
@@ -256,9 +279,9 @@ export function AaryaLensReveal() {
         <img
           ref={lensCapRef}
           // Using a high-res placeholder transparent Canon Lens Cap PNG from a free source
-          src="./pngegg2.png"
+          src="./pngegg3.png"
           alt="Canon Lens Cap"
-          className="w-[63vmin] h-[63vmin] object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.95)] z-20 pointer-events-auto"
+          className="w-[54vmin] h-[54vmin] object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.95)] z-20 pointer-events-auto"
         />
       </div>
     </div>

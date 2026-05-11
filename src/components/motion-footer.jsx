@@ -120,11 +120,15 @@ const STYLES = `
   line-height: 0.75;
   font-weight: 900;
   letter-spacing: -0.05em;
-  color: transparent;
-  -webkit-text-stroke: 1px color-mix(in oklch, var(--foreground) 5%, transparent);
-  background: linear-gradient(180deg, color-mix(in oklch, var(--foreground) 10%, transparent) 0%, transparent 60%);
+  color: color-mix(in oklch, var(--foreground) 40%, transparent);
+  -webkit-text-stroke: 1px color-mix(in oklch, var(--foreground) 8%, transparent);
+  background: linear-gradient(180deg, color-mix(in oklch, var(--foreground) 15%, transparent) 0%, color-mix(in oklch, var(--foreground) 5%, transparent) 100%);
   -webkit-background-clip: text;
   background-clip: text;
+  filter: drop-shadow(0px 0px 30px color-mix(in oklch, var(--foreground) 20%, transparent)) 
+          drop-shadow(0px 0px 60px color-mix(in oklch, var(--foreground) 10%, transparent));
+  text-shadow: 0px 0px 40px color-mix(in oklch, var(--foreground) 25%, transparent),
+               0px 0px 80px color-mix(in oklch, var(--foreground) 15%, transparent);
 }
 
 @media (min-width: 768px) {
@@ -146,53 +150,100 @@ const STYLES = `
 const MagneticButton = React.forwardRef(
   ({ className, children, as: Component = "button", ...props }, forwardedRef) => {
     const localRef = useRef(null);
+    const animationFrameRef = useRef(null);
+    const pendingUpdateRef = useRef(null);
 
     useEffect(() => {
       if (typeof window === "undefined") return;
       const element = localRef.current;
       if (!element) return;
 
-      const ctx = gsap.context(() => {
-        const handleMouseMove = (e) => {
-          const rect = element.getBoundingClientRect();
-          const h = rect.width / 2;
-          const w = rect.height / 2;
-          const x = e.clientX - rect.left - h;
-          const y = e.clientY - rect.top - w;
+      // Set initial GPU acceleration
+      gsap.set(element, {
+        willChange: 'transform',
+        force3D: true,
+        backfaceVisibility: 'hidden'
+      });
 
+      const ctx = gsap.context(() => {
+        let isHovering = false;
+
+        const handleMouseMove = (e) => {
+          if (!isHovering) return;
+
+          // Cancel previous animation frame if exists
+          if (animationFrameRef.current) {
+            cancelAnimationFrame(animationFrameRef.current);
+          }
+
+          // Queue the next frame update
+          animationFrameRef.current = requestAnimationFrame(() => {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const x = e.clientX - rect.left - centerX;
+            const y = e.clientY - rect.top - centerY;
+
+            // Simplified transform: just use x/y translation, no rotation for better performance
+            gsap.to(element, {
+              x: x * 0.3,
+              y: y * 0.3,
+              scale: 1.02,
+              ease: "sine.out",
+              duration: 0.25,
+              overwrite: 'auto'
+            });
+          });
+        };
+
+        const handleMouseEnter = () => {
+          isHovering = true;
           gsap.to(element, {
-            x: x * 0.4,
-            y: y * 0.4,
-            rotationX: -y * 0.15,
-            rotationY: x * 0.15,
-            scale: 1.05,
-            ease: "power2.out",
-            duration: 0.4,
+            scale: 1.02,
+            ease: "sine.out",
+            duration: 0.2,
+            overwrite: 'auto'
           });
         };
 
         const handleMouseLeave = () => {
+          isHovering = false;
+          
+          if (animationFrameRef.current) {
+            cancelAnimationFrame(animationFrameRef.current);
+          }
+
           gsap.to(element, {
             x: 0,
             y: 0,
-            rotationX: 0,
-            rotationY: 0,
             scale: 1,
-            ease: "elastic.out(1, 0.3)",
-            duration: 1.2,
+            ease: "sine.out",
+            duration: 0.5,
+            overwrite: 'auto'
           });
         };
 
         element.addEventListener("mousemove", handleMouseMove);
+        element.addEventListener("mouseenter", handleMouseEnter);
         element.addEventListener("mouseleave", handleMouseLeave);
 
         return () => {
           element.removeEventListener("mousemove", handleMouseMove);
+          element.removeEventListener("mouseenter", handleMouseEnter);
           element.removeEventListener("mouseleave", handleMouseLeave);
+          if (animationFrameRef.current) {
+            cancelAnimationFrame(animationFrameRef.current);
+          }
         };
       }, element);
 
-      return () => ctx.revert();
+      return () => {
+        ctx.revert();
+        gsap.set(element, { willChange: 'auto' });
+        if (animationFrameRef.current) {
+          cancelAnimationFrame(animationFrameRef.current);
+        }
+      };
     }, []);
 
     return (
@@ -236,32 +287,42 @@ export function CinematicFooter() {
 
     // React strict mode compatible GSAP context cleanup
     const ctx = gsap.context(() => {
-      // Background Parallax
-      gsap.fromTo(giantTextRef.current, { y: "10vh", scale: 0.8, opacity: 0 }, {
+      // Background Parallax - optimized
+      gsap.set(giantTextRef.current, { willChange: 'transform, opacity', force3D: true });
+      gsap.fromTo(giantTextRef.current, { y: "10vh", scale: 0.95, opacity: 0 }, {
         y: "0vh",
         scale: 1,
         opacity: 1,
-        ease: "power1.out",
+        ease: "sine.out",
         scrollTrigger: {
           trigger: wrapperRef.current,
           start: "top 80%",
           end: "bottom bottom",
-          scrub: 1,
+          scrub: 3, // Smoother
+          fastScrollEnd: true,
         },
+        onComplete: () => {
+          gsap.set(giantTextRef.current, { willChange: 'auto' });
+        }
       });
 
-      // Staggered Content Reveal
-      gsap.fromTo([headingRef.current, linksRef.current], { y: 50, opacity: 0 }, {
+      // Staggered Content Reveal - optimized
+      gsap.set([headingRef.current, linksRef.current], { willChange: 'transform, opacity', force3D: true });
+      gsap.fromTo([headingRef.current, linksRef.current], { y: 40, opacity: 0 }, {
         y: 0,
         opacity: 1,
-        stagger: 0.15,
-        ease: "power3.out",
+        stagger: 0.1,
+        ease: "sine.out",
         scrollTrigger: {
           trigger: wrapperRef.current,
           start: "top 40%",
           end: "bottom bottom",
-          scrub: 1,
+          scrub: 3, // Smoother
+          fastScrollEnd: true,
         },
+        onComplete: () => {
+          gsap.set([headingRef.current, linksRef.current], { willChange: 'auto' });
+        }
       });
     }, wrapperRef);
 
