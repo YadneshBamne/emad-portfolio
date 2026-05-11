@@ -11,27 +11,39 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  build: {
-    // Optimize bundle for animations
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'gsap': ['gsap', '@gsap/react'],
-          'framer': ['framer-motion'],
-          'three': ['three', '@react-three/fiber', '@react-three/drei'],
+build: {
+  rollupOptions: {
+    output: {
+      manualChunks(id) {
+        if (id.includes('gsap') || id.includes('@gsap/react')) {
+          return 'gsap'
         }
-      }
+
+        if (id.includes('framer-motion')) {
+          return 'framer'
+        }
+
+        if (
+          id.includes('three') ||
+          id.includes('@react-three/fiber') ||
+          id.includes('@react-three/drei')
+        ) {
+          return 'three'
+        }
+      },
     },
-    // Better minification
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: false,
-      }
-    },
-    // Optimal chunk size
-    chunkSizeWarningLimit: 500,
   },
+
+  minify: 'terser',
+
+  terserOptions: {
+    compress: {
+      drop_console: false,
+    },
+  },
+
+  chunkSizeWarningLimit: 500,
+},
   // Optimization for development
   esbuild: {
     drop: process.env.NODE_ENV === 'production' ? ['console'] : [],
