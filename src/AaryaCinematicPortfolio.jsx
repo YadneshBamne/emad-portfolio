@@ -7,6 +7,8 @@ import { AaryaNavigationDrawer } from './components/AaryaNavigationDrawer';
 import { AaryaLensReveal } from './components/AaryaLensReveal';
 import { AnimatedCarousel } from './components/ui/logo-carousel';
 import AboutSection from './components/AboutSection';
+import { PresetStudio } from './components/PresetStudio';
+import AaryaVideoShowcase from './components/AaryaVideoShowcase';
 
 gsap.registerPlugin(ScrollTrigger);
 // Optimize GSAP globally for better performance
@@ -137,7 +139,7 @@ const AaryaCinematicPortfolio = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] min-h-screen selection:bg-[var(--color-accent-metallic)] selection:text-[var(--color-bg-primary)] overflow-x-hidden transition-colors duration-500">
+    <div ref={containerRef} className="bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] min-h-screen selection:bg-[var(--color-accent-metallic)] selection:text-[var(--color-bg-primary)] rounded-b-[3rem] overflow-x-hidden transition-colors duration-500">
 
       {/* Theme Toggle Button */}
       <button 
@@ -274,6 +276,12 @@ const AaryaCinematicPortfolio = () => {
 
       {/* 6. Polaroid Grid Gallery Section */}
       <AaryaPolaroidGrid />
+
+      {/* 6.5 Video Showcase Section */}
+      <AaryaVideoShowcase />
+
+      {/* 7. Preset Studio Color Correction Feature */}
+      <PresetStudio />
 
       {/* Custom Styles for animations */}
       <style dangerouslySetInnerHTML={{

@@ -29,9 +29,16 @@ const AboutSection = () => {
 
       {/* Video Container */}
       <div className="relative w-full aspect-[21/9] md:aspect-[2.35/1] max-h-[55vh] bg-zinc-900 border border-zinc-800 rounded-sm overflow-hidden mb-6 group cursor-pointer">
-        {/* Placeholder for Video - user will add it here */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-zinc-600 font-mono text-sm tracking-widest">[ VIDEO CONTAINER ]</span>
+        {/* Actual Video Element */}
+        <div className="absolute inset-0 w-full h-full">
+          <video 
+            src="./graded piano people d1.mp4" 
+            className="w-full h-full object-cover"
+            autoPlay 
+            loop 
+            muted 
+            playsInline
+          />
         </div>
         
         {/* Bottom Left Text Over Video */}
