@@ -25,7 +25,7 @@ export function AaryaLensReveal() {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=200%",
+          end: "+=120%",
           pin: true,
           scrub: 3, // Smoother scrolling
           fastScrollEnd: true,
@@ -78,18 +78,6 @@ export function AaryaLensReveal() {
           duration: 1.1,
           ease: "sine.inOut",
         }, "<");
-
-      // 4. Optimized montage effect
-      const images = gsap.utils.toArray('.montage-img', containerRef.current);
-      if (images.length > 0) {
-        images.forEach((img, i) => {
-          gsap.set(img, { willChange: 'opacity' });
-          tl.to(img, { opacity: 1, duration: 0.04, ease: 'none' }, `>`);
-          if (i < images.length - 1) {
-            tl.to(img, { opacity: 0, duration: 0.04, ease: 'none' }, `>`);
-          }
-        });
-      }
 
       // Cleanup willChange after animation
       tl.eventCallback("onComplete", () => {
@@ -177,17 +165,9 @@ export function AaryaLensReveal() {
             playsInline
             className="w-full h-full object-cover opacity-90"
           >
+            {/* <source src="" type="video/mp4" /> */}
             <source src="https://www.pexels.com/download/video/13082773/" type="video/mp4" />
           </video>
-
-          {/* Montage Images (Hidden initially) */}
-          <div className="absolute inset-0 w-full h-full pointer-events-none">
-            <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070&auto=format&fit=crop" className="montage-img absolute inset-0 w-full h-full object-cover opacity-0" alt="Montage 1" />
-            <img src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=2070&auto=format&fit=crop" className="montage-img absolute inset-0 w-full h-full object-cover opacity-0" alt="Montage 2" />
-            <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=2070&auto=format&fit=crop" className="montage-img absolute inset-0 w-full h-full object-cover opacity-0" alt="Montage 3" />
-            <img src="https://images.unsplash.com/photo-1470229722913-7c092fb46d69?q=80&w=2070&auto=format&fit=crop" className="montage-img absolute inset-0 w-full h-full object-cover opacity-0" alt="Montage 4" />
-            <img src="https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?q=80&w=2070&auto=format&fit=crop" className="montage-img absolute inset-0 w-full h-full object-cover opacity-0" alt="Montage 5" />
-          </div>
 
           {/* Overlay to darken the background slightly */}
           <div className="absolute inset-0 bg-black/20 mix-blend-multiply pointer-events-none"></div>
