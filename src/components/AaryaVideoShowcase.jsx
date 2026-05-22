@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const ARTISTS = [
-  { id: '1', name: 'TYLA', url: './tyla live 2.mp4' },
-  { id: '2', name: 'JASON DERULA', url: './jason.mp4' },
-  { id: '3', name: 'SHANA', url: './Shana final.mp4' },
-  { id: '4', name: 'WIZKID', url: './anuv live cut.mp4' },
-  { id: '5', name: 'AKON', url: './akon live cut.mp4' },
-  { id: '6', name: 'SLIMANE', url: './BAGLAMI REEL.mp4' },
+  { id: '1', name: 'TYLA', url: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/tyla%20live%202.mp4' },
+  { id: '2', name: 'JASON DERULA', url: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/jason.mp4' },
+  { id: '3', name: 'SHANA', url: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/Europe%20arc%20final.mov' },
+  { id: '4', name: 'WIZKID', url: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/anuv%20live%20cut.mp4' },
+  { id: '5', name: 'AKON', url: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/akon%20live%20cut.mp4' },
+  { id: '6', name: 'SLIMANE', url: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/tyla%20live%202.mp4' },
 ];
 
 const AaryaVideoShowcase = () => {
