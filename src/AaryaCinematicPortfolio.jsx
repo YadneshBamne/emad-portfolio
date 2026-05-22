@@ -9,6 +9,7 @@ import { AnimatedCarousel } from './components/ui/logo-carousel';
 import AboutSection from './components/AboutSection';
 import { PresetStudio } from './components/PresetStudio';
 import AaryaVideoShowcase from './components/AaryaVideoShowcase';
+import { ScrollProgressIndicator } from './components/ScrollProgressIndicator';
 
 gsap.registerPlugin(ScrollTrigger);
 // Optimize GSAP globally for better performance
@@ -163,6 +164,8 @@ const AaryaCinematicPortfolio = () => {
         <AaryaNavigationDrawer />
       </div>
 
+      <ScrollProgressIndicator />
+
       {/* Desktop Navigation - Hide on Scroll */}
       <nav className="desktop-nav hidden md:flex fixed top-0 left-0 w-full z-50 py-8 px-12 items-center justify-center mix-blend-difference pointer-events-auto" style={{ transition: 'none' }}>
         <div className="flex gap-16 font-mono text-sm tracking-[0.2em] uppercase text-white/80 pointer-events-auto">
@@ -173,7 +176,9 @@ const AaryaCinematicPortfolio = () => {
       </nav>
 
       {/* 2. The Hero Section (Lens Reveal) */}
-      <AaryaLensReveal />
+      <div id="section-lens">
+        <AaryaLensReveal />
+      </div>
 
       {/* 4. The Navigation / Divider Bar */}
       <div className="w-full border-t border-[var(--color-border-color)] bg-[var(--color-bg-secondary)] py-5 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center text-xs md:text-sm font-mono text-[var(--color-text-secondary)] z-20 relative shadow-2xl transition-colors duration-500" style={{ fontFamily: "'Space Mono', monospace" }}>
@@ -186,7 +191,7 @@ const AaryaCinematicPortfolio = () => {
       </div>
 
       {/* 5. The Cards Section */}
-      <section className="relative w-full bg-[var(--color-bg-primary)] py-24 px-4 md:px-8 z-20 overflow-hidden transition-colors duration-500" style={{ backfaceVisibility: 'hidden' }}>
+      <section id="section-work" className="relative w-full bg-[var(--color-bg-primary)] py-24 px-4 md:px-8 z-20 overflow-hidden transition-colors duration-500" style={{ backfaceVisibility: 'hidden' }}>
 
         {/* Animated Logo Carousel - ABOVE Cards */}
         <div className="mb-16 md:mb-24">
@@ -272,16 +277,24 @@ const AaryaCinematicPortfolio = () => {
       </section>
 
       {/* 5.5 About Section */}
-      <AboutSection />
+      <div id="section-about">
+        <AboutSection />
+      </div>
 
       {/* 6. Polaroid Grid Gallery Section */}
-      <AaryaPolaroidGrid />
+      <div id="section-gallery">
+        <AaryaPolaroidGrid />
+      </div>
 
       {/* 6.5 Video Showcase Section */}
-      <AaryaVideoShowcase />
+      <div id="section-showcase">
+        <AaryaVideoShowcase />
+      </div>
 
       {/* 7. Preset Studio Color Correction Feature */}
-      <PresetStudio />
+      <div id="section-studio">
+        <PresetStudio />
+      </div>
 
       {/* Custom Styles for animations */}
       <style dangerouslySetInnerHTML={{

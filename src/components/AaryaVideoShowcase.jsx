@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const ARTISTS = [
@@ -13,6 +13,20 @@ const ARTISTS = [
 const AaryaVideoShowcase = () => {
   const [activeArtist, setActiveArtist] = useState(ARTISTS[0]);
   const [hoveredArtist, setHoveredArtist] = useState(null);
+  const scrollContainerRef = useRef(null);
+  const activeItemRef = useRef(null);
+
+  useEffect(() => {
+    // Only scroll if it's a mobile view (using a simple check or just applying it since desktop hides the container)
+    // The container is hidden on desktop, so scrollIntoView will safely do nothing or just scroll the hidden container.
+    if (activeItemRef.current && scrollContainerRef.current) {
+      activeItemRef.current.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest'
+      });
+    }
+  }, [activeArtist]);
 
   // The currently displayed artist is the hovered one, falling back to the active one
   const displayArtist = hoveredArtist || activeArtist;
@@ -38,7 +52,8 @@ const AaryaVideoShowcase = () => {
 
         {/* Bottom Left Artist Name */}
         <div className="flex flex-col gap-6">
-          <div className="h-[120px] md:h-[190px] overflow-hidden relative flex items-end">
+          {/* Desktop: Active Artist Name */}
+          <div className="hidden md:flex h-[190px] overflow-hidden relative items-end">
             <AnimatePresence mode="wait">
               <motion.h1
                 key={displayArtist.id}
@@ -46,7 +61,7 @@ const AaryaVideoShowcase = () => {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -40, opacity: 0 }}
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                className="text-6xl md:text-8xl font-black uppercase leading-none"
+                className="text-8xl font-black uppercase leading-none"
                 style={{ fontFamily: "'Anton', 'Impact', sans-serif" }}
               >
                 {displayArtist.name.split(' ').map((word, i) => (
@@ -54,6 +69,33 @@ const AaryaVideoShowcase = () => {
                 ))}
               </motion.h1>
             </AnimatePresence>
+          </div>
+
+          {/* Mobile: Horizontal Scrollable Artist List */}
+          <div 
+            ref={scrollContainerRef}
+            className="md:hidden w-full flex overflow-x-auto gap-8 items-end pb-2 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          >
+            {ARTISTS.map((artist) => {
+              const isActive = activeArtist.id === artist.id;
+              return (
+                <button
+                  key={artist.id}
+                  ref={isActive ? activeItemRef : null}
+                  onClick={() => setActiveArtist(artist)}
+                  className={`snap-center shrink-0 text-6xl font-black uppercase leading-none transition-colors ${
+                    isActive ? 'text-white' : 'text-zinc-800'
+                  }`}
+                  style={{ fontFamily: "'Anton', 'Impact', sans-serif" }}
+                >
+                  {artist.name.split(' ').map((word, i) => (
+                    <span key={i} className="block text-left">{word}</span>
+                  ))}
+                </button>
+              );
+            })}
+            {/* Spacer for right padding in scroll area */}
+            <div className="w-4 shrink-0"></div>
           </div>
           
           <button className="flex items-center gap-2 text-xs font-mono tracking-widest text-red-600 hover:text-white transition-colors uppercase w-fit group">
@@ -90,7 +132,7 @@ const AaryaVideoShowcase = () => {
       </div>
 
       {/* Right Column (35%) */}
-      <div className="w-full md:w-[35%] h-full flex items-center justify-end p-8 md:p-16 relative z-10">
+      <div className="hidden md:flex w-full md:w-[35%] h-full items-center justify-end p-8 md:p-16 relative z-10">
         <div 
           className="flex flex-col gap-6 text-right w-full items-end"
           onMouseLeave={() => setHoveredArtist(null)}

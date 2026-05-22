@@ -32,7 +32,7 @@ const AboutSection = () => {
         {/* Actual Video Element */}
         <div className="absolute inset-0 w-full h-full">
           <video 
-            src="./graded piano people d1.mp4" 
+            src="https://www.pexels.com/download/video/19070096/" 
             className="w-full h-full object-cover"
             autoPlay 
             loop 

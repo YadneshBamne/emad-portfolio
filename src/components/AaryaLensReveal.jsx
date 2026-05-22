@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -6,19 +6,39 @@ gsap.registerPlugin(ScrollTrigger);
 
 export function AaryaLensReveal() {
   const containerRef = useRef(null);
-  const lensCapRef = useRef(null);
   const videoContainerRef = useRef(null);
   const lensUIRef = useRef(null);
   const textLeftRef = useRef(null);
   const textRightRef = useRef(null);
+  const [signatureSvg, setSignatureSvg] = useState('');
+
+  useEffect(() => {
+    fetch('/ai-signature-20260522-transparent.svg')
+      .then(res => res.text())
+      .then(text => {
+        // Use the entire SVG string as is, keeping its original white color
+        setSignatureSvg(text);
+      })
+      .catch(err => console.error("Error loading signature:", err));
+  }, []);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       // Pre-set GPU acceleration for animated elements
-      gsap.set([lensCapRef.current, videoContainerRef.current, lensUIRef.current, textLeftRef.current, textRightRef.current], {
-        willChange: 'transform, opacity',
+      gsap.set([videoContainerRef.current, lensUIRef.current, textLeftRef.current, textRightRef.current], {
+        willChange: 'transform, opacity, filter',
         force3D: true,
         backfaceVisibility: 'hidden'
+      });
+
+      // Reveal signature on load (only opacity so we don't overwrite SVG scale)
+      gsap.fromTo('.signature-path', {
+        opacity: 0,
+      }, {
+        opacity: 0.8,
+        duration: 2,
+        ease: "power2.out",
+        delay: 0.5
       });
 
       const tl = gsap.timeline({
@@ -32,26 +52,13 @@ export function AaryaLensReveal() {
         }
       });
 
-      // 1. The Pop & Drop of the Lens Cap (optimized)
-      tl.to(lensCapRef.current, {
-        scale: 1.12,
-        rotationZ: -12,
-        duration: 0.35,
-        ease: "sine.out",
-      })
-        .to(lensCapRef.current, {
-          y: "150vh",
-          rotationX: 40,
-          rotationY: 30,
-          duration: 1.1,
-          ease: "sine.in",
-        }, "+=0.06")
-
-        // 2. The Reveal (Video container expanding - optimized)
-        .fromTo(videoContainerRef.current, {
-          clipPath: "circle(17.25vmin at 50% 50%)"
+        // 1. The Reveal (Video container expanding - optimized)
+        tl.fromTo(videoContainerRef.current, {
+          clipPath: "circle(25.8vmin at 50% 50%)",
+          filter: "blur(16px)"
         }, {
           clipPath: "circle(150vmin at 50% 50%)",
+          filter: "blur(0px)",
           duration: 1.1,
           ease: "sine.inOut",
         }, "<0.3")
@@ -64,24 +71,41 @@ export function AaryaLensReveal() {
           duration: 1.1,
           ease: "sine.inOut",
         }, "<")
+      
+        // Fade out the glass tint smoothly
+        .to('.lens-glass-layer', {
+          opacity: 0,
+          duration: 0.8,
+          ease: "power2.inOut",
+        }, "<0.1")
+
+        // Make the signature physically scroll up and fade out to simulate standard scrolling
+        .to('.signature-path', {
+          y: -1000,
+          opacity: 0,
+          duration: 1.1,
+          ease: "power1.inOut",
+        }, "<0")
 
         // 4. Parallax for the giant text (optimized)
         .to(textLeftRef.current, {
           x: "-8vw",
           opacity: 0,
+          filter: "blur(24px)",
           duration: 1.1,
           ease: "sine.inOut",
         }, "<")
         .to(textRightRef.current, {
           x: "8vw",
           opacity: 0,
+          filter: "blur(24px)",
           duration: 1.1,
           ease: "sine.inOut",
         }, "<");
 
       // Cleanup willChange after animation
       tl.eventCallback("onComplete", () => {
-        gsap.set([lensCapRef.current, videoContainerRef.current, lensUIRef.current, textLeftRef.current, textRightRef.current], {
+        gsap.set([videoContainerRef.current, lensUIRef.current, textLeftRef.current, textRightRef.current], {
           willChange: 'auto'
         });
       });
@@ -100,28 +124,30 @@ export function AaryaLensReveal() {
       <div className="absolute inset-0 z-0 flex flex-col justify-center pointer-events-none px-4 md:px-10">
         <div className="flex justify-between w-full relative h-full">
           {/* EMAR or EMAD based on user instruction (I'll use EMAD per context, but user prompt says "EMAR" in top-left, I will use EMAD because of the screenshot) */}
-          <h1
-            ref={textLeftRef}
-            className="absolute top-[10%] left-[2%] text-[24vw] md:text-[17vw] leading-[0.8] font-black text-[#FF0000]"
-            style={{
-              fontFamily: "'Impact', 'Oswald', 'Anton', sans-serif",
-              filter: 'drop-shadow(0px 0px 12px rgba(255, 0, 0, 0.4)) drop-shadow(0px 0px 25px rgba(255, 0, 0, 0.15))',
-              textShadow: '0px 0px 15px rgba(255, 0, 0, 0.3), 0px 0px 30px rgba(255, 0, 0, 0.1)'
-            }}
-          >
-            EMAD
-          </h1>
-          <h1
-            ref={textRightRef}
-            className="absolute bottom-[10%] right-[2%] text-[24vw] md:text-[17vw] leading-[0.8] font-black text-[#FF0000] text-right"
-            style={{
-              fontFamily: "'Impact', 'Oswald', 'Anton', sans-serif",
-              filter: 'drop-shadow(0px 0px 12px rgba(255, 0, 0, 0.4)) drop-shadow(0px 0px 25px rgba(255, 0, 0, 0.15))',
-              textShadow: '0px 0px 15px rgba(255, 0, 0, 0.3), 0px 0px 30px rgba(255, 0, 0, 0.1)'
-            }}
-          >
-            SHAIKH
-          </h1>
+          <div ref={textLeftRef} className="absolute top-[10%] left-[2%] z-0">
+            <h1
+              className="text-[24vw] md:text-[17vw] leading-[0.8] font-black text-[#FF0000]"
+              style={{
+                fontFamily: "'Impact', 'Oswald', 'Anton', sans-serif",
+                filter: 'drop-shadow(0px 0px 12px rgba(255, 0, 0, 0.4)) drop-shadow(0px 0px 25px rgba(255, 0, 0, 0.15))',
+                textShadow: '0px 0px 15px rgba(255, 0, 0, 0.3), 0px 0px 30px rgba(255, 0, 0, 0.1)'
+              }}
+            >
+              EMAD
+            </h1>
+          </div>
+          <div ref={textRightRef} className="absolute bottom-[10%] right-[2%] text-right z-0">
+            <h1
+              className="text-[24vw] md:text-[17vw] leading-[0.8] font-black text-[#FF0000]"
+              style={{
+                fontFamily: "'Impact', 'Oswald', 'Anton', sans-serif",
+                filter: 'drop-shadow(0px 0px 12px rgba(255, 0, 0, 0.4)) drop-shadow(0px 0px 25px rgba(255, 0, 0, 0.15))',
+                textShadow: '0px 0px 15px rgba(255, 0, 0, 0.3), 0px 0px 30px rgba(255, 0, 0, 0.1)'
+              }}
+            >
+              SHAIKH
+            </h1>
+          </div>
         </div>
       </div>
 
@@ -166,7 +192,7 @@ export function AaryaLensReveal() {
             className="w-full h-full object-cover opacity-90"
           >
             {/* <source src="" type="video/mp4" /> */}
-            <source src="https://www.pexels.com/download/video/13082773/" type="video/mp4" />
+            <source src="https://www.pexels.com/download/video/31540267/" type="video/mp4" />
           </video>
 
           {/* Overlay to darken the background slightly */}
@@ -179,9 +205,9 @@ export function AaryaLensReveal() {
         {/* --- The New Cinematic Lens UI --- */}
         <div
           ref={lensUIRef}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vmin] h-[50vmin] pointer-events-none z-10"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[75vmin] h-[75vmin] pointer-events-none z-10 overflow-visible"
         >
-          <svg viewBox="0 0 800 800" className="w-full h-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+          <svg viewBox="0 0 800 800" className="w-full h-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-visible">
             <defs>
               <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
                 <feGaussianBlur stdDeviation="4" result="blur" />
@@ -202,6 +228,10 @@ export function AaryaLensReveal() {
                 <stop offset="60%" stopColor="#ffffff" stopOpacity="0.0" />
                 <stop offset="100%" stopColor="#ffffff" stopOpacity="0.05" />
               </linearGradient>
+              <radialGradient id="lensTint" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.1" />
+                <stop offset="100%" stopColor="#1d4ed8" stopOpacity="0.2" />
+              </radialGradient>
             </defs>
 
             {/* Gear Teeth / Focus Ring Texture on the very outer edge */}
@@ -210,8 +240,13 @@ export function AaryaLensReveal() {
             {/* Solid background for the outer barrel with metallic shading */}
             <circle cx="400" cy="400" r="305" fill="none" stroke="url(#barrelGrad)" strokeWidth="150" />
 
-            {/* Subtle glass reflection over the center hole */}
-            <circle cx="400" cy="400" r="230" fill="url(#glassReflect)" />
+            <g className="lens-glass-layer">
+              {/* Simple blue lens tint over the center hole */}
+              <circle cx="400" cy="400" r="230" fill="url(#lensTint)" />
+
+              {/* Subtle glass reflection over the center hole */}
+              <circle cx="400" cy="400" r="230" fill="url(#glassReflect)" />
+            </g>
 
             {/* Inner Blue Rings */}
             <circle cx="400" cy="400" r="230" fill="none" stroke="#254252" strokeWidth="2" filter="url(#glow)" />
@@ -252,17 +287,17 @@ export function AaryaLensReveal() {
             <text x="120" y="404" fill="#666" fontSize="10" fontFamily="monospace" letterSpacing="0.1em" textAnchor="middle">50MM · SUMMILUX</text>
             <text x="680" y="404" fill="#666" fontSize="10" fontFamily="monospace" letterSpacing="0.1em" textAnchor="middle">F/1.4 · 1/250S · ISO 3</text>
             <text x="400" y="790" fill="#666" fontSize="10" fontFamily="monospace" letterSpacing="0.1em" textAnchor="middle">SONY · FE 50mm · f/1.4 GM · Ø82</text>
+
+            {/* Uploaded AI Signature placed ON TOP of everything in the lens */}
+            <g 
+              className="signature-path"
+              transform="translate(-104, -104) scale(3.5)"
+              dangerouslySetInnerHTML={{ __html: signatureSvg }}
+            />
           </svg>
         </div>
 
-        {/* Photorealistic Lens Cap */}
-        <img
-          ref={lensCapRef}
-          // Using a high-res placeholder transparent Canon Lens Cap PNG from a free source
-          src="./pngegg3.png"
-          alt="Canon Lens Cap"
-          className="w-[54vmin] h-[54vmin] object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.95)] z-20 pointer-events-auto"
-        />
+
       </div>
     </div>
   );

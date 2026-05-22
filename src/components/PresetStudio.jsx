@@ -205,11 +205,7 @@ export const PresetStudio = () => {
             ))}
           </div>
 
-          <div className="pl-4 shrink-0 border-l border-zinc-800/50 h-full flex items-center">
-            <button className="bg-red-600 hover:bg-red-700 text-white font-mono text-[10px] tracking-widest uppercase px-6 py-2.5 rounded shadow-[0_0_15px_rgba(220,38,38,0.3)] hover:shadow-[0_0_20px_rgba(220,38,38,0.5)] transition-all">
-              Visit Store →
-            </button>
-          </div>
+
         </div>
         
       </div>
