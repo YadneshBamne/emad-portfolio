@@ -3,16 +3,16 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 // Sample polaroid data
 const polaroidItems = [
-  { id: 1, src: './ISF-14.jpg', signature: 'Emad' },
-  { id: 2, src: './ISF-68.jpg', signature: 'Creative' },
-  { id: 3, src: './ISF-172.jpg', signature: 'Design' },
-  { id: 4, src: './credits_BARICCI_ES_75-6.jpg', signature: 'Vision' },
-  { id: 5, src: './ISF-147.jpg', signature: 'Motion' },
-  { id: 6, src: './credits_BARICCI_ES-65.jpg', signature: 'Art' },
-  { id: 7, src: './credits_BARICCI_ES-71.jpg', signature: 'Light' },
-  { id: 8, src: './credits_BARICCI_ES-75.jpg', signature: 'Moment' },
-  { id: 9, src: './ISF-8.jpg', signature: 'Frame' },
-  { id: 10, src: './ISF-11.jpg', signature: 'Shot' }
+  { id: 1, src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/ISF-14.jpg', signature: 'Emad' },
+  { id: 2, src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/ISF-68.jpg', signature: 'Creative' },
+  { id: 3, src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/ISF-172.jpg', signature: 'Design' },
+  { id: 4, src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/credits_BARICCI_ES_75-6.jpg', signature: 'Vision' },
+  { id: 5, src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/ISF-147.jpg', signature: 'Motion' },
+  { id: 6, src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/credits_BARICCI_ES-65.jpg', signature: 'Art' },
+  { id: 7, src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/credits_BARICCI_ES-71.jpg', signature: 'Light' },
+  { id: 8, src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/credits_BARICCI_ES-75.jpg', signature: 'Moment' },
+  { id: 9, src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/ISF-8.jpg', signature: 'Frame' },
+  { id: 10, src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/ISF-11.jpg', signature: 'Shot' }
 ];
 
 const scatterConfig = [

@@ -151,7 +151,7 @@ const AaryaCinematicPortfolio = () => {
         <AaryaNavigationDrawer />
       </div>
 
-      <ScrollProgressIndicator />
+      {/* <ScrollProgressIndicator /> */}
 
       {/* Desktop Navigation - Hide on Scroll */}
       <nav className="desktop-nav hidden md:grid grid-cols-3 fixed top-0 left-0 w-full z-[10000] py-8 px-12 items-center mix-blend-difference pointer-events-auto" style={{ transition: 'none' }}>
