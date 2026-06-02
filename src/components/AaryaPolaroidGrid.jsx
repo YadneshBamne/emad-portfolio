@@ -8,7 +8,7 @@ const polaroidItems = [
   { id: 3, src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/ISF-172.jpg', signature: 'Design' },
   { id: 4, src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/credits_BARICCI_ES_75-6.jpg', signature: 'Vision' },
   { id: 5, src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/ISF-147.jpg', signature: 'Motion' },
-  { id: 6, src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/credits_BARICCI_ES-65.jpg', signature: 'Art' },
+  { id: 6, src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/credits_BARICCI_ES-65.jpg?updatedAt=1780411130453', signature: 'Art' },
   { id: 7, src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/credits_BARICCI_ES-71.jpg', signature: 'Light' },
   { id: 8, src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/credits_BARICCI_ES-75.jpg', signature: 'Moment' },
   { id: 9, src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/ISF-8.jpg', signature: 'Frame' },
@@ -64,7 +64,7 @@ const PolaroidCard = ({ item, config }) => {
   return (
     <motion.div
       ref={cardRef}
-      className="relative aspect-[3/4] w-full max-w-[280px] bg-[#faf9f5] overflow-hidden cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+      className="relative aspect-3/4 w-full max-w-70 bg-[#faf9f5] overflow-hidden cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       whileHover={{ 
@@ -125,7 +125,7 @@ const AaryaPolaroidGrid = () => {
       <div className="w-full border-b border-zinc-900 bg-black/50 py-5 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center text-xs md:text-sm font-mono text-zinc-500 mb-20 shadow-2xl relative z-10">
         <div className="mb-3 md:mb-0 tracking-widest flex items-center gap-4">
            <span className="text-red-600 font-bold">04</span>
-           <span className="w-12 h-[1px] bg-zinc-600"></span>
+           <span className="w-12 h-px bg-zinc-600"></span>
            <span>GALLERY</span>
         </div>
         <div className="mb-3 md:mb-0 text-center tracking-widest font-bold text-zinc-200">POLAROID COLLECTION</div>
@@ -135,7 +135,7 @@ const AaryaPolaroidGrid = () => {
         </div>
       </div>
 
-      <div className="max-w-[1600px] mx-auto px-4 md:px-12">
+      <div className="max-w-400 mx-auto px-4 md:px-12">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-12 place-items-center">
           {polaroidItems.map((item, index) => (
              <div key={item.id} className="relative z-10 w-full flex justify-center items-center" style={{ zIndex: 10 }}>
