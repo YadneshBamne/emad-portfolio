@@ -4,7 +4,9 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AaryaPolaroidGrid from './components/AaryaPolaroidGrid';
 import { AaryaNavigationDrawer } from './components/AaryaNavigationDrawer';
-import { AaryaLensReveal } from './components/AaryaLensReveal';
+// import { AaryaLensReveal } from './components/AaryaLensReveal';
+import { AaryaHero } from './components/AaryaHero';
+import VhsRecorder from './components/VhsRecorder';
 import { AnimatedCarousel } from './components/ui/logo-carousel';
 import AboutSection from './components/AboutSection';
 import { PresetStudio } from './components/PresetStudio';
@@ -142,22 +144,7 @@ const AaryaCinematicPortfolio = () => {
   return (
     <div ref={containerRef} className="bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] min-h-screen selection:bg-[var(--color-accent-metallic)] selection:text-[var(--color-bg-primary)] rounded-b-[3rem] overflow-x-hidden transition-colors duration-500">
 
-      {/* Theme Toggle Button */}
-      <button 
-        onClick={toggleTheme}
-        className="fixed bottom-6 right-6 z-[100] w-12 h-12 rounded-full bg-[var(--color-bg-secondary)] border border-[var(--color-border-color)] flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95"
-        aria-label="Toggle Theme"
-      >
-        {isDark ? (
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-[var(--color-text-primary)]">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
-          </svg>
-        ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-[var(--color-text-primary)]">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
-          </svg>
-        )}
-      </button>
+
 
       {/* Global Slide-Out Navigation (Framer Motion) - Mobile Only */}
       <div className="block md:hidden">
@@ -167,17 +154,37 @@ const AaryaCinematicPortfolio = () => {
       <ScrollProgressIndicator />
 
       {/* Desktop Navigation - Hide on Scroll */}
-      <nav className="desktop-nav hidden md:flex fixed top-0 left-0 w-full z-50 py-8 px-12 items-center justify-center mix-blend-difference pointer-events-auto" style={{ transition: 'none' }}>
-        <div className="flex gap-16 font-mono text-sm tracking-[0.2em] uppercase text-white/80 pointer-events-auto">
-          <a href="#" className="hover:text-white hover:scale-105 transition-all duration-300">About</a>
-          <a href="#" className="hover:text-white hover:scale-105 transition-all duration-300">Work</a>
-          <a href="#" className="hover:text-white hover:scale-105 transition-all duration-300">Contact</a>
+      <nav className="desktop-nav hidden md:grid grid-cols-3 fixed top-0 left-0 w-full z-[10000] py-8 px-12 items-center mix-blend-difference pointer-events-auto" style={{ transition: 'none' }}>
+        {/* Left: Links */}
+        <div className="flex items-center gap-12 font-sans text-base tracking-[0.15em] text-white pointer-events-auto font-bold">
+          <button onClick={() => navigate('/about')} className="hover:opacity-70 transition-opacity duration-300">ABOUT</button>
+          <button onClick={() => navigate('/photography')} className="hover:opacity-70 transition-opacity duration-300">PHOTOGRAPHY</button>
+          <button onClick={() => navigate('/works')} className="hover:opacity-70 transition-opacity duration-300">WORKS</button>
+          <button onClick={() => navigate('/community')} className="hover:opacity-70 transition-opacity duration-300">COMMUNITY</button>
+        </div>
+        
+        {/* Center: Logo */}
+        <div className="flex justify-center items-center pointer-events-auto">
+          <button onClick={() => navigate('/')} className="hover:scale-110 transition-transform duration-300">
+            <img src="/logo.avif" alt="Logo" className="h-20 w-30" />
+          </button>
+        </div>
+
+        {/* Right: Hamburger */}
+        <div className="flex justify-end items-center text-white pointer-events-auto">
+          <button className="hover:opacity-70 transition-opacity duration-300">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-10 h-10">
+              <path d="M3 6H21M3 12H21M3 18H21" strokeLinecap="square" />
+            </svg>
+          </button>
         </div>
       </nav>
 
-      {/* 2. The Hero Section (Lens Reveal) */}
-      <div id="section-lens">
-        <AaryaLensReveal />
+      {/* 2. The Hero Section (Video & Logo Only wrapped in VHS Recorder) */}
+      <div id="section-hero-top">
+        <VhsRecorder>
+          <AaryaHero />
+        </VhsRecorder>
       </div>
 
       {/* 4. The Navigation / Divider Bar */}
@@ -290,6 +297,7 @@ const AaryaCinematicPortfolio = () => {
       <div id="section-showcase">
         <AaryaVideoShowcase />
       </div>
+
 
       {/* 7. Preset Studio Color Correction Feature */}
       <div id="section-studio">

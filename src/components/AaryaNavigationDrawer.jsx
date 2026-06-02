@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const navLinks = [
-  { id: 'about', title: 'ABOUT US', href: '#' },
-  { id: 'work', title: 'OUR WORK', href: '#work' },
-  { id: 'services', title: 'SERVICES', href: '#' },
-  { id: 'blog', title: 'BLOG', href: '#' },
-  { id: 'contact', title: 'CONTACT US', href: '#' },
+  { id: 'about', title: 'ABOUT', href: '/about' },
+  { id: 'photography', title: 'PHOTOGRAPHY', href: '/photography' },
+  { id: 'works', title: 'WORKS', href: '/works' },
+  { id: 'community', title: 'COMMUNITY', href: '/community' },
 ];
 
 const menuVariants = {
@@ -46,6 +46,12 @@ const linkVariants = {
 
 export function AaryaNavigationDrawer() {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleNavigation = (href) => {
+    setIsOpen(false);
+    navigate(href);
+  };
 
   return (
     <>
@@ -150,15 +156,32 @@ export function AaryaNavigationDrawer() {
                 className="absolute top-0 right-0 h-full w-[70%] bg-zinc-900 rounded-l-[2rem] border-l border-white/5 shadow-2xl z-30 flex flex-col justify-center px-8 md:px-16 overflow-y-auto"
               >
                 <ul className="flex flex-col gap-4">
+                  {/* Global Home Link */}
+                  <motion.li variants={linkVariants} className="">
+                    <button
+                      onClick={() => handleNavigation('/')}
+                      className="block group relative w-fit text-left"
+                    >
+                      <motion.span 
+                        className="text-5xl md:text-7xl lg:text-8xl font-black text-zinc-100 uppercase leading-[0.85] hover:text-white transition-colors"
+                        style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}
+                        whileHover={{ x: 12 }}
+                        transition={{ type: 'spring', stiffness: 320, damping: 18 }}
+                      >
+                        HOME
+                      </motion.span>
+                      <span className="absolute -bottom-2 left-0 w-0 h-1 bg-white/30 group-hover:w-full transition-all duration-200 ease-out" style={{ willChange: 'width' }}></span>
+                    </button>
+                  </motion.li>
+
                   {navLinks.map((link) => (
                     <motion.li key={link.id} variants={linkVariants} className="">
-                      <a
-                        href={link.href}
-                        onClick={() => setIsOpen(false)}
-                        className="block group relative w-fit"
+                      <button
+                        onClick={() => handleNavigation(link.href)}
+                        className="block group relative w-fit text-left"
                       >
                         <motion.span 
-                          className=" text-5xl md:text-7xl lg:text-8xl font-black text-zinc-100 uppercase leading-[0.85] hover:text-white transition-colors"
+                          className="text-5xl md:text-7xl lg:text-8xl font-black text-zinc-100 uppercase leading-[0.85] hover:text-white transition-colors"
                           style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}
                           whileHover={{ x: 12 }}
                           transition={{ type: 'spring', stiffness: 320, damping: 18 }}
@@ -166,7 +189,7 @@ export function AaryaNavigationDrawer() {
                           {link.title}
                         </motion.span>
                         <span className="absolute -bottom-2 left-0 w-0 h-1 bg-white/30 group-hover:w-full transition-all duration-200 ease-out" style={{ willChange: 'width' }}></span>
-                      </a>
+                      </button>
                     </motion.li>
                   ))}
                 </ul>
