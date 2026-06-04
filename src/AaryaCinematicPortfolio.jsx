@@ -12,6 +12,7 @@ import AboutSection from './components/AboutSection';
 import { PresetStudio } from './components/PresetStudio';
 import AaryaVideoShowcase from './components/AaryaVideoShowcase';
 import { ScrollProgressIndicator } from './components/ScrollProgressIndicator';
+import AaryaCategoryAccordion from './components/AaryaCategoryAccordion';
 
 gsap.registerPlugin(ScrollTrigger);
 // Optimize GSAP globally for better performance
@@ -174,28 +175,17 @@ const AaryaCinematicPortfolio = () => {
     // We create a GSAP context to ensure proper cleanup in React strict mode
     const ctx = gsap.context(() => {
 
-      // Cards entrance animations - optimized for performance
-      const cards = gsap.utils.toArray('.work-card');
-      cards.forEach((card, index) => {
-        gsap.set(card, { willChange: 'transform, opacity' });
-        gsap.fromTo(card,
-          { y: 100, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.7,
-            ease: 'sine.out',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top bottom-=50',
-              toggleActions: 'play none none reverse',
-              markers: false
-            },
-            onComplete: () => {
-              gsap.set(card, { willChange: 'auto' });
-            }
-          }
-        );
+      // Smooth fade-in from solid black at the page level to match preloader fade-out (ultra-smooth)
+      gsap.fromTo('.hero-fade-overlay', {
+        opacity: 1,
+        willChange: 'opacity'
+      }, {
+        opacity: 0,
+        duration: 1.8,
+        ease: "power3.out",
+        onComplete: () => {
+          gsap.set('.hero-fade-overlay', { display: 'none', willChange: 'auto' });
+        }
       });
 
     }, containerRef); // Scope to container
@@ -205,6 +195,9 @@ const AaryaCinematicPortfolio = () => {
 
   return (
     <div ref={containerRef} className="bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] min-h-screen selection:bg-[var(--color-accent-metallic)] selection:text-[var(--color-bg-primary)] rounded-b-[3rem] overflow-x-hidden transition-colors duration-500">
+
+      {/* Solid Black Page Transition Mask Overlay for Dark Fade-in */}
+      <div className="hero-fade-overlay fixed inset-0 bg-[#000000] z-[100000] pointer-events-none" />
 
 
 
@@ -278,57 +271,7 @@ const AaryaCinematicPortfolio = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 max-w-[1400px] mx-auto mt-8 mb-8">
-
-          {/* Card 1: Photography */}
-          <div className="work-card group relative h-[45vh] md:h-[55vh] overflow-hidden bg-[var(--color-bg-secondary)] border border-[var(--color-border-color)] flex items-end" style={{ backfaceVisibility: 'hidden', perspective: 1000 }}>
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Photograph_of_a_Photographer.jpg"
-              alt="Photography"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover:brightness-100 brightness-75 mix-blend-luminosity opacity-80"
-              style={{ willChange: 'transform' }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg-primary)] via-transparent to-transparent opacity-90 group-hover:opacity-60 transition-opacity duration-500" style={{ willChange: 'opacity' }}></div>
-            <div className="relative z-10 p-8 w-full transform transition-transform duration-500 group-hover:-translate-y-4" style={{ willChange: 'transform' }}>
-              <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-[var(--color-text-primary)] tracking-tighter uppercase drop-shadow-md" style={{ fontFamily: "'Anton', sans-serif" }}>PHOTOGRAPHY</h2>
-              <p className="text-[var(--color-text-secondary)] font-mono text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 uppercase tracking-widest bg-[var(--color-bg-primary)]/80 inline-block px-2 py-1 backdrop-blur-sm">Capturing light & moments</p>
-              <div className="h-[2px] w-0 bg-[var(--color-accent-metallic)] mt-4 transition-all duration-500 group-hover:w-full" style={{ willChange: 'width' }}></div>
-            </div>
-          </div>
-
-          {/* Card 2: Videography */}
-          <div className="work-card group relative h-[45vh] md:h-[55vh] overflow-hidden bg-[var(--color-bg-secondary)] border border-[var(--color-border-color)] flex items-end" style={{ backfaceVisibility: 'hidden', perspective: 1000 }}>
-            <img
-              src="https://images.pexels.com/photos/34612064/pexels-photo-34612064.jpeg"
-              alt="Videography"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover:brightness-100 brightness-75 mix-blend-luminosity opacity-80"
-              style={{ willChange: 'transform' }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg-primary)] via-transparent to-transparent opacity-90 group-hover:opacity-60 transition-opacity duration-500" style={{ willChange: 'opacity' }}></div>
-            <div className="relative z-10 p-8 w-full transform transition-transform duration-500 group-hover:-translate-y-4" style={{ willChange: 'transform' }}>
-              <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-[var(--color-text-primary)] tracking-tighter uppercase drop-shadow-md" style={{ fontFamily: "'Anton', sans-serif" }}>VIDEOGRAPHY</h2>
-              <p className="text-[var(--color-text-secondary)] font-mono text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 uppercase tracking-widest bg-[var(--color-bg-primary)]/80 inline-block px-2 py-1 backdrop-blur-sm">Motion & storytelling</p>
-              <div className="h-[2px] w-0 bg-[var(--color-accent-metallic)] mt-4 transition-all duration-500 group-hover:w-full" style={{ willChange: 'width' }}></div>
-            </div>
-          </div>
-
-          {/* Card 3: Graphic Design */}
-          <div className="work-card group relative h-[45vh] md:h-[55vh] overflow-hidden bg-[var(--color-bg-secondary)] border border-[var(--color-border-color)] flex items-end" style={{ backfaceVisibility: 'hidden', perspective: 1000 }}>
-            <img
-              src="https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=2071&auto=format&fit=crop"
-              alt="Graphic Design"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover:brightness-100 brightness-75 mix-blend-luminosity opacity-80"
-              style={{ willChange: 'transform' }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg-primary)] via-transparent to-transparent opacity-90 group-hover:opacity-60 transition-opacity duration-500" style={{ willChange: 'opacity' }}></div>
-            <div className="relative z-10 p-8 w-full transform transition-transform duration-500 group-hover:-translate-y-4" style={{ willChange: 'transform' }}>
-              <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-[var(--color-text-primary)] tracking-tighter uppercase drop-shadow-md" style={{ fontFamily: "'Anton', sans-serif" }}>GRAPHIC DESIGN</h2>
-              <p className="text-[var(--color-text-secondary)] font-mono text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 uppercase tracking-widest bg-[var(--color-bg-primary)]/80 inline-block px-2 py-1 backdrop-blur-sm">Visual communication</p>
-              <div className="h-[2px] w-0 bg-[var(--color-accent-metallic)] mt-4 transition-all duration-500 group-hover:w-full" style={{ willChange: 'width' }}></div>
-            </div>
-          </div>
-
-        </div>
+        <AaryaCategoryAccordion />
 
         {/* Filmstrip Bottom Border */}
         <div className="absolute bottom-0 left-0 w-full h-8 flex items-center overflow-hidden opacity-30 bg-[var(--color-bg-primary)] border-t border-[var(--color-border-color)]">
