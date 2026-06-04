@@ -4,9 +4,9 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AaryaPolaroidGrid from './components/AaryaPolaroidGrid';
 import { AaryaNavigationDrawer } from './components/AaryaNavigationDrawer';
-// import { AaryaLensReveal } from './components/AaryaLensReveal';
-import { AaryaHero } from './components/AaryaHero';
-import VhsRecorder from './components/VhsRecorder';
+import { AaryaLensReveal } from './components/AaryaLensReveal';
+// import { AaryaHero } from './components/AaryaHero';
+// import VhsRecorder from './components/VhsRecorder';
 import { AnimatedCarousel } from './components/ui/logo-carousel';
 import AboutSection from './components/AboutSection';
 import { PresetStudio } from './components/PresetStudio';
@@ -44,8 +44,13 @@ const AaryaCinematicPortfolio = () => {
 
   useEffect(() => {
     let lastScrollY = 0;
-    let isHidden = false;
+    let isHidden = true;
     let scrollTimeout;
+
+    // Set initial layout state for the micro-animations
+    gsap.set('.nav-left-links', { x: -50, opacity: 0 });
+    gsap.set('.nav-right-links', { x: 50, opacity: 0 });
+    gsap.set('.nav-logo', { y: -40, opacity: 0 });
     
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -53,49 +58,106 @@ const AaryaCinematicPortfolio = () => {
       
       if (!nav) return;
       
-      // Scrolling down - hide navigation
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        if (!isHidden) {
-          gsap.killTweensOf(nav);
-          gsap.to(nav, {
-            y: -120,
-            opacity: 0,
-            pointerEvents: 'none',
-            duration: 0.35,
-            ease: 'sine.out',
-          });
-          isHidden = true;
-        }
-      } 
-      // Scrolling up - show navigation
-      else if (currentScrollY < lastScrollY) {
-        if (isHidden) {
-          gsap.killTweensOf(nav);
-          gsap.to(nav, {
-            y: 0,
-            opacity: 1,
-            pointerEvents: 'auto',
-            duration: 0.35,
-            ease: 'sine.out',
-          });
-          isHidden = false;
-        }
+      const isTopSection = currentScrollY < window.innerHeight * 0.8;
+      const isScrollingDown = currentScrollY > lastScrollY;
+      
+      let shouldHide = false;
+      
+      if (isTopSection) {
+        shouldHide = true;
+      } else if (isScrollingDown) {
+        shouldHide = true;
+      } else {
+        shouldHide = false;
+      }
+      
+      if (shouldHide && !isHidden) {
+        gsap.killTweensOf([nav, '.nav-left-links', '.nav-right-links', '.nav-logo']);
+        gsap.to(nav, {
+          opacity: 0,
+          pointerEvents: 'none',
+          duration: 0.35,
+          ease: 'sine.in',
+        });
+        gsap.to('.nav-left-links', {
+          x: -50,
+          opacity: 0,
+          duration: 0.35,
+          ease: 'sine.in',
+        });
+        gsap.to('.nav-right-links', {
+          x: 50,
+          opacity: 0,
+          duration: 0.35,
+          ease: 'sine.in',
+        });
+        gsap.to('.nav-logo', {
+          y: -40,
+          opacity: 0,
+          duration: 0.35,
+          ease: 'sine.in',
+        });
+        isHidden = true;
+      } else if (!shouldHide && isHidden) {
+        gsap.killTweensOf([nav, '.nav-left-links', '.nav-right-links', '.nav-logo']);
+        gsap.to(nav, {
+          opacity: 1,
+          pointerEvents: 'auto',
+          duration: 0.35,
+          ease: 'sine.out',
+        });
+        gsap.to('.nav-left-links', {
+          x: 0,
+          opacity: 1,
+          duration: 0.5,
+          ease: 'power2.out',
+        });
+        gsap.to('.nav-right-links', {
+          x: 0,
+          opacity: 1,
+          duration: 0.5,
+          ease: 'power2.out',
+        });
+        gsap.to('.nav-logo', {
+          y: 0,
+          opacity: 1,
+          duration: 0.5,
+          ease: 'power2.out',
+        });
+        isHidden = false;
       }
       
       lastScrollY = currentScrollY;
       
       // Clear previous timeout
       clearTimeout(scrollTimeout);
-      // Show nav on scroll stop (after 1 second)
+      // Show nav on scroll stop (after 1 second) only if not in top section
       scrollTimeout = setTimeout(() => {
-        if (!isHidden) return;
-        gsap.killTweensOf(nav);
+        if (!isHidden || currentScrollY < window.innerHeight * 0.8) return;
+        gsap.killTweensOf([nav, '.nav-left-links', '.nav-right-links', '.nav-logo']);
         gsap.to(nav, {
-          y: 0,
           opacity: 1,
           pointerEvents: 'auto',
           duration: 0.35,
           ease: 'sine.out',
+        });
+        gsap.to('.nav-left-links', {
+          x: 0,
+          opacity: 1,
+          duration: 0.5,
+          ease: 'power2.out',
+        });
+        gsap.to('.nav-right-links', {
+          x: 0,
+          opacity: 1,
+          duration: 0.5,
+          ease: 'power2.out',
+        });
+        gsap.to('.nav-logo', {
+          y: 0,
+          opacity: 1,
+          duration: 0.5,
+          ease: 'power2.out',
         });
         isHidden = false;
       }, 1000);
@@ -154,37 +216,32 @@ const AaryaCinematicPortfolio = () => {
       {/* <ScrollProgressIndicator /> */}
 
       {/* Desktop Navigation - Hide on Scroll */}
-      <nav className="desktop-nav hidden md:grid grid-cols-3 fixed top-0 left-0 w-full z-[10000] py-8 px-12 items-center mix-blend-difference pointer-events-auto" style={{ transition: 'none' }}>
-        {/* Left: Links */}
-        <div className="flex items-center gap-12 font-sans text-base tracking-[0.15em] text-white pointer-events-auto font-bold">
-          <button onClick={() => navigate('/about')} className="hover:opacity-70 transition-opacity duration-300">ABOUT</button>
-          <button onClick={() => navigate('/photography')} className="hover:opacity-70 transition-opacity duration-300">PHOTOGRAPHY</button>
-          <button onClick={() => navigate('/works')} className="hover:opacity-70 transition-opacity duration-300">WORKS</button>
-          <button onClick={() => navigate('/community')} className="hover:opacity-70 transition-opacity duration-300">COMMUNITY</button>
-        </div>
-        
-        {/* Center: Logo */}
-        <div className="flex justify-center items-center pointer-events-auto">
-          <button onClick={() => navigate('/')} className="hover:scale-110 transition-transform duration-300">
-            <img src="/logo.avif" alt="Logo" className="h-20 w-30" />
-          </button>
-        </div>
+      <nav className="desktop-nav hidden md:flex justify-center fixed top-0 left-0 w-full z-[10000] py-8 px-12 items-center mix-blend-difference pointer-events-none opacity-0" style={{ transition: 'none' }}>
+        <div className="flex items-center gap-8 md:gap-12 pointer-events-auto">
+          {/* Left: Links */}
+          <div className="nav-left-links flex items-center gap-10 font-sans text-base tracking-[0.15em] text-white font-bold">
+            <button onClick={() => navigate('/about')} className="hover:opacity-70 transition-opacity duration-300">ABOUT</button>
+            <button onClick={() => navigate('/photography')} className="hover:opacity-70 transition-opacity duration-300">PHOTOGRAPHY</button>
+          </div>
+          
+          {/* Center: Logo */}
+          <div className="nav-logo flex justify-center items-center">
+            <button onClick={() => navigate('/')} className="hover:scale-110 transition-transform duration-300 shrink-0">
+              <img src="/logo.avif" alt="Logo" className="h-20 w-30" />
+            </button>
+          </div>
 
-        {/* Right: Hamburger */}
-        <div className="flex justify-end items-center text-white pointer-events-auto">
-          <button className="hover:opacity-70 transition-opacity duration-300">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-10 h-10">
-              <path d="M3 6H21M3 12H21M3 18H21" strokeLinecap="square" />
-            </svg>
-          </button>
+          {/* Right: Links */}
+          <div className="nav-right-links flex items-center gap-10 font-sans text-base tracking-[0.15em] text-white font-bold">
+            <button onClick={() => navigate('/works')} className="hover:opacity-70 transition-opacity duration-300">WORKS</button>
+            <button onClick={() => navigate('/community')} className="hover:opacity-70 transition-opacity duration-300">COMMUNITY</button>
+          </div>
         </div>
       </nav>
 
-      {/* 2. The Hero Section (Video & Logo Only wrapped in VHS Recorder) */}
+      {/* 2. The Hero Section (Lens Reveal) */}
       <div id="section-hero-top">
-        <VhsRecorder>
-          <AaryaHero />
-        </VhsRecorder>
+        <AaryaLensReveal />
       </div>
 
       {/* 4. The Navigation / Divider Bar */}

@@ -54,7 +54,7 @@ export const AnimatedCarousel = ({
   const defaultLogos = Array.from({ length: 16 }, (_, i) => `/${(i % 15) + 5}.png`);
   const logoItems = logos || defaultLogos;
 
-  // Chunk logos into pairs for 2-row layout
+  // Chunk logos into pairs for 2-row layout (same layout as original)
   const chunkedLogos = [];
   for (let i = 0; i < logoItems.length; i += 2) {
     chunkedLogos.push(logoItems.slice(i, i + 2));
@@ -86,27 +86,71 @@ export const AnimatedCarousel = ({
             <div className="md:hidden w-16 h-[1px] bg-zinc-800 my-6"></div>
           </div>
           
-          {/* Carousel Section */}
-          <div className="w-full overflow-hidden flex-1">
-            <Carousel setApi={setApi} className={`w-full ${carouselClassName}`}>
-              <CarouselContent className="-ml-2 md:-ml-4">
+          {/* Marquee Section */}
+          <div 
+            className="w-full overflow-hidden flex-1 relative select-none"
+            style={{
+              maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)'
+            }}
+          >
+            <div className="flex overflow-hidden w-full py-4 relative">
+              <style dangerouslySetInnerHTML={{__html: `
+                @keyframes marqueeContinuous {
+                  0% { transform: translateX(0); }
+                  100% { transform: translateX(-50%); }
+                }
+                .marquee-inner-flow {
+                  display: flex;
+                  gap: 2.5rem;
+                  width: max-content;
+                  animation: marqueeContinuous 18s linear infinite;
+                  padding-right: 2.5rem;
+                }
+                @media (min-width: 768px) {
+                  .marquee-inner-flow {
+                    gap: 4.5rem;
+                    padding-right: 4.5rem;
+                  }
+                }
+                .marquee-inner-flow:hover {
+                  animation-play-state: paused;
+                }
+              `}} />
+
+              {/* Render twice for seamless looping */}
+              <div className="marquee-inner-flow">
                 {chunkedLogos.map((chunk, index) => (
-                  <CarouselItem className={`pl-2 md:pl-4 basis-1/${itemsPerViewMobile} lg:basis-1/${itemsPerViewDesktop}`} key={index}>
-                    <div className="flex flex-col gap-4 md:gap-8 justify-center h-full">
-                      {chunk.map((logo, logoIdx) => (
-                        <div key={logoIdx} className={`flex ${logoContainerWidth} ${logoContainerHeight} items-center justify-center p-2 hover:bg-white/5 rounded-lg transition-colors ${logoClassName}`}>
-                          <img 
-                            src={typeof logo === 'string' ? logo : logo.src}
-                            alt={typeof logo === 'string' ? `Logo ${index * 2 + logoIdx + 1}` : logo.alt}
-                            className={`${logoImageSizeClasses} object-contain filter opacity-70 hover:opacity-100 transition-opacity duration-300`}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </CarouselItem>
+                  <div key={`orig-chunk-${index}`} className="flex flex-col gap-4 md:gap-8 justify-center shrink-0">
+                    {chunk.map((logo, logoIdx) => (
+                      <div key={logoIdx} className={`flex ${logoContainerWidth} ${logoContainerHeight} items-center justify-center p-2 hover:bg-white/5 rounded-lg transition-colors ${logoClassName}`} style={{ width: '130px' }}>
+                        <img 
+                          src={typeof logo === 'string' ? logo : logo.src}
+                          alt={typeof logo === 'string' ? `Logo ${index * 2 + logoIdx + 1}` : logo.alt}
+                          className={`${logoImageSizeClasses} object-contain filter opacity-60 hover:opacity-100 transition-opacity duration-300`}
+                        />
+                      </div>
+                    ))}
+                  </div>
                 ))}
-              </CarouselContent>
-            </Carousel>
+              </div>
+
+              <div className="marquee-inner-flow" aria-hidden="true">
+                {chunkedLogos.map((chunk, index) => (
+                  <div key={`dup-chunk-${index}`} className="flex flex-col gap-4 md:gap-8 justify-center shrink-0">
+                    {chunk.map((logo, logoIdx) => (
+                      <div key={logoIdx} className={`flex ${logoContainerWidth} ${logoContainerHeight} items-center justify-center p-2 hover:bg-white/5 rounded-lg transition-colors ${logoClassName}`} style={{ width: '130px' }}>
+                        <img 
+                          src={typeof logo === 'string' ? logo : logo.src}
+                          alt={typeof logo === 'string' ? `Logo ${index * 2 + logoIdx + 1}` : logo.alt}
+                          className={`${logoImageSizeClasses} object-contain filter opacity-60 hover:opacity-100 transition-opacity duration-300`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
         </div>
