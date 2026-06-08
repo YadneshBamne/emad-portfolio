@@ -1,0 +1,17 @@
+{
+  "name": "Emad Shaikh Portfolio",
+  "short_name": "Emad Shaikh",
+  "description": "Creative Portfolio by Emad Shaikh",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FF0000",
+  "theme_color": "#FF0000",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

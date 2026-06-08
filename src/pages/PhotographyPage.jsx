@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTransitionNavigate } from '../context/TransitionContext';
 import { ArrowLeft } from 'lucide-react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
@@ -179,7 +180,7 @@ const PolaroidCard = ({ item, index }) => {
 };
 
 export default function PhotographyPage() {
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
 
   return (
     <div className="w-full min-h-screen bg-black text-white relative select-none overflow-x-hidden overflow-y-auto">

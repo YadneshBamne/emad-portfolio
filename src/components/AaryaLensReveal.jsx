@@ -39,7 +39,7 @@ export function AaryaLensReveal() {
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       // Pre-set GPU acceleration and centering translations for animated elements
-      gsap.set(lensUIRef.current, { xPercent: -50, yPercent: -50, x: 0, y: 0 });
+      gsap.set(lensUIRef.current, { xPercent: -50, yPercent: -50, x: 0, y: 0, opacity: 1, visibility: "visible" });
       gsap.set([videoContainerRef.current, textLeftRef.current, textRightRef.current], {
         willChange: 'transform, opacity, filter',
         force3D: true,
@@ -78,15 +78,13 @@ export function AaryaLensReveal() {
           ease: "sine.inOut",
         }, "<0.3")
 
-        // 3. The Lens UI scaling up with the circle (optimized) and fading out
-        .fromTo(lensUIRef.current, {
-          scale: 1,
-          opacity: 1,
-        }, {
-          scale: 8.695,
+        // 3. The Lens UI - zooms continuously and disappears at midpoint
+        .to(lensUIRef.current, {
+          scale: 20,
           opacity: 0,
-          duration: 1.1,
-          ease: "sine.inOut",
+          visibility: "hidden",
+          duration: 1.2,
+          ease: "power2.in"
         }, "<")
       
         // Fade out the glass tint smoothly
@@ -96,12 +94,11 @@ export function AaryaLensReveal() {
           ease: "power2.inOut",
         }, "<0.1")
 
-        // Fade out the viewfinder UI smoothly
-        .to('.viewfinder-ui', {
+        // Instantly hide viewfinder UI at midpoint
+        .set('.viewfinder-ui', {
           opacity: 0,
-          duration: 0.8,
-          ease: "power2.inOut",
-        }, "<")
+          visibility: "hidden"
+        }, 0.6)
 
         // Make the center text physically scroll up and fade out to simulate standard scrolling
         .to('.scroll-center-text', {
@@ -111,23 +108,29 @@ export function AaryaLensReveal() {
           ease: "power1.inOut",
         }, "<0")
 
-        // 4. Parallax for the giant text (disappears early and recedes backward)
+        // 4. Text gets pushed backwards behind the lens and disappears
         .to(textLeftRef.current, {
-          x: "-12vw",
-          scale: 0.7,
+          x: "-8vw",
+          scale: 0.5,
           opacity: 0,
-          filter: "blur(30px)",
-          duration: 0.45,
-          ease: "power2.out",
-        }, "<")
+          filter: "blur(40px)",
+          duration: 0.5,
+          ease: "power2.in",
+        }, 0)
         .to(textRightRef.current, {
-          x: "12vw",
-          scale: 0.7,
+          x: "8vw",
+          scale: 0.5,
           opacity: 0,
-          filter: "blur(30px)",
-          duration: 0.45,
-          ease: "power2.out",
-        }, "<");
+          filter: "blur(40px)",
+          duration: 0.5,
+          ease: "power2.in",
+        }, 0)
+        // Instantly hide the entire lens component at the midpoint (0.6s of 1.2s duration)
+        .set(lensUIRef.current, {
+          opacity: 0,
+          visibility: "hidden",
+          pointerEvents: "none"
+        }, 0.6);
 
       // Cleanup willChange after animation
       tl.eventCallback("onComplete", () => {
@@ -181,7 +184,7 @@ export function AaryaLensReveal() {
       className="relative w-full h-screen bg-[#090909] overflow-hidden text-white font-sans selection:bg-red-600 selection:text-white"
     >
       {/* --- 2. Giant Typography --- */}
-      <div className="giant-text-container absolute inset-0 z-40 pointer-events-none px-4 md:px-10">
+      <div className="giant-text-container absolute inset-0 z-[60] pointer-events-none px-4 md:px-10">
         <div className="flex justify-between w-full relative h-full">
           {/* EMAR or EMAD based on user instruction (I'll use EMAD per context, but user prompt says "EMAR" in top-left, I will use EMAD because of the screenshot) */}
           <div ref={textLeftRef} className="absolute top-[10%] left-[2%] z-0">
@@ -394,8 +397,9 @@ export function AaryaLensReveal() {
             {/* Solid background for the outer barrel with metallic shading */}
             <circle cx="400" cy="400" r="305" fill="none" stroke="url(#barrelGrad)" strokeWidth="150" />
 
-            {/* Overlapping Concentric Mechanical Rings for realistic barrel texture */}
-            <circle cx="400" cy="400" r="370" fill="none" stroke="#222222" strokeWidth="1" />
+            <g className="lens-details-to-hide">
+              {/* Overlapping Concentric Mechanical Rings for realistic barrel texture */}
+              <circle cx="400" cy="400" r="370" fill="none" stroke="#222222" strokeWidth="1" />
             <circle cx="400" cy="400" r="368" fill="none" stroke="#111111" strokeWidth="1" />
             <circle cx="400" cy="400" r="360" fill="none" stroke="#333333" strokeWidth="0.5" />
             <circle cx="400" cy="400" r="350" fill="none" stroke="#222222" strokeWidth="1" />
@@ -555,6 +559,7 @@ export function AaryaLensReveal() {
                   SCROLL TO BEGIN
                 </text>
               </g>
+            </g>
             </g>
           </svg>
         </div>

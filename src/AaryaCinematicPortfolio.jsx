@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTransitionNavigate } from './context/TransitionContext';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AaryaPolaroidGrid from './components/AaryaPolaroidGrid';
@@ -20,7 +21,7 @@ gsap.defaults({ overwrite: 'auto' });
 
 const AaryaCinematicPortfolio = () => {
   const containerRef = useRef(null);
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
   const [isDark, setIsDark] = useState(true);
 
   useEffect(() => {
@@ -174,20 +175,23 @@ const AaryaCinematicPortfolio = () => {
   useEffect(() => {
     // We create a GSAP context to ensure proper cleanup in React strict mode
     const ctx = gsap.context(() => {
-
-      // Smooth fade-in from solid black at the page level to match preloader fade-out (ultra-smooth)
-      gsap.fromTo('.hero-fade-overlay', {
-        opacity: 1,
-        willChange: 'opacity'
-      }, {
-        opacity: 0,
-        duration: 1.8,
-        ease: "power3.out",
-        onComplete: () => {
-          gsap.set('.hero-fade-overlay', { display: 'none', willChange: 'auto' });
-        }
-      });
-
+      // If we are mid-route-transition, instantly hide the black overlay
+      if (window.isRouteTransition) {
+        gsap.set('.hero-fade-overlay', { display: 'none' });
+      } else {
+        // Otherwise, this is a clean initial site load, play the smooth fade-in
+        gsap.fromTo('.hero-fade-overlay', {
+          opacity: 1,
+          willChange: 'opacity'
+        }, {
+          opacity: 0,
+          duration: 1.8,
+          ease: "power3.out",
+          onComplete: () => {
+            gsap.set('.hero-fade-overlay', { display: 'none', willChange: 'auto' });
+          }
+        });
+      }
     }, containerRef); // Scope to container
 
     return () => ctx.revert(); // Cleanup!

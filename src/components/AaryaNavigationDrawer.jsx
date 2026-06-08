@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTransitionNavigate } from '../context/TransitionContext';
 
 const navLinks = [
   { id: 'about', title: 'ABOUT', href: '/about' },
@@ -46,7 +47,7 @@ const linkVariants = {
 
 export function AaryaNavigationDrawer() {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
 
   const handleNavigation = (href) => {
     setIsOpen(false);

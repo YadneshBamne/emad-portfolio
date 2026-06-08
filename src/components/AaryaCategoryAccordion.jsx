@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTransitionNavigate } from '../context/TransitionContext';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight, Camera, Video, Layers } from 'lucide-react';
@@ -13,7 +14,7 @@ const AaryaCategoryAccordion = () => {
   
   const containerRef = useRef(null);
   const videoRef = useRef(null);
-  const navigate = useNavigate();
+  const navigate = useTransitionNavigate();
 
   // Resize monitor for mobile stacking
   useEffect(() => {
