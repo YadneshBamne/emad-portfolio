@@ -264,7 +264,7 @@ export function AaryaLensReveal() {
             playsInline
             className="w-full h-full object-cover opacity-90"
           >
-            <source src="https://k68-gray.vercel.app/main.mp4" type="video/mp4" />
+            <source src="" type="video/mp4" />
           </video>
 
           {/* Overlay to darken the background slightly */}
