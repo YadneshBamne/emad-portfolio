@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
 // Register ScrollTrigger safely for React
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
+  // Global GSAP optimization
+  gsap.config({ force3D: true });
 }
 
 // -------------------------------------------------------------------------
@@ -186,12 +188,13 @@ const MagneticButton = React.forwardRef(
 
             // Simplified transform: just use x/y translation, no rotation for better performance
             gsap.to(element, {
-              x: x * 0.3,
-              y: y * 0.3,
+              x: x * 0.25,
+              y: y * 0.25,
               scale: 1.02,
               ease: "sine.out",
-              duration: 0.25,
-              overwrite: 'auto'
+              duration: 0.2,
+              overwrite: 'auto',
+              force3D: true
             });
           });
         };
@@ -201,8 +204,9 @@ const MagneticButton = React.forwardRef(
           gsap.to(element, {
             scale: 1.02,
             ease: "sine.out",
-            duration: 0.2,
-            overwrite: 'auto'
+            duration: 0.15,
+            overwrite: 'auto',
+            force3D: true
           });
         };
 
@@ -218,8 +222,9 @@ const MagneticButton = React.forwardRef(
             y: 0,
             scale: 1,
             ease: "sine.out",
-            duration: 0.5,
-            overwrite: 'auto'
+            duration: 0.3,
+            overwrite: 'auto',
+            force3D: true
           });
         };
 
@@ -298,8 +303,9 @@ export function CinematicFooter() {
           trigger: wrapperRef.current,
           start: "top 80%",
           end: "bottom bottom",
-          scrub: 3, // Smoother
-          fastScrollEnd: true,
+          scrub: 3.5,
+          preventOverlaps: true,
+          fastScrollEnd: true
         },
         onComplete: () => {
           gsap.set(giantTextRef.current, { willChange: 'auto' });

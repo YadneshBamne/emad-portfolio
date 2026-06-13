@@ -45,130 +45,41 @@ const AaryaCinematicPortfolio = () => {
   };
 
   useEffect(() => {
-    let lastScrollY = 0;
-    let isHidden = true;
-    let scrollTimeout;
+    // Nav is hidden on the lens reveal hero section and slides in
+    // once the user scrolls past it — then stays visible permanently.
+    gsap.set('.nav-left-links', { x: -40, opacity: 0 });
+    gsap.set('.nav-right-links', { x: 40, opacity: 0 });
+    gsap.set('.nav-logo', { y: -30, opacity: 0 });
 
-    // Set initial layout state for the micro-animations
-    gsap.set('.nav-left-links', { x: -50, opacity: 0 });
-    gsap.set('.nav-right-links', { x: 50, opacity: 0 });
-    gsap.set('.nav-logo', { y: -40, opacity: 0 });
-    
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const nav = document.querySelector('nav.desktop-nav');
-      
-      if (!nav) return;
-      
-      const isTopSection = currentScrollY < window.innerHeight * 0.8;
-      const isScrollingDown = currentScrollY > lastScrollY;
-      
-      let shouldHide = false;
-      
-      if (isTopSection) {
-        shouldHide = true;
-      } else if (isScrollingDown) {
-        shouldHide = true;
-      } else {
-        shouldHide = false;
-      }
-      
-      if (shouldHide && !isHidden) {
-        gsap.killTweensOf([nav, '.nav-left-links', '.nav-right-links', '.nav-logo']);
-        gsap.to(nav, {
-          opacity: 0,
-          pointerEvents: 'none',
-          duration: 0.35,
-          ease: 'sine.in',
-        });
-        gsap.to('.nav-left-links', {
-          x: -50,
-          opacity: 0,
-          duration: 0.35,
-          ease: 'sine.in',
-        });
-        gsap.to('.nav-right-links', {
-          x: 50,
-          opacity: 0,
-          duration: 0.35,
-          ease: 'sine.in',
-        });
-        gsap.to('.nav-logo', {
-          y: -40,
-          opacity: 0,
-          duration: 0.35,
-          ease: 'sine.in',
-        });
-        isHidden = true;
-      } else if (!shouldHide && isHidden) {
-        gsap.killTweensOf([nav, '.nav-left-links', '.nav-right-links', '.nav-logo']);
-        gsap.to(nav, {
-          opacity: 1,
-          pointerEvents: 'auto',
-          duration: 0.35,
-          ease: 'sine.out',
-        });
-        gsap.to('.nav-left-links', {
-          x: 0,
-          opacity: 1,
-          duration: 0.5,
-          ease: 'power2.out',
-        });
-        gsap.to('.nav-right-links', {
-          x: 0,
-          opacity: 1,
-          duration: 0.5,
-          ease: 'power2.out',
-        });
-        gsap.to('.nav-logo', {
-          y: 0,
-          opacity: 1,
-          duration: 0.5,
-          ease: 'power2.out',
-        });
-        isHidden = false;
-      }
-      
-      lastScrollY = currentScrollY;
-      
-      // Clear previous timeout
-      clearTimeout(scrollTimeout);
-      // Show nav on scroll stop (after 1 second) only if not in top section
-      scrollTimeout = setTimeout(() => {
-        if (!isHidden || currentScrollY < window.innerHeight * 0.8) return;
-        gsap.killTweensOf([nav, '.nav-left-links', '.nav-right-links', '.nav-logo']);
-        gsap.to(nav, {
-          opacity: 1,
-          pointerEvents: 'auto',
-          duration: 0.35,
-          ease: 'sine.out',
-        });
-        gsap.to('.nav-left-links', {
-          x: 0,
-          opacity: 1,
-          duration: 0.5,
-          ease: 'power2.out',
-        });
-        gsap.to('.nav-right-links', {
-          x: 0,
-          opacity: 1,
-          duration: 0.5,
-          ease: 'power2.out',
-        });
-        gsap.to('.nav-logo', {
-          y: 0,
-          opacity: 1,
-          duration: 0.5,
-          ease: 'power2.out',
-        });
-        isHidden = false;
-      }, 1000);
+    let hasAppeared = false;
+    let rafId = null;
+
+    const showNav = () => {
+      if (hasAppeared) return;
+      hasAppeared = true;
+      gsap.timeline()
+        .to('.nav-logo',        { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out', force3D: true })
+        .to('.nav-left-links',  { x: 0, opacity: 1, duration: 0.5, ease: 'power3.out', force3D: true }, '-=0.3')
+        .to('.nav-right-links', { x: 0, opacity: 1, duration: 0.5, ease: 'power3.out', force3D: true }, '-=0.45');
+      // No longer need the scroll listener once nav is visible
+      window.removeEventListener('scroll', onScroll);
     };
-    
-    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    const onScroll = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        // Lens reveal is pinned for ~1.5× viewport height (end: +=120% in ScrollTrigger)
+        // Show nav once user has scrolled past the hero pin region
+        if (window.scrollY > window.innerHeight * 0.9) {
+          showNav();
+        }
+      });
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      clearTimeout(scrollTimeout);
+      window.removeEventListener('scroll', onScroll);
+      if (rafId) cancelAnimationFrame(rafId);
     };
   }, []);
 
@@ -212,24 +123,24 @@ const AaryaCinematicPortfolio = () => {
 
       {/* <ScrollProgressIndicator /> */}
 
-      {/* Desktop Navigation - Hide on Scroll */}
-      <nav className="desktop-nav hidden md:flex justify-center fixed top-0 left-0 w-full z-[10000] py-8 px-12 items-center mix-blend-difference pointer-events-none opacity-0" style={{ transition: 'none' }}>
-        <div className="flex items-center gap-8 md:gap-12 pointer-events-auto">
+      {/* Desktop Navigation — always visible, animates in on load */}
+      <nav className="desktop-nav hidden md:flex justify-center fixed top-0 left-0 w-full z-[10000] py-8 px-12 items-center pointer-events-auto" style={{ transition: 'none' }}>
+        <div className="flex items-center gap-8 md:gap-12">
           {/* Left: Links */}
-          <div className="nav-left-links flex items-center gap-10 font-sans text-base tracking-[0.15em] text-white font-bold">
+          <div className="nav-left-links flex items-center gap-10 font-sans text-base tracking-[0.15em] text-white font-bold" style={{ opacity: 0 }}>
             <button onClick={() => navigate('/about')} className="hover:opacity-70 transition-opacity duration-300">ABOUT</button>
             <button onClick={() => navigate('/photography')} className="hover:opacity-70 transition-opacity duration-300">PHOTOGRAPHY</button>
           </div>
           
           {/* Center: Logo */}
-          <div className="nav-logo flex justify-center items-center">
+          <div className="nav-logo flex justify-center items-center" style={{ opacity: 0 }}>
             <button onClick={() => navigate('/')} className="hover:scale-110 transition-transform duration-300 shrink-0">
               <img src="/logo.avif" alt="Logo" className="h-20 w-30" />
             </button>
           </div>
 
           {/* Right: Links */}
-          <div className="nav-right-links flex items-center gap-10 font-sans text-base tracking-[0.15em] text-white font-bold">
+          <div className="nav-right-links flex items-center gap-10 font-sans text-base tracking-[0.15em] text-white font-bold" style={{ opacity: 0 }}>
             <button onClick={() => navigate('/works')} className="hover:opacity-70 transition-opacity duration-300">WORKS</button>
             <button onClick={() => navigate('/community')} className="hover:opacity-70 transition-opacity duration-300">COMMUNITY</button>
           </div>

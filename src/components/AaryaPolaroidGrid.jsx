@@ -34,11 +34,11 @@ const PolaroidCard = ({ item, config }) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30, mass: 2 });
-  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30, mass: 2 });
+  const mouseXSpring = useSpring(x, { stiffness: 250, damping: 25, mass: 1 });
+  const mouseYSpring = useSpring(y, { stiffness: 250, damping: 25, mass: 1 });
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
   
   const handleMouseMove = (e) => {
     if (!cardRef.current) return;
@@ -68,12 +68,13 @@ const PolaroidCard = ({ item, config }) => {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       whileHover={{ 
-        scale: 1.15, 
+        scale: 1.08, 
         zIndex: 50, 
         rotate: 0, 
         x: 0, 
         y: 0,
-        boxShadow: "0 40px 80px -20px rgba(0, 0, 0, 0.8)" 
+        boxShadow: "0 30px 60px -15px rgba(0, 0, 0, 0.7)",
+        transition: { duration: 0.3, type: 'spring', stiffness: 300, damping: 30 }
       }}
       initial={{ 
         scale: 1, 

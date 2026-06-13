@@ -60,9 +60,9 @@ const AaryaVideoShowcase = () => {
                 initial={{ y: 40, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -40, opacity: 0 }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
                 className="text-8xl font-black uppercase leading-none"
-                style={{ fontFamily: "'Anton', 'Impact', sans-serif" }}
+                style={{ fontFamily: "'Anton', 'Impact', sans-serif", transform: 'translateZ(0)' }}
               >
                 {displayArtist.name.split(' ').map((word, i) => (
                   <span key={i} className="block">{word}</span>

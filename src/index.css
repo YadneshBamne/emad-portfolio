@@ -50,16 +50,28 @@
    PERFORMANCE OPTIMIZATIONS
    ======================================== */
 
-/* Enable GPU acceleration for animations */
+/* Font smoothing only — do NOT apply backface-visibility globally,
+   it creates a GPU compositing layer on EVERY element causing huge lag */
 * {
     -webkit-font-smoothing: antialiased;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
 }
 
-/* Smooth transitions by default */
-body {
-    scroll-behavior: smooth;
+/* GPU compositing only for elements that actually animate */
+.hero-fade-overlay,
+.transition-overlay {
+  transform: translateZ(0);
+  will-change: opacity;
+}
+
+/* Slide animation utility */
+@keyframes slide {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-slide {
+  animation: slide 40s linear infinite;
+  will-change: transform;
 }
 
 /* Reduce motion for accessibility */
@@ -72,26 +84,6 @@ body {
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
-}
-
-/* Optimize transform animations */
-.work-card,
-[style*="transform"],
-[class*="motion"],
-.group:hover {
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -webkit-perspective: 1000;
-    perspective: 1000;
-}
-
-/* Optimize transitions with GPU acceleration */
-.transition-all,
-.transition-transform,
-.transition-opacity,
-.group-hover\:transition-all {
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
 }
 
 /* Better easing for smoother animations */

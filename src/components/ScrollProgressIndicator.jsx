@@ -79,6 +79,7 @@ export function ScrollProgressIndicator() {
       className={`fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-[100] flex flex-col items-end gap-4 pointer-events-none mix-blend-difference transition-all duration-700 ease-in-out ${
         isScrolling ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'
       }`}
+      style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}
     >
       {SECTIONS.map(({ id, label }) => {
         const isActive = activeSection === id;

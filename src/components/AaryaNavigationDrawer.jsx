@@ -17,8 +17,8 @@ const menuVariants = {
     x: '100%',
     transition: {
       type: 'spring',
-      stiffness: 300, // Lower = smoother
-      damping: 30,
+      stiffness: 280,
+      damping: 25,
       when: 'afterChildren',
       staggerChildren: 0.02,
       staggerDirection: -1,
@@ -28,10 +28,10 @@ const menuVariants = {
     x: 0,
     transition: {
       type: 'spring',
-      stiffness: 300,
-      damping: 30,
+      stiffness: 280,
+      damping: 25,
       when: 'beforeChildren',
-      staggerChildren: 0.06,
+      staggerChildren: 0.05,
     },
   },
 };
@@ -41,7 +41,7 @@ const linkVariants = {
   open: { 
     y: 0, 
     opacity: 1,
-    transition: { type: 'spring', stiffness: 260, damping: 20 }
+    transition: { type: 'spring', stiffness: 240, damping: 18 }
   },
 };
 
@@ -67,9 +67,9 @@ export function AaryaNavigationDrawer() {
               initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 0.7, x: 0 }}
               exit={{ opacity: 0, x: 10 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.15 }}
               className="text-zinc-400 hidden md:flex items-center gap-2"
-              style={{ fontFamily: "'Dancing Script', 'Caveat', cursive", fontSize: '1.2rem' }}
+              style={{ fontFamily: "'Dancing Script', 'Caveat', cursive", fontSize: '1.2rem', transform: 'translateZ(0)' }}
             >
               <span>click me</span>
               <span className="text-xl">→</span>
@@ -92,8 +92,9 @@ export function AaryaNavigationDrawer() {
                   initial={{ scale: 0.5, opacity: 0, rotate: -90 }}
                   animate={{ scale: 1, opacity: 1, rotate: 0 }}
                   exit={{ scale: 0.5, opacity: 0, rotate: 90 }}
-                  transition={{ type: 'spring', stiffness: 260, damping: 16 }}
+                  transition={{ type: 'spring', stiffness: 240, damping: 14 }}
                   className="absolute"
+                  style={{ transform: 'translateZ(0)' }}
                 >
                   <X className="w-6 h-6" />
                 </motion.div>

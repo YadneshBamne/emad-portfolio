@@ -60,9 +60,10 @@ export const TransitionProvider = ({ children }) => {
       // 1. Slide the solid red curtain up to cover the screen (yPercent: 0)
       tl.to(overlayRef.current, {
         yPercent: 0,
-        duration: 0.8,
-        ease: 'power4.inOut',
-        force3D: true
+        duration: 0.7,
+        ease: 'sine.inOut',
+        force3D: true,
+        backfaceVisibility: 'hidden'
       });
 
       // 2. Fluidic Entrance: Stagger text fade-in, scale-down, and letter-spacing contraction
@@ -70,9 +71,10 @@ export const TransitionProvider = ({ children }) => {
         opacity: 1,
         scale: 1,
         letterSpacing: '0.15em',
-        duration: 0.6,
-        ease: 'power3.out'
-      }, '-=0.35'); // Overlap with curtain slide for dynamic pacing
+        duration: 0.5,
+        ease: 'sine.out',
+        force3D: true
+      }, '-=0.3'); // Overlap with curtain slide for dynamic pacing
     }
   }, [blocker.state]);
 
@@ -103,17 +105,19 @@ export const TransitionProvider = ({ children }) => {
           opacity: 0,
           scale: 0.95,
           letterSpacing: '0.35em',
-          duration: 0.35,
-          ease: 'power3.in'
+          duration: 0.3,
+          ease: 'sine.in',
+          force3D: true
         });
 
         // 2. Animate the overlay sliding up out of view off the top (yPercent: -100)
         tl.to(overlayRef.current, {
           yPercent: -100,
-          duration: 0.8,
-          ease: 'power4.inOut',
-          force3D: true
-        }, '-=0.15');
+          duration: 0.7,
+          ease: 'sine.inOut',
+          force3D: true,
+          backfaceVisibility: 'hidden'
+        }, '-=0.1');
       }, 100);
 
       return () => clearTimeout(delayTimer);

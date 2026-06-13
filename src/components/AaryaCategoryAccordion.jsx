@@ -50,20 +50,20 @@ const AaryaCategoryAccordion = () => {
 
     // Dynamic width & height sliding division adjustments (optimized for ultra-soft expo easing)
     if (paneName === 'left') {
-      gsap.to('.pane-left', { width: '58%', duration: 0.9, ease: 'expo.out' });
-      gsap.to('.pane-right', { width: '42%', duration: 0.9, ease: 'expo.out' });
-      gsap.to('.pane-right-top', { height: '50%', duration: 0.9, ease: 'expo.out' });
-      gsap.to('.pane-right-bottom', { height: '50%', duration: 0.9, ease: 'expo.out' });
+      gsap.to('.pane-left', { width: '58%', duration: 0.9, ease: 'expo.out', force3D: true });
+      gsap.to('.pane-right', { width: '42%', duration: 0.9, ease: 'expo.out', force3D: true });
+      gsap.to('.pane-right-top', { height: '50%', duration: 0.9, ease: 'expo.out', force3D: true });
+      gsap.to('.pane-right-bottom', { height: '50%', duration: 0.9, ease: 'expo.out', force3D: true });
     } else if (paneName === 'right-top') {
-      gsap.to('.pane-left', { width: '36%', duration: 0.9, ease: 'expo.out' });
-      gsap.to('.pane-right', { width: '64%', duration: 0.9, ease: 'expo.out' });
-      gsap.to('.pane-right-top', { height: '62%', duration: 0.9, ease: 'expo.out' });
-      gsap.to('.pane-right-bottom', { height: '38%', duration: 0.9, ease: 'expo.out' });
+      gsap.to('.pane-left', { width: '36%', duration: 0.9, ease: 'expo.out', force3D: true });
+      gsap.to('.pane-right', { width: '64%', duration: 0.9, ease: 'expo.out', force3D: true });
+      gsap.to('.pane-right-top', { height: '62%', duration: 0.9, ease: 'expo.out', force3D: true });
+      gsap.to('.pane-right-bottom', { height: '38%', duration: 0.9, ease: 'expo.out', force3D: true });
     } else if (paneName === 'right-bottom') {
-      gsap.to('.pane-left', { width: '36%', duration: 0.9, ease: 'expo.out' });
-      gsap.to('.pane-right', { width: '64%', duration: 0.9, ease: 'expo.out' });
-      gsap.to('.pane-right-top', { height: '36%', duration: 0.9, ease: 'expo.out' });
-      gsap.to('.pane-right-bottom', { height: '64%', duration: 0.9, ease: 'expo.out' });
+      gsap.to('.pane-left', { width: '36%', duration: 0.9, ease: 'expo.out', force3D: true });
+      gsap.to('.pane-right', { width: '64%', duration: 0.9, ease: 'expo.out', force3D: true });
+      gsap.to('.pane-right-top', { height: '36%', duration: 0.9, ease: 'expo.out', force3D: true });
+      gsap.to('.pane-right-bottom', { height: '64%', duration: 0.9, ease: 'expo.out', force3D: true });
     }
   };
 
@@ -72,10 +72,10 @@ const AaryaCategoryAccordion = () => {
     setHoveredPane(null);
 
     // Reset back to system default ratios (optimized for ultra-soft expo easing)
-    gsap.to('.pane-left', { width: '45%', duration: 0.9, ease: 'expo.out' });
-    gsap.to('.pane-right', { width: '55%', duration: 0.9, ease: 'expo.out' });
-    gsap.to('.pane-right-top', { height: '52%', duration: 0.9, ease: 'expo.out' });
-    gsap.to('.pane-right-bottom', { height: '48%', duration: 0.9, ease: 'expo.out' });
+    gsap.to('.pane-left', { width: '45%', duration: 0.9, ease: 'expo.out', force3D: true });
+    gsap.to('.pane-right', { width: '55%', duration: 0.9, ease: 'expo.out', force3D: true });
+    gsap.to('.pane-right-top', { height: '52%', duration: 0.9, ease: 'expo.out', force3D: true });
+    gsap.to('.pane-right-bottom', { height: '48%', duration: 0.9, ease: 'expo.out', force3D: true });
   };
 
   // Section entrance reveal staggering timeline
@@ -237,7 +237,6 @@ const AaryaCategoryAccordion = () => {
           <div
             onMouseEnter={() => handlePaneHover('left')}
             className="pane-left w-[45%] h-full relative overflow-hidden group/pane hud-pane"
-            style={{ willChange: 'width' }}
           >
             {/* Background Ken Burns Parallax */}
             <img
@@ -313,14 +312,12 @@ const AaryaCategoryAccordion = () => {
           {/* RIGHT COLUMN WRAPPER: Splits into Top (Video) and Bottom (Design) (55% Width System Default) */}
           <div 
             className="pane-right w-[55%] h-full flex flex-col divide-y divide-zinc-800/80"
-            style={{ willChange: 'width' }}
           >
             
             {/* TOP RIGHT MONITOR PANE: Videography (52% Height System Default) */}
             <div
               onMouseEnter={() => handlePaneHover('right-top')}
               className="pane-right-top h-[52%] relative overflow-hidden group/pane hud-pane"
-              style={{ willChange: 'height' }}
             >
               {/* Loop Video Reel */}
               <video
@@ -400,7 +397,6 @@ const AaryaCategoryAccordion = () => {
             <div
               onMouseEnter={() => handlePaneHover('right-bottom')}
               className="pane-right-bottom h-[48%] relative overflow-hidden group/pane hud-pane"
-              style={{ willChange: 'height' }}
             >
               {/* Background Art Poster */}
               <img
