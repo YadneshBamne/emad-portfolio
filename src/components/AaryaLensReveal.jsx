@@ -76,25 +76,25 @@ export function AaryaLensReveal() {
       );
 
       // A separate timeline for the lens that is triggered by scroll but plays
-      // automatically over 3 seconds, so the lens disappears smoothly without scrubbing.
+      // automatically over 2.5 seconds, so the lens disappears smoothly without scrubbing.
       const lensTimeline = gsap.timeline({ paused: true });
       lensTimeline
         .to(lensUIRef.current, {
           scale: 3.2,
           opacity: 0,
-          duration: 3.0,
+          duration: 2.5,
           ease: 'power2.inOut',
           force3D: true,
         })
         .to('.lens-glass-layer', {
           opacity: 0,
-          duration: 2.1,
+          duration: 1.75,
           ease: 'power2.inOut',
           force3D: true,
         }, '<')
         .to('.viewfinder-ui', {
           opacity: 0,
-          duration: 1.8,
+          duration: 1.5,
           ease: 'power2.inOut',
           force3D: true,
         }, '<');
@@ -115,17 +115,17 @@ export function AaryaLensReveal() {
           preventOverlaps: true,
           anticipatePin: 1,
           onUpdate: (self) => {
-            // Trigger the lens zoom/fade automatically over 3 seconds when scroll starts
+            // Trigger the lens zoom/fade automatically over 2.5 seconds when scroll starts
             if (self.progress > 0.05) {
               if (!lensFaded) {
                 lensFaded = true;
-                gsap.to(lensTimeline, { progress: 1, duration: 3.0, ease: 'power1.out', overwrite: 'auto' });
+                gsap.to(lensTimeline, { progress: 1, duration: 2.5, ease: 'power1.out', overwrite: 'auto' });
               }
             } else {
-              // Revert the lens back to original state if scrolled back to the top
+              // Revert the lens back to original state if scrolled back to the top (brings the lens back in over 0.5 seconds)
               if (lensFaded) {
                 lensFaded = false;
-                gsap.to(lensTimeline, { progress: 0, duration: 2.4, ease: 'power1.out', overwrite: 'auto' });
+                gsap.to(lensTimeline, { progress: 0, duration: 0.5, ease: 'power1.out', overwrite: 'auto' });
               }
             }
           }

@@ -35,7 +35,7 @@ const AaryaVideoShowcase = () => {
     <section className="w-full h-screen bg-black overflow-hidden flex flex-col md:flex-row text-white font-sans">
       
       {/* Left Column (25%) */}
-      <div className="w-full md:w-[25%] h-full flex flex-col justify-between p-8 md:p-12 relative z-10">
+      <div className="w-full md:w-[25%] h-auto md:h-full flex flex-col justify-between gap-8 md:gap-0 p-4 md:p-12 relative z-10">
         
         {/* Top Left Details */}
         <div className="flex flex-col gap-2 font-mono text-xs tracking-[0.2em] uppercase">
@@ -106,8 +106,8 @@ const AaryaVideoShowcase = () => {
       </div>
 
       {/* Center Column (40%) */}
-      <div className="w-full md:w-[40%] h-full flex items-center justify-center p-4 md:p-0 relative z-0">
-        <div className="relative w-full max-w-[400px] aspect-[9/16] overflow-hidden bg-zinc-900 shadow-2xl">
+      <div className="w-full md:w-[40%] flex-1 md:h-full flex items-center justify-center p-0 relative z-0">
+        <div className="relative w-auto h-full max-h-full aspect-[9/16] md:w-full md:max-w-[400px] md:h-auto overflow-hidden bg-zinc-900 shadow-2xl">
           <AnimatePresence mode="wait">
             <motion.div
               key={displayArtist.id}

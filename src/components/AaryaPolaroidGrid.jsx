@@ -16,16 +16,16 @@ const polaroidItems = [
 ];
 
 const scatterConfig = [
-  { rotate: 12, y: 15 },    // 1 top left
-  { rotate: -8, y: 45 },    // 2 top mid-left
-  { rotate: -12, y: -15 },  // 3 top middle
-  { rotate: 8, y: 35 },     // 4 top mid-right
-  { rotate: 10, y: 0 },     // 5 top right
-  { rotate: -10, y: -25 },  // 6 bottom left
-  { rotate: 10, y: 25 },    // 7 bottom mid-left
-  { rotate: -6, y: 50 },    // 8 bottom middle
-  { rotate: -12, y: 15 },   // 9 bottom mid-right
-  { rotate: 8, y: -15 },    // 10 bottom right
+  { rotate: 8, x: -18, y: 12 },    // 1 top left
+  { rotate: -6, x: 12, y: 35 },    // 2 top mid-left
+  { rotate: -12, x: -8, y: -10 },  // 3 top middle
+  { rotate: 5, x: 22, y: 25 },     // 4 top mid-right
+  { rotate: 9, x: -12, y: -5 },    // 5 top right
+  { rotate: -8, x: 14, y: -20 },   // 6 bottom left
+  { rotate: 11, x: -22, y: 18 },   // 7 bottom mid-left
+  { rotate: -4, x: 6, y: 40 },     // 8 bottom middle
+  { rotate: -10, x: -14, y: 8 },   // 9 bottom mid-right
+  { rotate: 7, x: 12, y: -12 },    // 10 bottom right
 ];
 
 const PolaroidCard = ({ item, config }) => {
@@ -37,8 +37,9 @@ const PolaroidCard = ({ item, config }) => {
   const mouseXSpring = useSpring(x, { stiffness: 250, damping: 25, mass: 1 });
   const mouseYSpring = useSpring(y, { stiffness: 250, damping: 25, mass: 1 });
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+  // Increased tilt bounds to 15deg for a stronger 3D perspective effect
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
   
   const handleMouseMove = (e) => {
     if (!cardRef.current) return;
@@ -56,31 +57,32 @@ const PolaroidCard = ({ item, config }) => {
     y.set(0);
   };
 
-  const textRotation = Math.sin(item.id * 0.5) * 4;
-
   const baseRotation = config?.rotate || 0;
+  const baseTranslateX = config?.x || 0;
   const baseTranslateY = config?.y || 0;
 
   return (
     <motion.div
       ref={cardRef}
-      className="relative aspect-3/4 w-full max-w-70 bg-[#faf9f5] overflow-hidden cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+      // overflow-visible lets the 3D translated children extend past the card frame without clipping
+      className="relative aspect-3/4 w-full max-w-70 bg-[#faf9f5] overflow-visible cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       whileHover={{ 
-        scale: 1.08, 
+        scale: 1.12, // slightly larger lift on hover
         zIndex: 50, 
         rotate: 0, 
         x: 0, 
         y: 0,
-        boxShadow: "0 30px 60px -15px rgba(0, 0, 0, 0.7)",
+        // Deeper, softer shadow that gives a strong "floating" effect
+        boxShadow: "0 40px 80px -20px rgba(0, 0, 0, 0.85), 0 0 40px rgba(0, 0, 0, 0.3)",
         transition: { duration: 0.3, type: 'spring', stiffness: 300, damping: 30 }
       }}
       initial={{ 
         scale: 1, 
         zIndex: 1, 
         rotate: baseRotation,
-        x: 0,
+        x: baseTranslateX,
         y: baseTranslateY,
       }}
       transition={{ scale: { duration: 0.4 }, boxShadow: { duration: 0.4 }, rotate: { duration: 0.4, ease: 'easeOut' }, x: { duration: 0.4 }, y: { duration: 0.4 } }}
@@ -91,7 +93,7 @@ const PolaroidCard = ({ item, config }) => {
         rotateY
       }}
     >
-      <div className="w-full h-full p-[6%] pb-[14%] bg-[#faf9f5] flex flex-col pointer-events-none">
+      <div className="w-full h-full p-[3%] pb-[14%] bg-[#faf9f5] flex flex-col pointer-events-none">
         <div className="relative flex-1 bg-black overflow-hidden shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]">
           <img
             src={item.src}
@@ -100,19 +102,6 @@ const PolaroidCard = ({ item, config }) => {
             loading="lazy"
             draggable="false"
           />
-        </div>
-        <div className="h-[10%] mt-[2%] flex items-center justify-center">
-          <span 
-            className="text-black text-2xl font-bold opacity-80"
-            style={{
-              fontFamily: "'Caveat', cursive",
-              transform: `rotate(${textRotation}deg)`,
-              display: "inline-block",
-              fontSize: "clamp(1rem, 1.8vw, 2.2rem)"
-            }}
-          >
-            {item.signature}
-          </span>
         </div>
       </div>
     </motion.div>
