@@ -92,8 +92,12 @@ function CameraModel() {
 
   useFrame((state, delta) => {
     if (groupRef.current) {
-      // Faster rotation speed for a more dynamic look
-      groupRef.current.rotation.y += delta * 0.85;
+      // 1.6 rad/s (performs a perfect full 360° rotation over the 3.5s loading period)
+      groupRef.current.rotation.y += delta * 1.6;
+      
+      // Floating wobble animation to make the camera feel suspended in space
+      const elapsed = state.clock.getElapsedTime();
+      groupRef.current.position.y = Math.sin(elapsed * 1.8) * 0.08;
     }
   });
 
@@ -193,7 +197,8 @@ export default function Preloader({ children }) {
       const deltaTime = time - lastTime;
       lastTime = time;
       
-      const increment = 15 * (deltaTime / 1000); 
+      // Increments by 28% per second (reaches 100% in ~3.5 seconds, giving the model more time to spin)
+      const increment = 28 * (deltaTime / 1000); 
 
       currentProgress = Math.min(currentProgress + increment, 100);
       setProgress(currentProgress);
@@ -213,8 +218,8 @@ export default function Preloader({ children }) {
       setTimeout(() => {
         setLoadingComplete(true);
         updateBrowserThemeColor('#050505');
-        setTimeout(() => setShowContent(true), 1000);
-      }, 800);
+        setTimeout(() => setShowContent(true), 500);
+      }, 300);
     }
   }, [progress]);
 
@@ -285,11 +290,27 @@ export default function Preloader({ children }) {
           </Canvas>
         </div>
 
-        {/* Progress Counter positioned clearly below the model */}
-        <div className="absolute bottom-6 flex flex-col items-center pointer-events-none">
-          <span className="text-white/50 text-xs font-light tracking-[0.3em]" style={{ fontVariantNumeric: 'tabular-nums' }}>
-            {Math.round(progress)}%
+        {/* Aesthetic Progress Counter and Thin Loading Line below the model */}
+        <div className="absolute bottom-6 flex flex-col items-center gap-3.5 pointer-events-none">
+          <span className="text-[8px] font-light tracking-[0.6em] text-white/35 uppercase select-none">
+            INITIALIZING ENGINE
           </span>
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-white/10" />
+            <span className="text-white/60 text-[11px] font-light tracking-[0.3em]" style={{ fontVariantNumeric: 'tabular-nums' }}>
+              {Math.round(progress)}%
+            </span>
+            <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-white/10" />
+          </div>
+          <div className="w-36 h-[1px] bg-white/5 relative overflow-hidden">
+            <div 
+              className="absolute top-0 left-0 h-full bg-white/30" 
+              style={{ 
+                width: `${progress}%`,
+                transition: 'width 150ms cubic-bezier(0.4, 0, 0.2, 1)' 
+              }}
+            />
+          </div>
         </div>
         
       </div>

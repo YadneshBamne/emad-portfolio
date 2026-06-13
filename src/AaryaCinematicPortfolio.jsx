@@ -121,7 +121,7 @@ const AaryaCinematicPortfolio = () => {
         <AaryaNavigationDrawer />
       </div>
 
-      {/* <ScrollProgressIndicator /> */}
+      <ScrollProgressIndicator />
 
       {/* Desktop Navigation — always visible, animates in on load */}
       <nav className="desktop-nav hidden md:flex justify-center fixed top-0 left-0 w-full z-[10000] py-8 px-12 items-center pointer-events-auto" style={{ transition: 'none' }}>
