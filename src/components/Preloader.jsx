@@ -92,8 +92,8 @@ function CameraModel() {
 
   useFrame((state, delta) => {
     if (groupRef.current) {
-      // 1.6 rad/s (performs a perfect full 360° rotation over the 3.5s loading period)
-      groupRef.current.rotation.y += delta * 1.6;
+      // 2.2 rad/s (faster dynamic spin to showcase reflective metallic details)
+      groupRef.current.rotation.y += delta * 2.2;
       
       // Floating wobble animation to make the camera feel suspended in space
       const elapsed = state.clock.getElapsedTime();
@@ -183,7 +183,7 @@ export default function Preloader({ children }) {
 
   useEffect(() => {
     if (showContent) return;
-    updateBrowserThemeColor('#000000');
+    updateBrowserThemeColor('#0D0D0C');
   }, [showContent]);
 
   useEffect(() => {
@@ -197,8 +197,8 @@ export default function Preloader({ children }) {
       const deltaTime = time - lastTime;
       lastTime = time;
       
-      // Increments by 28% per second (reaches 100% in ~3.5 seconds, giving the model more time to spin)
-      const increment = 28 * (deltaTime / 1000); 
+      // Increments by 18% per second (reaches 100% in ~5.5 seconds, ensuring other page assets load in the background)
+      const increment = 18 * (deltaTime / 1000); 
 
       currentProgress = Math.min(currentProgress + increment, 100);
       setProgress(currentProgress);
@@ -228,12 +228,33 @@ export default function Preloader({ children }) {
   }
 
   return (
-    <div className={`fixed inset-0 z-50 flex items-center justify-center bg-[#000000] transition-opacity duration-1000 ${loadingComplete ? 'opacity-0' : 'opacity-100'} overflow-hidden`}>
-      {/* Noise overlay */}
+    <div className={`fixed inset-0 z-50 flex items-center justify-center bg-[#0D0D0C] transition-opacity duration-1000 ${loadingComplete ? 'opacity-0' : 'opacity-100'} overflow-hidden`}>
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes noiseShift {
+          0% { transform: translate(0, 0); }
+          10% { transform: translate(-1%, -1%); }
+          20% { transform: translate(-2%, 1%); }
+          30% { transform: translate(1%, -2%); }
+          40% { transform: translate(-1%, 3%); }
+          50% { transform: translate(-2%, 1%); }
+          60% { transform: translate(1%, 2%); }
+          70% { transform: translate(3%, -1%); }
+          80% { transform: translate(-2%, 1%); }
+          90% { transform: translate(1%, 3%); }
+          100% { transform: translate(0, 0); }
+        }
+      `}} />
+
+      {/* Dynamic Animated Film Grain Noise overlay */}
       <div 
-        className="absolute inset-0 pointer-events-none opacity-[0.15] mix-blend-overlay z-20"
+        className="absolute pointer-events-none opacity-[0.24] mix-blend-overlay z-20"
         style={{
-          backgroundImage: `url('data:image/svg+xml;utf8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')`
+          width: '120%',
+          height: '120%',
+          top: '-10%',
+          left: '-10%',
+          backgroundImage: `url('data:image/svg+xml;utf8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')`,
+          animation: 'noiseShift 0.15s infinite steps(6)'
         }}
       />
 
@@ -277,11 +298,16 @@ export default function Preloader({ children }) {
             style={{ background: 'transparent', width: '100%', height: '100%' }}
           >
             <ambientLight intensity={1.0} />
-            {/* Rich 4-point studio lights setup to show mesh depth and photogrammetry colors */}
+            {/* Rich studio lighting + cinematic red rim lights to match portfolio colors */}
             <directionalLight position={[5, 5, 5]} intensity={1.8} color="#ffffff" />
-            <directionalLight position={[-5, 3, 5]} intensity={1.0} color="#e2ebff" />
+            <directionalLight position={[-5, 3, 5]} intensity={0.8} color="#e2ebff" />
             <directionalLight position={[0, 5, -5]} intensity={2.2} color="#ffffff" />
             <directionalLight position={[0, -5, 0]} intensity={0.5} color="#dce2e2" />
+            
+            {/* Colored PBR Rim Lights - Red Theme */}
+            <directionalLight position={[-4, 4, -4]} intensity={2.8} color="#FF0000" /> {/* Left Red Rim */}
+            <directionalLight position={[4, -2, -2]} intensity={2.0} color="#FF0000" /> {/* Right Red Rim */}
+            
             <Suspense fallback={null}>
               <ThreeErrorBoundary fallback={null}>
                 <CameraModel />
@@ -290,24 +316,17 @@ export default function Preloader({ children }) {
           </Canvas>
         </div>
 
-        {/* Aesthetic Progress Counter and Thin Loading Line below the model */}
-        <div className="absolute bottom-6 flex flex-col items-center gap-3.5 pointer-events-none">
-          <span className="text-[8px] font-light tracking-[0.6em] text-white/35 uppercase select-none">
-            INITIALIZING ENGINE
+        {/* Minimalist Progress Counter and Thin Red Loading Line below the model */}
+        <div className="absolute bottom-6 flex flex-col items-center gap-2.5 pointer-events-none">
+          <span className="text-white/50 text-[10px] font-light tracking-[0.4em] uppercase" style={{ fontVariantNumeric: 'tabular-nums' }}>
+            {Math.round(progress)}%
           </span>
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-white/10" />
-            <span className="text-white/60 text-[11px] font-light tracking-[0.3em]" style={{ fontVariantNumeric: 'tabular-nums' }}>
-              {Math.round(progress)}%
-            </span>
-            <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-white/10" />
-          </div>
-          <div className="w-36 h-[1px] bg-white/5 relative overflow-hidden">
+          <div className="w-24 h-[1px] bg-white/10 relative overflow-hidden rounded-full">
             <div 
-              className="absolute top-0 left-0 h-full bg-white/30" 
+              className="absolute top-0 left-0 h-full bg-[#FF0000]" 
               style={{ 
                 width: `${progress}%`,
-                transition: 'width 150ms cubic-bezier(0.4, 0, 0.2, 1)' 
+                transition: 'width 100ms ease-out' 
               }}
             />
           </div>
