@@ -56,11 +56,12 @@
     -webkit-font-smoothing: antialiased;
 }
 
-/* GPU compositing only for elements that actually animate */
 .hero-fade-overlay,
-.transition-overlay {
+.transition-overlay-1,
+.transition-overlay-2,
+.transition-overlay-3 {
   transform: translateZ(0);
-  will-change: opacity;
+  will-change: opacity, transform;
 }
 
 /* Slide animation utility */

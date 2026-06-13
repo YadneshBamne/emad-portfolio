@@ -61,7 +61,8 @@ export function AaryaLensReveal() {
       });
 
       gsap.set([textLeftRef.current, textRightRef.current], {
-        willChange: 'transform, opacity',
+        willChange: 'transform, opacity, filter',
+        filter: 'blur(0px)',
         force3D: true,
       });
 
@@ -161,6 +162,7 @@ export function AaryaLensReveal() {
       .to(textLeftRef.current, {
         y: flyUp,
         opacity: 0,
+        filter: 'blur(20px)',
         duration: 0.55,
         ease: 'power2.in',
         force3D: true,
@@ -170,6 +172,7 @@ export function AaryaLensReveal() {
       .to(textRightRef.current, {
         y: flyDown,
         opacity: 0,
+        filter: 'blur(20px)',
         duration: 0.55,
         ease: 'power2.in',
         force3D: true,
@@ -288,7 +291,7 @@ export function AaryaLensReveal() {
           </div>
           {/* PERF: Removed backdrop-blur-sm — blur filters create separate compositor
               layers and re-composite on every repaint. Solid bg looks identical. */}
-          <div className="flex items-center gap-2 text-[#FF0000] font-bold bg-black/60 px-2 py-1 rounded z-10">
+          <div className="hidden md:flex items-center gap-2 text-[#FF0000] font-bold bg-black/60 px-2 py-1 rounded z-10">
             <div className="w-2.5 h-2.5 rounded-full bg-[#FF0000] animate-pulse" />
             <span>[REC]</span>
           </div>
@@ -300,6 +303,11 @@ export function AaryaLensReveal() {
             <span>SHUTTER: 1/2500</span>
             <span>ISO: 3200</span>
             <span>AWB: AUTO</span>
+          </div>
+          {/* Mobile-only REC badge on bottom right */}
+          <div className="flex md:hidden items-center gap-2 text-[#FF0000] font-bold bg-black/60 px-2 py-1 rounded z-10">
+            <div className="w-2.5 h-2.5 rounded-full bg-[#FF0000] animate-pulse" />
+            <span>[REC]</span>
           </div>
         </div>
       </div>

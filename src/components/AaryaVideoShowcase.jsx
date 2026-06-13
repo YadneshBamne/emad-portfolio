@@ -71,31 +71,21 @@ const AaryaVideoShowcase = () => {
             </AnimatePresence>
           </div>
 
-          {/* Mobile: Horizontal Scrollable Artist List */}
-          <div 
-            ref={scrollContainerRef}
-            className="md:hidden w-full flex overflow-x-auto gap-8 items-end pb-2 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-          >
-            {ARTISTS.map((artist) => {
-              const isActive = activeArtist.id === artist.id;
-              return (
-                <button
-                  key={artist.id}
-                  ref={isActive ? activeItemRef : null}
-                  onClick={() => setActiveArtist(artist)}
-                  className={`snap-center shrink-0 text-6xl font-black uppercase leading-none transition-colors ${
-                    isActive ? 'text-white' : 'text-zinc-800'
-                  }`}
-                  style={{ fontFamily: "'Anton', 'Impact', sans-serif" }}
-                >
-                  {artist.name.split(' ').map((word, i) => (
-                    <span key={i} className="block text-left">{word}</span>
-                  ))}
-                </button>
-              );
-            })}
-            {/* Spacer for right padding in scroll area */}
-            <div className="w-4 shrink-0"></div>
+          {/* Mobile: Active Artist Name Display */}
+          <div className="flex md:hidden h-10 overflow-hidden relative items-end">
+            <AnimatePresence mode="wait">
+              <motion.h1
+                key={displayArtist.id}
+                initial={{ y: 25, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -25, opacity: 0 }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+                className="text-4xl font-black uppercase leading-none"
+                style={{ fontFamily: "'Anton', 'Impact', sans-serif" }}
+              >
+                {displayArtist.name}
+              </motion.h1>
+            </AnimatePresence>
           </div>
           
           <button className="flex items-center gap-2 text-xs font-mono tracking-widest text-red-600 hover:text-white transition-colors uppercase w-fit group">
@@ -125,9 +115,42 @@ const AaryaVideoShowcase = () => {
                 muted
                 playsInline
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30"></div>
             </motion.div>
           </AnimatePresence>
+
+          {/* Mobile Overlay: Horizontal Scrollable Selector */}
+          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black via-black/60 to-transparent pt-12 pb-6 px-4 z-20 md:hidden flex flex-col gap-3">
+            <div className="text-[9px] font-mono tracking-[0.3em] text-red-500 uppercase text-center opacity-70">
+              SELECT DIRECT REEL
+            </div>
+            <div 
+              ref={scrollContainerRef}
+              className="w-full flex overflow-x-auto gap-5 items-center justify-start py-2 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+            >
+              {/* Left padding spacer for centering */}
+              <div className="w-[35vw] shrink-0"></div>
+              {ARTISTS.map((artist) => {
+                const isActive = activeArtist.id === artist.id;
+                return (
+                  <button
+                    key={artist.id}
+                    ref={isActive ? activeItemRef : null}
+                    onClick={() => setActiveArtist(artist)}
+                    className={`snap-center shrink-0 font-mono text-[10px] tracking-[0.2em] font-bold uppercase transition-all duration-300 py-1.5 px-4 rounded-full border ${
+                      isActive 
+                        ? 'text-white border-white bg-white/10 backdrop-blur-sm scale-105' 
+                        : 'text-white/40 border-transparent hover:text-white/70'
+                    }`}
+                  >
+                    {artist.name}
+                  </button>
+                );
+              })}
+              {/* Right padding spacer for centering */}
+              <div className="w-[35vw] shrink-0"></div>
+            </div>
+          </div>
         </div>
       </div>
 

@@ -1,0 +1,11 @@
+Model Information:
+* title:	SONY α7RV [Photogrammetry]
+* source:	https://sketchfab.com/3d-models/sony-7rv-photogrammetry-05193afe1853437b9ad0a9990ab72742
+* author:	erudishion_pho (https://sketchfab.com/Erudishion_pho)
+
+Model License:
+* license type:	CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
+* requirements:	Author must be credited. No commercial use.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "SONY α7RV [Photogrammetry]" (https://sketchfab.com/3d-models/sony-7rv-photogrammetry-05193afe1853437b9ad0a9990ab72742) by erudishion_pho (https://sketchfab.com/Erudishion_pho) licensed under CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)

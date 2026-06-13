@@ -1,4 +1,5 @@
 import React from 'react';
+import ScrollReveal from './ui/ScrollReveal';
 
 const AboutSection = () => {
   return (
@@ -57,15 +58,27 @@ const AboutSection = () => {
 
       {/* Content Section */}
       <div className="max-w-4xl">
-        <h2 className="text-2xl md:text-4xl lg:text-5xl text-zinc-200 leading-tight mb-8" style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}>
+        <ScrollReveal
+          baseOpacity={0.05}
+          enableBlur={true}
+          baseRotation={2}
+          blurStrength={10}
+          containerClassName="mb-8"
+          textClassName="text-2xl md:text-4xl lg:text-5xl text-zinc-200 leading-tight font-serif font-normal"
+        >
           Concert photographer, videographer, and music marketing creative — with a unique blend of visual storytelling and industry expertise.
-        </h2>
+        </ScrollReveal>
         
-        <p className="text-zinc-400 text-sm md:text-base leading-relaxed mb-12 max-w-2xl" style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}>
-          Published in <strong className="text-zinc-200 font-semibold">Billboard</strong> and <strong className="text-zinc-200 font-semibold">Variety Magazine</strong>. 
-          Touring experience with multiple artists. Media credentials at major festivals across North America. 
-          Worked with <strong className="text-zinc-200 font-semibold">Warner Music</strong> and <strong className="text-zinc-200 font-semibold">Atlantic Records</strong>.
-        </p>
+        <ScrollReveal
+          baseOpacity={0.05}
+          enableBlur={true}
+          baseRotation={1.5}
+          blurStrength={6}
+          containerClassName="mb-12 max-w-2xl"
+          textClassName="text-zinc-400 text-sm md:text-base leading-relaxed font-serif font-normal"
+        >
+          Published in Billboard and Variety Magazine. Touring experience with multiple artists. Media credentials at major festivals across North America. Worked with Warner Music and Atlantic Records.
+        </ScrollReveal>
 
         {/* Subtle Divider */}
         <div className="w-64 h-[1px] bg-zinc-800 mb-8"></div>

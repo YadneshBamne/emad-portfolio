@@ -1,15 +1,111 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import OrbitImages from './OrbitImages';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { useGLTF, useTexture, Center } from '@react-three/drei';
+import * as THREE from 'three';
 
-const images = [
-  "https://picsum.photos/300/300?grayscale&random=1",
-  "https://picsum.photos/300/300?grayscale&random=2",
-  "https://picsum.photos/300/300?grayscale&random=3",
-  "https://picsum.photos/300/300?grayscale&random=4",
-  "https://picsum.photos/300/300?grayscale&random=5",
-  "https://picsum.photos/300/300?grayscale&random=6",
-];
+class ThreeErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("ThreeErrorBoundary caught an error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+    return this.props.children;
+  }
+}
+
+
+
+function CameraModel() {
+  const { scene } = useGLTF('/scene.gltf');
+  const texture = useTexture('/textures/cam2_u1_v1_diffuse.jpeg');
+  const groupRef = useRef();
+
+  useEffect(() => {
+    if (scene && texture) {
+      // Configure texture parameters for GLTF UV alignment and color space
+      texture.flipY = false;
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.needsUpdate = true;
+
+      // 1. Reset scale and position first to get clean bounds
+      scene.scale.set(1, 1, 1);
+      scene.position.set(0, 0, 0);
+      scene.rotation.set(0, 0, 0);
+
+      // 2. Configure mesh properties and force-assign the diffuse map
+      scene.traverse((child) => {
+        if (child.isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+          
+          if (child.material) {
+            child.material.side = THREE.DoubleSide;
+            child.material.map = texture;
+            child.material.needsUpdate = true;
+          }
+        }
+      });
+
+      // 3. Compute bounding bounds using mesh nodes only to ignore helpers or scanners
+      const box = new THREE.Box3();
+      let hasMesh = false;
+      scene.traverse((child) => {
+        if (child.isMesh) {
+          if (!hasMesh) {
+            box.setFromObject(child);
+            hasMesh = true;
+          } else {
+            box.expandByObject(child);
+          }
+        }
+      });
+
+      if (hasMesh) {
+        const size = new THREE.Vector3();
+        box.getSize(size);
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const targetSize = 2.4; // Perfect bounding box size fit
+        const scaleFactor = targetSize / (maxDim || 1);
+        
+        scene.scale.setScalar(scaleFactor);
+
+        // Position model center exactly at origin (0, 0, 0)
+        const center = new THREE.Vector3();
+        box.getCenter(center);
+        scene.position.copy(center).multiplyScalar(-scaleFactor);
+      }
+    }
+  }, [scene, texture]);
+
+  useFrame((state, delta) => {
+    if (groupRef.current) {
+      // Faster rotation speed for a more dynamic look
+      groupRef.current.rotation.y += delta * 0.85;
+    }
+  });
+
+  return (
+    <group ref={groupRef}>
+      <primitive object={scene} />
+    </group>
+  );
+}
+
+useGLTF.preload('/scene.gltf');
+useTexture.preload('/textures/cam2_u1_v1_diffuse.jpeg');
 
 const words1 = ["CINEMATIC", "AESTHETIC", "DYNAMIC", "BEAUTIFUL"];
 const words2 = ["ARTISTRY", "MOTION", "DESIGN", "CRAFT"];
@@ -51,6 +147,28 @@ const CyclingWord = ({ words, interval = 2500, offset = 0, align = "center" }) =
   );
 };
 
+const updateBrowserThemeColor = (color) => {
+  let metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (!metaTheme) {
+    metaTheme = document.createElement('meta');
+    metaTheme.setAttribute('name', 'theme-color');
+    document.head.appendChild(metaTheme);
+  }
+  metaTheme.setAttribute('content', color);
+
+  const metaTile = document.querySelector('meta[name="msapplication-TileColor"]');
+  if (metaTile) {
+    metaTile.setAttribute('content', color);
+  }
+
+  if (document.body) {
+    document.body.style.backgroundColor = color;
+  }
+  if (document.documentElement) {
+    document.documentElement.style.backgroundColor = color;
+  }
+};
+
 export default function Preloader({ children }) {
   const [progress, setProgress] = useState(0);
   const [loadingComplete, setLoadingComplete] = useState(false);
@@ -58,6 +176,11 @@ export default function Preloader({ children }) {
     // Skip preloader if not on the home page
     return window.location.pathname !== '/';
   });
+
+  useEffect(() => {
+    if (showContent) return;
+    updateBrowserThemeColor('#000000');
+  }, [showContent]);
 
   useEffect(() => {
     if (showContent) return; // Don't run animation if we're skipping
@@ -89,6 +212,7 @@ export default function Preloader({ children }) {
     if (progress === 100) {
       setTimeout(() => {
         setLoadingComplete(true);
+        updateBrowserThemeColor('#050505');
         setTimeout(() => setShowContent(true), 1000);
       }, 800);
     }
@@ -133,29 +257,37 @@ export default function Preloader({ children }) {
       
       <div className="relative w-full max-w-[800px] h-[500px] flex items-center justify-center px-4 z-10">
         
-        {/* Intact Main Orbit with larger mobile scaling */}
+        {/* 3D Camera Model Canvas */}
         <div 
-          className="absolute inset-0 w-full h-full pointer-events-none flex items-center justify-center scale-[1.65] md:scale-100"
+          className="absolute inset-0 w-full h-full pointer-events-none flex items-center justify-center"
         >
-          <OrbitImages
-            images={images}
-            shape="ellipse"
-            radiusX={340}
-            radiusY={80}
-            rotation={-8}
-            duration={30}
-            itemSize={80}
-            showPath={true}
-            pathColor="rgba(255,255,255,0.2)"
-            responsive={true}
-            className="w-full"
-            absorbingProgress={0}
-          />
+          <Canvas 
+            camera={{ position: [0, 0, 4.2], fov: 45 }}
+            gl={{ 
+              antialias: true, 
+              alpha: true,
+              toneMapping: THREE.ACESFilmicToneMapping,
+              toneMappingExposure: 1.5
+            }}
+            style={{ background: 'transparent', width: '100%', height: '100%' }}
+          >
+            <ambientLight intensity={1.0} />
+            {/* Rich 4-point studio lights setup to show mesh depth and photogrammetry colors */}
+            <directionalLight position={[5, 5, 5]} intensity={1.8} color="#ffffff" />
+            <directionalLight position={[-5, 3, 5]} intensity={1.0} color="#e2ebff" />
+            <directionalLight position={[0, 5, -5]} intensity={2.2} color="#ffffff" />
+            <directionalLight position={[0, -5, 0]} intensity={0.5} color="#dce2e2" />
+            <Suspense fallback={null}>
+              <ThreeErrorBoundary fallback={null}>
+                <CameraModel />
+              </ThreeErrorBoundary>
+            </Suspense>
+          </Canvas>
         </div>
 
-        {/* Center Text */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-          <span className="text-white/60 text-sm font-light tracking-[0.2em]" style={{ fontVariantNumeric: 'tabular-nums' }}>
+        {/* Progress Counter positioned clearly below the model */}
+        <div className="absolute bottom-6 flex flex-col items-center pointer-events-none">
+          <span className="text-white/50 text-xs font-light tracking-[0.3em]" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {Math.round(progress)}%
           </span>
         </div>
