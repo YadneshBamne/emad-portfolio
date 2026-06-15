@@ -117,13 +117,13 @@ const AaryaCategoryAccordion = () => {
     <div
       ref={containerRef}
       onMouseLeave={handlePaneLeave}
-      className="w-full max-w-[1400px] mx-auto my-16 bg-[#070707] border border-zinc-800/80 rounded-2xl overflow-hidden relative shadow-2xl"
+      className="w-full max-w-[1400px] mx-auto my-16 bg-bg-secondary border border-border-color rounded-2xl overflow-hidden relative shadow-2xl transition-colors duration-500"
     >
       
       {/* System Technical Top Bar */}
-      <div className="w-full h-8 bg-black/60 border-b border-zinc-800/80 px-6 flex items-center justify-between font-mono text-[9px] tracking-widest text-zinc-500 select-none">
-        <div className="flex items-center gap-1.5 text-red-500">
-          <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"></span>
+      <div className="w-full h-8 bg-bg-primary/60 border-b border-border-color px-6 flex items-center justify-between font-mono text-[9px] tracking-widest text-text-secondary select-none">
+        <div className="flex items-center gap-1.5 text-accent-metallic font-bold">
+          <span className="w-1.5 h-1.5 rounded-full bg-accent-metallic animate-pulse"></span>
           <span>CONSOLE: MULTI-MONITOR DIRECTING INTERFACE</span>
         </div>
         <div className="hidden sm:block">GRID_ALIGN: AUTO // COLOR: CMYK-D65</div>
@@ -133,7 +133,7 @@ const AaryaCategoryAccordion = () => {
       {/* DASHBOARD GRID CONTAINER (Desktop layout vs Mobile layout) */}
       {isMobile ? (
         /* MOBILE VIEW: Staggered commands panels, expands on tap */
-        <div className="flex flex-col divide-y divide-zinc-800/80 h-[700px]">
+        <div className="flex flex-col divide-y divide-border-color h-[700px]">
           
           {/* Mobile Panel 1: Photography */}
           <div
@@ -231,7 +231,7 @@ const AaryaCategoryAccordion = () => {
         </div>
       ) : (
         /* DESKTOP VIEW: Director's Multi-Monitor Console Dashboard */
-        <div className="flex h-[600px] lg:h-[650px] divide-x divide-zinc-800/80 bg-black select-none">
+        <div className="flex h-[600px] lg:h-[650px] divide-x divide-border-color bg-bg-primary select-none transition-colors duration-500">
           
           {/* LEFT MONITOR PANE: Photography (45% Width System Default) */}
           <div
@@ -489,8 +489,8 @@ const AaryaCategoryAccordion = () => {
         .bg-design-blueprint {
           background-size: 20px 20px;
           background-image: 
-            linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            linear-gradient(to right, var(--blueprint-grid-color) 1px, transparent 1px),
+            linear-gradient(to bottom, var(--blueprint-grid-color) 1px, transparent 1px);
         }
       `}} />
 

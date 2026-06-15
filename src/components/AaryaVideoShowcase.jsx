@@ -32,7 +32,7 @@ const AaryaVideoShowcase = () => {
   const displayArtist = hoveredArtist || activeArtist;
 
   return (
-    <section className="w-full h-screen bg-black overflow-hidden flex flex-col md:flex-row text-white font-sans">
+    <section className="w-full h-screen bg-bg-primary overflow-hidden flex flex-col md:flex-row text-text-primary font-sans transition-colors duration-500">
       
       {/* Left Column (25%) */}
       <div className="w-full md:w-[25%] h-auto md:h-full flex flex-col justify-between gap-8 md:gap-0 p-4 md:p-12 relative z-10">
@@ -40,13 +40,13 @@ const AaryaVideoShowcase = () => {
         {/* Top Left Details */}
         <div className="flex flex-col gap-2 font-mono text-xs tracking-[0.2em] uppercase">
           <div className="flex items-center gap-4">
-            <span className="text-red-600 font-bold">04</span>
-            <span className="w-8 h-[1px] bg-zinc-700"></span>
-            <span className="text-zinc-400">FILM</span>
+            <span className="text-accent-metallic font-bold">04</span>
+            <span className="w-8 h-[1px] bg-border-color"></span>
+            <span className="text-text-secondary">FILM</span>
           </div>
           <div className="flex items-center gap-2 mt-4">
-            <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
-            <span className="text-red-600">PLAYING</span>
+            <span className="w-2 h-2 rounded-full bg-accent-metallic animate-pulse"></span>
+            <span className="text-accent-metallic font-bold">PLAYING</span>
           </div>
         </div>
 
@@ -88,8 +88,8 @@ const AaryaVideoShowcase = () => {
             </AnimatePresence>
           </div>
           
-          <button className="flex items-center gap-2 text-xs font-mono tracking-widest text-red-600 hover:text-white transition-colors uppercase w-fit group">
-            <span className="w-4 h-[1px] bg-red-600 group-hover:bg-white transition-colors"></span>
+          <button className="flex items-center gap-2 text-xs font-mono tracking-widest text-accent-metallic hover:opacity-85 transition-opacity uppercase w-fit group cursor-pointer">
+            <span className="w-4 h-[1px] bg-accent-metallic group-hover:bg-text-primary transition-colors"></span>
             View All Films
           </button>
         </div>
@@ -171,12 +171,12 @@ const AaryaVideoShowcase = () => {
                 key={artist.id}
                 onClick={() => setActiveArtist(artist)}
                 onMouseEnter={() => setHoveredArtist(artist)}
-                className="relative group w-fit focus:outline-none pr-8 py-1"
+                className="relative group w-fit focus:outline-none pr-8 py-1 cursor-pointer"
                 aria-label={`Select ${artist.name}`}
               >
                 <motion.span
                   animate={{
-                    color: isHighlighted ? '#FFFFFF' : '#52525B', // zinc-600
+                    color: isHighlighted ? 'var(--text-primary)' : 'var(--text-secondary)',
                     scale: isHighlighted ? 1.1 : 1,
                   }}
                   transition={{ duration: 0.3 }}
@@ -192,7 +192,7 @@ const AaryaVideoShowcase = () => {
                      <motion.div
                        layoutId="verticalActiveLine"
                        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                       className="w-full h-full bg-red-600 shadow-[0_0_10px_rgba(220,38,38,0.8)]"
+                       className="w-full h-full bg-accent-metallic shadow-[0_0_10px_var(--accent-glow)]"
                      />
                    )}
                 </div>

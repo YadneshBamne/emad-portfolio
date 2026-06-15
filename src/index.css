@@ -13,14 +13,14 @@
 }
 
 :root {
-  /* Light mode: Sleek, premium platinum/silver metallic feel */
-  --bg-primary: #e2e4e9;
-  --bg-secondary: #d1d5db;
-  --text-primary: #18191a;
-  --text-secondary: #4b5563;
-  --border-color: #9ca3af;
-  --accent-metallic: #64748b;
-  --accent-glow: #334155;
+  /* Light mode: Warm Luxury Cream & Rust styling */
+  --bg-primary: #FAF8F5;      /* Premium soft off-white alabaster */
+  --bg-secondary: #F3EFE9;    /* Warm beige for cards/nav panels */
+  --text-primary: #1E1A16;    /* Rich dark espresso brown text */
+  --text-secondary: #60584E;  /* Warm grey-brown for telemetry */
+  --border-color: #E6E0D5;    /* Subtle warm tan border */
+  --accent-metallic: #C23B22; /* Rust red accent */
+  --accent-glow: rgba(194, 59, 34, 0.2);
 
   --color-primary: #6366f1;
   --color-dark: #131313;
@@ -33,10 +33,13 @@
   --section-padding: 4em;
   --gap: 1.5em;
   --cubic-default: cubic-bezier(0.65, 0.05, 0, 1);
+
+  --sensor-grid-color: rgba(30, 26, 22, 0.03);
+  --blueprint-grid-color: rgba(30, 26, 22, 0.05);
 }
 
 .dark {
-  /* Dark mode: Dark gunmetal / Kartalucia styling */
+  /* Dark mode: Dark gunmetal / Kartalucia styling (original site colors preserved) */
   --bg-primary: #050505;
   --bg-secondary: #0a0a0a;
   --text-primary: #f8fafc;
@@ -44,6 +47,9 @@
   --border-color: rgba(255, 255, 255, 0.15);
   --accent-metallic: #94a3b8;
   --accent-glow: #e2e8f0;
+
+  --sensor-grid-color: rgba(255, 255, 255, 0.02);
+  --blueprint-grid-color: rgba(255, 255, 255, 0.05);
 }
 
 /* ========================================

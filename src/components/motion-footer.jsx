@@ -22,13 +22,13 @@ const STYLES = `
   font-family: 'Plus Jakarta Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   
-  /* Hardcoded Dark Theme to match exactly */
-  --background: #050505;
-  --foreground: #ffffff;
-  --primary: #ffffff;
-  --secondary: #a3a3a3;
-  --border: #262626;
-  --destructive: #ef4444;
+  /* Dynamic Theme Variables mapped to global variables */
+  --background: var(--bg-primary);
+  --foreground: var(--text-primary);
+  --primary: var(--text-primary);
+  --secondary: var(--text-secondary);
+  --border: var(--border-color);
+  --destructive: var(--accent-metallic);
 
   
   /* Dynamic Variables using standard shadcn/tailwind v4 tokens */
@@ -353,7 +353,7 @@ export function CinematicFooter() {
         style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}>
         {/* The actual footer stays fixed to the viewport underneath everything */}
         <footer
-          className="fixed bottom-0 left-0 flex h-screen w-full flex-col justify-between overflow-hidden bg-[#050505] text-white cinematic-footer-wrapper">
+          className="fixed bottom-0 left-0 flex h-screen w-full flex-col justify-between overflow-hidden bg-bg-primary text-text-primary cinematic-footer-wrapper transition-colors duration-500">
           
           {/* Ambient Light & Grid Background */}
           <div

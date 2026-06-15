@@ -110,18 +110,18 @@ const PolaroidCard = ({ item, config }) => {
 
 const AaryaPolaroidGrid = () => {
   return (
-    <section className="relative w-full bg-black py-24 border-t border-zinc-900 transition-colors duration-500 overflow-hidden">
+    <section className="relative w-full bg-bg-primary py-24 border-t border-border-color transition-colors duration-500 overflow-hidden">
       {/* Header Section */}
-      <div className="w-full border-b border-zinc-900 bg-black/50 py-5 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center text-xs md:text-sm font-mono text-zinc-500 mb-20 shadow-2xl relative z-10">
+      <div className="w-full border-b border-border-color bg-bg-secondary/50 py-5 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center text-xs md:text-sm font-mono text-text-secondary mb-20 shadow-2xl relative z-10">
         <div className="mb-3 md:mb-0 tracking-widest flex items-center gap-4">
-           <span className="text-red-600 font-bold">04</span>
-           <span className="w-12 h-px bg-zinc-600"></span>
+           <span className="text-accent-metallic font-bold">04</span>
+           <span className="w-12 h-px bg-border-color"></span>
            <span>GALLERY</span>
         </div>
-        <div className="mb-3 md:mb-0 text-center tracking-widest font-bold text-zinc-200">POLAROID COLLECTION</div>
+        <div className="mb-3 md:mb-0 text-center tracking-widest font-bold text-text-primary">POLAROID COLLECTION</div>
         <div className="flex items-center gap-3">
-          <span className="w-2.5 h-2.5 rounded-full bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.8)] animate-pulse"></span>
-          <span className="tracking-widest text-zinc-200">LIVE</span>
+          <span className="w-2.5 h-2.5 rounded-full bg-accent-metallic shadow-[0_0_8px_var(--accent-glow)] animate-pulse"></span>
+          <span className="tracking-widest text-text-primary">LIVE</span>
         </div>
       </div>
 

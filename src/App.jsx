@@ -11,6 +11,7 @@ import PhotographyPage from './pages/PhotographyPage'
 import WorksPage from './pages/WorksPage'
 import CommunityPage from './pages/CommunityPage'
 import { TransitionProvider } from './context/TransitionContext'
+import { ThemeProvider } from './context/ThemeContext'
 
 // Root Layout wrapping all pages to supply the TransitionProvider and CinematicFooter
 const Layout = () => {
@@ -41,9 +42,11 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <Preloader>
-      <RouterProvider router={router} />
-    </Preloader>
+    <ThemeProvider>
+      <Preloader>
+        <RouterProvider router={router} />
+      </Preloader>
+    </ThemeProvider>
   )
 }
 
