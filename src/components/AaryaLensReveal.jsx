@@ -112,30 +112,26 @@ export function AaryaLensReveal() {
           end: '+=120%',
           pin: true,
           scrub: 0.5,
-          fastScrollEnd: true,
-          preventOverlaps: true,
           anticipatePin: 1,
           onUpdate: (self) => {
             // Trigger the lens zoom/fade automatically over 2.5 seconds when scroll starts
             if (self.progress > 0.05) {
               if (!lensFaded) {
                 lensFaded = true;
+                gsap.killTweensOf(lensTimeline);
                 gsap.to(lensTimeline, { progress: 1, duration: 2.5, ease: 'power1.out', overwrite: 'auto' });
               }
             } else {
               // Revert the lens back to original state if scrolled back to the top (brings the lens back in over 0.5 seconds)
               if (lensFaded) {
                 lensFaded = false;
+                gsap.killTweensOf(lensTimeline);
                 gsap.to(lensTimeline, { progress: 0, duration: 0.5, ease: 'power1.out', overwrite: 'auto' });
               }
             }
           }
         }
       });
-
-      // Pre-compute viewport-unit y values to plain pixels ONCE at setup time.
-      const flyUp   = -(window.innerHeight * 1.2);
-      const flyDown =  (window.innerHeight * 1.2);
 
       // 1. The Reveal — clip-path circle expanding (GPU-composited via will-change)
       tl.fromTo(videoContainerRef.current, {
@@ -158,9 +154,9 @@ export function AaryaLensReveal() {
         force3D: true,
       }, '<0')
 
-      // 3. EMAD flies upward — pre-computed pixel value avoids per-frame vh unit parsing
+      // 3. EMAD flies upward — function-based dynamic pixel value guarantees resize responsiveness
       .to(textLeftRef.current, {
-        y: flyUp,
+        y: () => -(window.innerHeight * 1.2),
         opacity: 0,
         filter: 'blur(20px)',
         duration: 0.55,
@@ -168,9 +164,9 @@ export function AaryaLensReveal() {
         force3D: true,
       }, 0)
 
-      // 3b. SHAIKH flies downward — pre-computed pixel value
+      // 3b. SHAIKH flies downward — function-based dynamic pixel value
       .to(textRightRef.current, {
-        y: flyDown,
+        y: () => window.innerHeight * 1.2,
         opacity: 0,
         filter: 'blur(20px)',
         duration: 0.55,
@@ -217,6 +213,8 @@ export function AaryaLensReveal() {
         if (rafId) cancelAnimationFrame(rafId);
         container.removeEventListener('mousemove', handleMouseMove);
         container.removeEventListener('mouseleave', handleMouseLeave);
+        gsap.killTweensOf(lensTimeline);
+        lensTimeline.kill();
       };
 
     }, containerRef);

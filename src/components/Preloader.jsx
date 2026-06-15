@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Suspense, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF, useTexture, Center } from '@react-three/drei';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { useGLTF, useTexture, Center, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 
 class ThreeErrorBoundary extends React.Component {
@@ -28,10 +28,16 @@ class ThreeErrorBoundary extends React.Component {
 
 
 
+const START_COLOR = new THREE.Color('#0D0D0C');
+const END_COLOR = new THREE.Color('#ffffff');
+const tempColor = new THREE.Color();
+
 function CameraModel() {
   const { scene } = useGLTF('/scene.gltf');
   const texture = useTexture('/textures/cam2_u1_v1_diffuse.jpeg');
+  const { viewport } = useThree();
   const groupRef = useRef();
+  const fadeOpacity = useRef(0); // Track fade-in progress
 
   useEffect(() => {
     if (scene && texture) {
@@ -54,6 +60,18 @@ function CameraModel() {
           if (child.material) {
             child.material.side = THREE.DoubleSide;
             child.material.map = texture;
+            
+            // PBR configurations to make the camera body completely matte with no shininess
+            child.material.roughness = 0.95; // High roughness = fully diffuse, non-reflective finish
+            child.material.metalness = 0.0;  // Zero metalness = flat matte composite body
+            
+            // Set starting color to match background (#0D0D0C) for a clean color fade-in
+            child.material.color.copy(START_COLOR);
+
+            // Enable transparency and start at 0 opacity for a smooth fade-in
+            child.material.transparent = true;
+            child.material.opacity = 0.0;
+            
             child.material.needsUpdate = true;
           }
         }
@@ -77,8 +95,10 @@ function CameraModel() {
         const size = new THREE.Vector3();
         box.getSize(size);
         const maxDim = Math.max(size.x, size.y, size.z);
-        const targetSize = 2.4; // Perfect bounding box size fit
-        const scaleFactor = targetSize / (maxDim || 1);
+        
+        // Dynamically scale model target size based on aspect ratio to prevent clipping on mobile portrait viewports
+        const responsiveTargetSize = Math.min(2.4, viewport.width * 0.7);
+        const scaleFactor = responsiveTargetSize / (maxDim || 1);
         
         scene.scale.setScalar(scaleFactor);
 
@@ -88,7 +108,7 @@ function CameraModel() {
         scene.position.copy(center).multiplyScalar(-scaleFactor);
       }
     }
-  }, [scene, texture]);
+  }, [scene, texture, viewport.width]);
 
   useFrame((state, delta) => {
     if (groupRef.current) {
@@ -98,6 +118,22 @@ function CameraModel() {
       // Floating wobble animation to make the camera feel suspended in space
       const elapsed = state.clock.getElapsedTime();
       groupRef.current.position.y = Math.sin(elapsed * 1.8) * 0.08;
+    }
+
+    // Smoothly fade in all camera meshes on load/mount
+    if (scene && fadeOpacity.current < 1.0) {
+      // Fade-in duration of ~0.6 seconds (delta * 1.6)
+      fadeOpacity.current = Math.min(1.0, fadeOpacity.current + delta * 1.6);
+      
+      // Interpolate material color from starting bg color (#0D0D0C) to standard white (#ffffff)
+      tempColor.lerpColors(START_COLOR, END_COLOR, fadeOpacity.current);
+
+      scene.traverse((child) => {
+        if (child.isMesh && child.material) {
+          child.material.color.copy(tempColor);
+          child.material.opacity = fadeOpacity.current;
+        }
+      });
     }
   });
 
@@ -218,7 +254,7 @@ export default function Preloader({ children }) {
       setTimeout(() => {
         setLoadingComplete(true);
         updateBrowserThemeColor('#050505');
-        setTimeout(() => setShowContent(true), 500);
+        setTimeout(() => setShowContent(true), 1000);
       }, 300);
     }
   }, [progress]);
@@ -281,7 +317,7 @@ export default function Preloader({ children }) {
         </motion.div>
       </div>
       
-      <div className="relative w-full max-w-[800px] h-[500px] flex items-center justify-center px-4 z-10">
+      <div className="relative w-full max-w-[800px] h-[60vh] md:h-[500px] flex items-center justify-center px-4 z-10">
         
         {/* 3D Camera Model Canvas */}
         <div 
@@ -305,8 +341,11 @@ export default function Preloader({ children }) {
             <directionalLight position={[0, -5, 0]} intensity={0.5} color="#dce2e2" />
             
             {/* Colored PBR Rim Lights - Red Theme */}
-            <directionalLight position={[-4, 4, -4]} intensity={2.8} color="#FF0000" /> {/* Left Red Rim */}
-            <directionalLight position={[4, -2, -2]} intensity={2.0} color="#FF0000" /> {/* Right Red Rim */}
+            <directionalLight position={[-4, 4, -4]} intensity={3.5} color="#FF0000" /> {/* Left Red Rim */}
+            <directionalLight position={[4, -2, -2]} intensity={2.5} color="#FF0000" /> {/* Right Red Rim */}
+            
+            {/* Red Back-Light Point Light to create a glowing silhouette halo */}
+            <pointLight position={[0, 0, -1.8]} intensity={15.0} color="#FF0000" distance={6} decay={1.2} />
             
             <Suspense fallback={null}>
               <ThreeErrorBoundary fallback={null}>
@@ -323,7 +362,7 @@ export default function Preloader({ children }) {
           </span>
           <div className="w-24 h-[1px] bg-white/10 relative overflow-hidden rounded-full">
             <div 
-              className="absolute top-0 left-0 h-full bg-[#FF0000]" 
+              className="absolute top-0 left-0 h-full bg-[#FF0000] shadow-[0_0_8px_#FF0000]" 
               style={{ 
                 width: `${progress}%`,
                 transition: 'width 100ms ease-out' 

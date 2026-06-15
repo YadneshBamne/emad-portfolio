@@ -2,16 +2,19 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowRight, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { useTransitionNavigate } from '../context/TransitionContext';
+import { AaryaNavigationDrawer } from '../components/AaryaNavigationDrawer';
 
 export default function CommunityPage() {
   const [email, setEmail] = useState('');
   const [portfolio, setPortfolio] = useState('');
+  const [country, setCountry] = useState('');
+  const [city, setCity] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const navigate = useTransitionNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (email && portfolio) {
+    if (email && portfolio && country && city) {
       setSubmitted(true);
       // Backend integration goes here later
     }
@@ -20,34 +23,36 @@ export default function CommunityPage() {
   return (
     <div className="w-full min-h-screen bg-[#0a0a0a] text-white relative select-none overflow-x-hidden overflow-hidden">
       
-      {/* GLOBAL HUD NAVIGATION OVERLAY */}
-      <header className="fixed top-0 left-0 w-full h-18 px-6 sm:px-10 flex items-center justify-between z-50 pointer-events-none mix-blend-difference text-white bg-transparent">
-        
-        {/* Return link */}
-        <button 
-          onClick={() => navigate('/')}
-          className="flex items-center gap-2 font-mono text-[10px] font-bold tracking-[0.2em] cursor-pointer pointer-events-auto hover:opacity-85 transition-opacity"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>EMAD SHAIKH.</span>
-        </button>
+      {/* Global Slide-Out Navigation (Framer Motion) - Mobile Only */}
+      <div className="block md:hidden">
+        <AaryaNavigationDrawer />
+      </div>
 
-        {/* Middle indicator */}
-        <div className="font-mono text-[9px] tracking-[0.3em] uppercase hidden sm:block">
-          COMMUNITY // ECOSYSTEM
+      {/* Desktop Navigation — always visible */}
+      <nav className="desktop-nav hidden md:flex justify-center fixed top-0 left-0 w-full z-[10000] py-8 px-12 items-center pointer-events-auto" style={{ transition: 'none' }}>
+        <div className="flex items-center gap-8 md:gap-12">
+          {/* Left: Links */}
+          <div className="nav-left-links flex items-center gap-10 font-sans text-base tracking-[0.15em] text-white font-bold">
+            <button onClick={() => navigate('/about')} className="hover:opacity-70 transition-opacity duration-300 cursor-pointer">ABOUT</button>
+            <button onClick={() => navigate('/photography')} className="hover:opacity-70 transition-opacity duration-300 cursor-pointer">PHOTOGRAPHY</button>
+          </div>
+          
+          {/* Center: Logo */}
+          <div className="nav-logo flex justify-center items-center">
+            <button onClick={() => navigate('/')} className="hover:scale-110 transition-transform duration-300 shrink-0 cursor-pointer">
+              <img src="/logo.avif" alt="Logo" className="h-20 w-30" />
+            </button>
+          </div>
+
+          {/* Right: Links */}
+          <div className="nav-right-links flex items-center gap-10 font-sans text-base tracking-[0.15em] text-white font-bold">
+            <button onClick={() => navigate('/works')} className="hover:opacity-70 transition-opacity duration-300 cursor-pointer">WORKS</button>
+            <button onClick={() => navigate('/community')} className="hover:opacity-70 transition-opacity duration-300 underline decoration-white underline-offset-4 decoration-2 cursor-pointer">COMMUNITY</button>
+          </div>
         </div>
+      </nav>
 
-        {/* Global links */}
-        <div className="flex items-center gap-8 font-mono text-[10px] font-bold tracking-widest pointer-events-auto">
-          <button onClick={() => navigate('/')} className="hover:opacity-75 cursor-pointer transition-opacity">HOME</button>
-          <button onClick={() => navigate('/photography')} className="hover:opacity-75 cursor-pointer transition-opacity">PHOTOGRAPHY</button>
-          <button onClick={() => navigate('/works')} className="hover:opacity-75 cursor-pointer transition-opacity">WORKS</button>
-          <button onClick={() => navigate('/about')} className="hover:opacity-75 cursor-pointer transition-opacity">ABOUT</button>
-        </div>
-
-      </header>
-
-      <div className="pt-32 pb-24 px-4 md:px-12 relative">
+      <div className="pt-36 pb-24 px-4 md:px-12 relative">
         {/* Background glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] bg-red-900/10 rounded-full blur-[120px] pointer-events-none z-0"></div>
         
@@ -69,7 +74,7 @@ export default function CommunityPage() {
               Join a globally recognized creative community. Gain access to insider blogs, exclusive future merch drops, and our private curated WhatsApp group for trusted creators.
             </motion.p>
           </header>
-
+ 
         <div className="grid md:grid-cols-2 gap-12 mt-20">
           
           {/* Perks Section */}
@@ -91,7 +96,7 @@ export default function CommunityPage() {
               <p className="text-zinc-400 text-sm">Access to our trusted WhatsApp group based on portfolio review. Collaborate globally.</p>
             </div>
           </motion.div>
-
+ 
           {/* Registration Form */}
           <motion.div 
             initial={{ opacity: 0, x: 30 }}
@@ -136,6 +141,31 @@ export default function CommunityPage() {
                         className="bg-black border border-zinc-800 p-4 text-white focus:outline-none focus:border-red-600 transition-colors font-mono text-sm"
                         placeholder="https://your-work.com"
                       />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs tracking-widest text-zinc-400">COUNTRY</label>
+                        <input 
+                          type="text" 
+                          required
+                          value={country}
+                          onChange={(e) => setCountry(e.target.value)}
+                          className="bg-black border border-zinc-800 p-4 text-white focus:outline-none focus:border-red-600 transition-colors font-mono text-sm"
+                          placeholder="e.g. USA"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs tracking-widest text-zinc-400">CITY</label>
+                        <input 
+                          type="text" 
+                          required
+                          value={city}
+                          onChange={(e) => setCity(e.target.value)}
+                          className="bg-black border border-zinc-800 p-4 text-white focus:outline-none focus:border-red-600 transition-colors font-mono text-sm"
+                          placeholder="e.g. New York"
+                        />
+                      </div>
                     </div>
 
                     <button 

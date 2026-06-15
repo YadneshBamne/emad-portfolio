@@ -1,6 +1,9 @@
 import React, { createContext, useContext, useEffect, useLayoutEffect, useRef } from 'react';
 import { useBlocker, useLocation, useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const TransitionContext = createContext(null);
 
@@ -136,6 +139,9 @@ export const TransitionProvider = ({ children }) => {
             if (blocker.reset) {
               blocker.reset();
             }
+
+            // Force ScrollTrigger to recalculate and refresh triggers based on the new page layout
+            ScrollTrigger.refresh();
           }
         });
 

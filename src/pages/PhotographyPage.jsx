@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTransitionNavigate } from '../context/TransitionContext';
+import { AaryaNavigationDrawer } from '../components/AaryaNavigationDrawer';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 
@@ -290,22 +291,20 @@ export default function PhotographyPage() {
     }
   };
 
-  // Keyboard navigation
+  // Keyboard navigation for full screen view
   useEffect(() => {
-    if (activePhotoIndex === null) return;
-
     const handleKeyDown = (e) => {
-      if (e.key === 'ArrowLeft') {
-        setDirection(-1);
-        setActivePhotoIndex((prev) => (prev - 1 + PHOTO_ITEMS.length) % PHOTO_ITEMS.length);
+      if (activePhotoIndex === null) return;
+      if (e.key === 'Escape') {
+        setActivePhotoIndex(null);
       } else if (e.key === 'ArrowRight') {
         setDirection(1);
         setActivePhotoIndex((prev) => (prev + 1) % PHOTO_ITEMS.length);
-      } else if (e.key === 'Escape') {
-        setActivePhotoIndex(null);
+      } else if (e.key === 'ArrowLeft') {
+        setDirection(-1);
+        setActivePhotoIndex((prev) => (prev - 1 + PHOTO_ITEMS.length) % PHOTO_ITEMS.length);
       }
     };
-
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [activePhotoIndex]);
@@ -326,29 +325,36 @@ export default function PhotographyPage() {
     <div className="w-full min-h-screen bg-black text-white relative select-none overflow-x-hidden overflow-y-auto">
       
       {/* GLOBAL HUD NAVIGATION OVERLAY */}
-      <header className={`fixed top-0 left-0 w-full h-18 px-6 sm:px-10 flex items-center justify-between z-50 pointer-events-none mix-blend-difference text-white bg-transparent transition-opacity duration-300 ${activePhotoIndex !== null ? 'opacity-0' : 'opacity-100'}`}>
+      <header className={`fixed top-0 left-0 w-full h-18 px-6 sm:px-10 z-50 pointer-events-none text-white bg-transparent transition-opacity duration-300 ${activePhotoIndex !== null ? 'opacity-0' : 'opacity-100'}`}>
         
-        {/* Return link */}
-        <button 
-          onClick={() => navigate('/')}
-          className="flex items-center gap-2 font-mono text-[10px] font-bold tracking-[0.2em] cursor-pointer pointer-events-auto hover:opacity-85 transition-opacity"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>EMAD SHAIKH.</span>
-        </button>
-
-        {/* Middle indicator */}
-        <div className="font-mono text-[9px] tracking-[0.3em] uppercase hidden sm:block">
-          GALLERY FEED // RAW DATABASE
+        {/* Global Slide-Out Navigation (Framer Motion) - Mobile Only */}
+        <div className="block md:hidden">
+          <AaryaNavigationDrawer />
         </div>
 
-        {/* Global links */}
-        <div className="flex items-center gap-8 font-mono text-[10px] font-bold tracking-widest pointer-events-auto">
-          <button onClick={() => navigate('/')} className="hover:opacity-75 cursor-pointer transition-opacity">HOME</button>
-          <button onClick={() => navigate('/photography')} className="underline decoration-white underline-offset-4 cursor-pointer">PHOTOGRAPHY</button>
-          <button onClick={() => navigate('/works')} className="hover:opacity-75 cursor-pointer transition-opacity">WORKS</button>
-          <button onClick={() => navigate('/about')} className="hover:opacity-75 cursor-pointer transition-opacity">ABOUT</button>
-        </div>
+        {/* Desktop Navigation — always visible */}
+        <nav className="desktop-nav hidden md:flex justify-center fixed top-0 left-0 w-full z-[10000] py-8 px-12 items-center pointer-events-auto" style={{ transition: 'none' }}>
+          <div className="flex items-center gap-8 md:gap-12">
+            {/* Left: Links */}
+            <div className="nav-left-links flex items-center gap-10 font-sans text-base tracking-[0.15em] text-white font-bold">
+              <button onClick={() => navigate('/about')} className="hover:opacity-70 transition-opacity duration-300 cursor-pointer">ABOUT</button>
+              <button onClick={() => navigate('/photography')} className="hover:opacity-70 transition-opacity duration-300 underline decoration-white underline-offset-4 decoration-2 cursor-pointer">PHOTOGRAPHY</button>
+            </div>
+            
+            {/* Center: Logo */}
+            <div className="nav-logo flex justify-center items-center">
+              <button onClick={() => navigate('/')} className="hover:scale-110 transition-transform duration-300 shrink-0 cursor-pointer">
+                <img src="/logo.avif" alt="Logo" className="h-20 w-30" />
+              </button>
+            </div>
+
+            {/* Right: Links */}
+            <div className="nav-right-links flex items-center gap-10 font-sans text-base tracking-[0.15em] text-white font-bold">
+              <button onClick={() => navigate('/works')} className="hover:opacity-70 transition-opacity duration-300 cursor-pointer">WORKS</button>
+              <button onClick={() => navigate('/community')} className="hover:opacity-70 transition-opacity duration-300 cursor-pointer">COMMUNITY</button>
+            </div>
+          </div>
+        </nav>
 
       </header>
 
