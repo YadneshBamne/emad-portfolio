@@ -44,6 +44,8 @@ export const TransitionProvider = ({ children }) => {
   const overlay1Ref = useRef(null);
   const overlay2Ref = useRef(null);
   const overlay3Ref = useRef(null);
+  const overlay4Ref = useRef(null);
+  const overlay5Ref = useRef(null);
   const textRef = useRef(null);
   
   const isTransitioningRef = useRef(false);
@@ -56,8 +58,14 @@ export const TransitionProvider = ({ children }) => {
 
   // Set initial state of the overlays on mount synchronously before paint
   useLayoutEffect(() => {
-    gsap.set([overlay1Ref.current, overlay2Ref.current, overlay3Ref.current], { yPercent: 100 });
-    gsap.set(textRef.current, { opacity: 0, scale: 1.15, letterSpacing: '0.35em' });
+    gsap.set([
+      overlay1Ref.current,
+      overlay2Ref.current,
+      overlay3Ref.current,
+      overlay4Ref.current,
+      overlay5Ref.current
+    ], { yPercent: 100 });
+    gsap.set(textRef.current, { opacity: 0, scale: 1.15, letterSpacing: '0.05em' });
     
     // Set initial theme color to dark page background on clean mount
     updateBrowserThemeColor('#050505');
@@ -73,9 +81,22 @@ export const TransitionProvider = ({ children }) => {
       updateBrowserThemeColor('#FF0000');
 
       // Reset styles and clear any active tweens for animation stability
-      gsap.killTweensOf([overlay1Ref.current, overlay2Ref.current, overlay3Ref.current, textRef.current]);
-      gsap.set([overlay1Ref.current, overlay2Ref.current, overlay3Ref.current], { yPercent: 100 });
-      gsap.set(textRef.current, { opacity: 0, scale: 1.15, letterSpacing: '0.35em' });
+      gsap.killTweensOf([
+        overlay1Ref.current,
+        overlay2Ref.current,
+        overlay3Ref.current,
+        overlay4Ref.current,
+        overlay5Ref.current,
+        textRef.current
+      ]);
+      gsap.set([
+        overlay1Ref.current,
+        overlay2Ref.current,
+        overlay3Ref.current,
+        overlay4Ref.current,
+        overlay5Ref.current
+      ], { yPercent: 100 });
+      gsap.set(textRef.current, { opacity: 0, scale: 1.15, letterSpacing: '0.05em' });
 
       const tl = gsap.timeline({
         onComplete: () => {
@@ -85,35 +106,47 @@ export const TransitionProvider = ({ children }) => {
         }
       });
 
-      // 1. Staggered slide up of the 3 transition panels
+      // 1. Staggered slide up of the 5 transition panels
       tl.to(overlay1Ref.current, {
         yPercent: 0,
-        duration: 0.75,
+        duration: 0.65,
         ease: 'power3.inOut',
         force3D: true,
       })
       .to(overlay2Ref.current, {
         yPercent: 0,
-        duration: 0.75,
+        duration: 0.65,
         ease: 'power3.inOut',
         force3D: true,
-      }, '-=0.6')
+      }, '-=0.52')
       .to(overlay3Ref.current, {
         yPercent: 0,
-        duration: 0.75,
+        duration: 0.65,
         ease: 'power3.inOut',
         force3D: true,
-      }, '-=0.6')
+      }, '-=0.52')
+      .to(overlay4Ref.current, {
+        yPercent: 0,
+        duration: 0.65,
+        ease: 'power3.inOut',
+        force3D: true,
+      }, '-=0.52')
+      .to(overlay5Ref.current, {
+        yPercent: 0,
+        duration: 0.65,
+        ease: 'power3.inOut',
+        force3D: true,
+      }, '-=0.52')
 
       // 2. Fluidic Entrance: Stagger text fade-in, scale-down, and letter-spacing contraction
       .to(textRef.current, {
         opacity: 1,
         scale: 1,
-        letterSpacing: '0.15em',
+        letterSpacing: '-0.05em',
         duration: 0.5,
         ease: 'power2.out',
         force3D: true
-      }, '-=0.45'); // Overlap with curtain slide for dynamic pacing
+      }, '-=0.35'); // Overlap with curtain slide for dynamic pacing
     }
   }, [blocker.state]);
 
@@ -123,12 +156,25 @@ export const TransitionProvider = ({ children }) => {
       // Delay the entry transition by a short period (100ms) to guarantee
       // that the new route components are fully mounted, painted, and ready.
       const delayTimer = setTimeout(() => {
-        gsap.killTweensOf([overlay1Ref.current, overlay2Ref.current, overlay3Ref.current, textRef.current]);
+        gsap.killTweensOf([
+          overlay1Ref.current,
+          overlay2Ref.current,
+          overlay3Ref.current,
+          overlay4Ref.current,
+          overlay5Ref.current,
+          textRef.current
+        ]);
         
         const tl = gsap.timeline({
           onComplete: () => {
             // Reset overlays back to yPercent: 100 so they are ready for the next click
-            gsap.set([overlay1Ref.current, overlay2Ref.current, overlay3Ref.current], { yPercent: 100 });
+            gsap.set([
+              overlay1Ref.current,
+              overlay2Ref.current,
+              overlay3Ref.current,
+              overlay4Ref.current,
+              overlay5Ref.current
+            ], { yPercent: 100 });
             isTransitioningRef.current = false;
             window.isRouteTransition = false;
             
@@ -149,31 +195,43 @@ export const TransitionProvider = ({ children }) => {
         tl.to(textRef.current, {
           opacity: 0,
           scale: 0.95,
-          letterSpacing: '0.35em',
-          duration: 0.35,
+          letterSpacing: '0.05em',
+          duration: 0.3,
           ease: 'power2.in',
           force3D: true
         });
 
-        // 2. Staggered slide up and away of the 3 transition panels (out off the top)
-        tl.to(overlay3Ref.current, {
+        // 2. Staggered slide up and away of the 5 transition panels (out off the top)
+        tl.to(overlay5Ref.current, {
           yPercent: -100,
-          duration: 0.75,
+          duration: 0.65,
           ease: 'power3.inOut',
           force3D: true,
         }, '-=0.15')
+        .to(overlay4Ref.current, {
+          yPercent: -100,
+          duration: 0.65,
+          ease: 'power3.inOut',
+          force3D: true,
+        }, '-=0.52')
+        .to(overlay3Ref.current, {
+          yPercent: -100,
+          duration: 0.65,
+          ease: 'power3.inOut',
+          force3D: true,
+        }, '-=0.52')
         .to(overlay2Ref.current, {
           yPercent: -100,
-          duration: 0.75,
+          duration: 0.65,
           ease: 'power3.inOut',
           force3D: true,
-        }, '-=0.6')
+        }, '-=0.52')
         .to(overlay1Ref.current, {
           yPercent: -100,
-          duration: 0.75,
+          duration: 0.65,
           ease: 'power3.inOut',
           force3D: true,
-        }, '-=0.6');
+        }, '-=0.52');
       }, 100);
 
       return () => clearTimeout(delayTimer);
@@ -189,24 +247,39 @@ export const TransitionProvider = ({ children }) => {
 
   return (
     <TransitionContext.Provider value={{ transitionNavigate }}>
+      <style dangerouslySetInnerHTML={{ __html: `
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@800;900&display=swap');
+      ` }} />
       {children}
       
-      {/* Layer 1: Solid black background curtain */}
+      {/* Layer 1: Extremely dark cherry/black-red (Stagger Start) */}
       <div 
         ref={overlay1Ref}
-        className="transition-overlay-1 fixed top-0 left-0 w-screen h-screen bg-[#050505] z-[999997] pointer-events-none"
+        className="transition-overlay-1 fixed top-0 left-0 w-screen h-screen bg-[#150002] z-[999995] pointer-events-none"
       />
 
-      {/* Layer 2: Deep crimson/burgundy accent curtain */}
+      {/* Layer 2: Deep maroon-burgundy */}
       <div 
         ref={overlay2Ref}
-        className="transition-overlay-2 fixed top-0 left-0 w-screen h-screen bg-[#800000] z-[999998] pointer-events-none"
+        className="transition-overlay-2 fixed top-0 left-0 w-screen h-screen bg-[#420005] z-[999996] pointer-events-none"
       />
 
-      {/* Layer 3: Vibrant red foreground curtain with text */}
+      {/* Layer 3: Rich classic crimson */}
       <div 
         ref={overlay3Ref}
-        className="transition-overlay-3 fixed top-0 left-0 w-screen h-screen bg-[#FF0000] z-[999999] flex flex-col items-center justify-center pointer-events-none"
+        className="transition-overlay-3 fixed top-0 left-0 w-screen h-screen bg-[#78000b] z-[999997] pointer-events-none"
+      />
+
+      {/* Layer 4: Strong scarlet red */}
+      <div 
+        ref={overlay4Ref}
+        className="transition-overlay-4 fixed top-0 left-0 w-screen h-screen bg-[#b80010] z-[999998] pointer-events-none"
+      />
+
+      {/* Layer 5: Vibrant brand scarlet red (Foreground with signature) */}
+      <div 
+        ref={overlay5Ref}
+        className="transition-overlay-5 fixed top-0 left-0 w-screen h-screen bg-[#FF0000] z-[999999] flex flex-col items-center justify-center pointer-events-none"
       >
         {/* Subtle scanline/noise effect overlay on the transition panel to make it feel tactile */}
         <div className="absolute inset-0 bg-black/5 pointer-events-none mix-blend-overlay" />
@@ -214,14 +287,14 @@ export const TransitionProvider = ({ children }) => {
 
         <h1 
           ref={textRef}
-          className="branding-text text-white text-[12vw] md:text-[8vw] opacity-0 leading-none select-none" 
+          className="branding-text text-white text-[12vw] md:text-[8vw] font-black lowercase tracking-tighter opacity-0 leading-none select-none" 
           style={{ 
-            fontFamily: "'Ephesis', cursive",
-            fontWeight: 400,
-            textShadow: '0 0 20px rgba(255,255,255,0.3)',
+            fontFamily: "'Outfit', sans-serif",
+            fontWeight: 900,
+            textShadow: '0 0 20px rgba(255,255,255,0.35)',
           }}
         >
-          Emad Shaikh
+          emad shaikh.
         </h1>
       </div>
     </TransitionContext.Provider>

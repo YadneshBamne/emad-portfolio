@@ -2,7 +2,7 @@ import React from 'react'
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
 import AaryaCinematicPortfolio from './AaryaCinematicPortfolio'
 import DemoOne from './demo'
-import { CinematicFooter } from './components/motion-footer'
+import AaryaDotMatrixFooter from './components/AaryaDotMatrixFooter'
 import './App.css'
 import VhsRecorder from './components/VhsRecorder'
 import Preloader from './components/Preloader'
@@ -12,12 +12,12 @@ import WorksPage from './pages/WorksPage'
 import CommunityPage from './pages/CommunityPage'
 import { TransitionProvider } from './context/TransitionContext'
 
-// Root Layout wrapping all pages to supply the TransitionProvider and CinematicFooter
+// Root Layout wrapping all pages to supply the TransitionProvider and AaryaDotMatrixFooter
 const Layout = () => {
   return (
     <TransitionProvider>
       <Outlet />
-      <CinematicFooter />
+      <AaryaDotMatrixFooter />
     </TransitionProvider>
   )
 }
