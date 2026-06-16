@@ -253,7 +253,7 @@ export default function AaryaDotMatrixFooter() {
       ` }} />
 
       <footer 
-        className="w-full bg-black text-white rounded-t-[2.5rem] md:rounded-t-[3.5rem] pt-10 md:pt-16 lg:pt-24 pb-6 select-none relative z-20 font-sans border-t border-zinc-900"
+        className="w-full bg-black text-white  pt-10 md:pt-16 lg:pt-24 pb-6 select-none relative z-20 font-sans border-t border-zinc-900"
         style={{ fontFamily: "'Outfit', sans-serif" }}
       >
         {/* 1. Top Section (Branding & Links) */}
