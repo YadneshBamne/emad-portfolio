@@ -2,7 +2,6 @@ import React, { createContext, useContext, useEffect, useLayoutEffect, useRef } 
 import { useBlocker, useLocation, useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useTheme } from './ThemeContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -33,7 +32,7 @@ const updateBrowserThemeColor = (color) => {
 export const useTransitionNavigate = () => {
   const context = useContext(TransitionContext);
   if (!context) {
-    throw new Error('useTransitionNavigate must be used within a ThemeProvider');
+    throw new Error('useTransitionNavigate must be used within a TransitionProvider');
   }
   return context.transitionNavigate;
 };
@@ -41,7 +40,6 @@ export const useTransitionNavigate = () => {
 export const TransitionProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { theme } = useTheme();
   
   const overlay1Ref = useRef(null);
   const overlay2Ref = useRef(null);
@@ -56,20 +54,13 @@ export const TransitionProvider = ({ children }) => {
     return currentLocation.pathname !== nextLocation.pathname && !isTransitioningRef.current;
   });
 
-  // Synchronize browser theme color when theme changes
-  useEffect(() => {
-    if (!isTransitioningRef.current) {
-      updateBrowserThemeColor(theme === 'dark' ? '#050505' : '#FAF8F5');
-    }
-  }, [theme]);
-
   // Set initial state of the overlays on mount synchronously before paint
   useLayoutEffect(() => {
     gsap.set([overlay1Ref.current, overlay2Ref.current, overlay3Ref.current], { yPercent: 100 });
     gsap.set(textRef.current, { opacity: 0, scale: 1.15, letterSpacing: '0.35em' });
     
-    // Set initial theme color to page background on clean mount
-    updateBrowserThemeColor(theme === 'dark' ? '#050505' : '#FAF8F5');
+    // Set initial theme color to dark page background on clean mount
+    updateBrowserThemeColor('#050505');
   }, []);
 
   // Leave Hook (Exit Animation): Triggered whenever a route change is blocked
@@ -141,8 +132,8 @@ export const TransitionProvider = ({ children }) => {
             isTransitioningRef.current = false;
             window.isRouteTransition = false;
             
-            // Restore theme color back to page background when transition finishes
-            updateBrowserThemeColor(theme === 'dark' ? '#050505' : '#FAF8F5');
+            // Restore theme color back to dark page background when transition finishes
+            updateBrowserThemeColor('#050505');
             
             // Reset blocker state so it can block the next navigation
             if (blocker.reset) {
@@ -200,10 +191,10 @@ export const TransitionProvider = ({ children }) => {
     <TransitionContext.Provider value={{ transitionNavigate }}>
       {children}
       
-      {/* Layer 1: Solid background curtain */}
+      {/* Layer 1: Solid black background curtain */}
       <div 
         ref={overlay1Ref}
-        className="transition-overlay-1 fixed top-0 left-0 w-screen h-screen bg-bg-primary z-[999997] pointer-events-none"
+        className="transition-overlay-1 fixed top-0 left-0 w-screen h-screen bg-[#050505] z-[999997] pointer-events-none"
       />
 
       {/* Layer 2: Deep crimson/burgundy accent curtain */}

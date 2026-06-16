@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ArrowRight, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { useTransitionNavigate } from '../context/TransitionContext';
 import { AaryaNavigationDrawer } from '../components/AaryaNavigationDrawer';
-import AaryaNavbar from '../components/AaryaNavbar';
 
 export default function CommunityPage() {
   const [email, setEmail] = useState('');
@@ -22,15 +21,36 @@ export default function CommunityPage() {
   };
 
   return (
-    <div className="w-full min-h-screen md:h-screen bg-bg-primary text-text-primary relative select-none overflow-y-auto md:overflow-hidden flex flex-col transition-colors duration-500">
+    <div className="w-full min-h-screen md:h-screen bg-[#0a0a0a] text-white relative select-none overflow-y-auto md:overflow-hidden flex flex-col">
       
       {/* Global Slide-Out Navigation (Framer Motion) - Mobile Only */}
       <div className="block md:hidden">
         <AaryaNavigationDrawer />
       </div>
 
-      {/* Desktop Navigation */}
-      <AaryaNavbar activePage="community" isHome={false} />
+      {/* Desktop Navigation — always visible */}
+      <nav className="desktop-nav hidden md:flex justify-center fixed top-0 left-0 w-full z-[10000] py-8 px-12 items-center pointer-events-auto" style={{ transition: 'none' }}>
+        <div className="flex items-center gap-8 md:gap-12">
+          {/* Left: Links */}
+          <div className="nav-left-links flex items-center gap-10 font-sans text-base tracking-[0.15em] text-white font-bold">
+            <button onClick={() => navigate('/about')} className="hover:opacity-70 transition-opacity duration-300 cursor-pointer">ABOUT</button>
+            <button onClick={() => navigate('/photography')} className="hover:opacity-70 transition-opacity duration-300 cursor-pointer">PHOTOGRAPHY</button>
+          </div>
+          
+          {/* Center: Logo */}
+          <div className="nav-logo flex justify-center items-center">
+            <button onClick={() => navigate('/')} className="hover:scale-110 transition-transform duration-300 shrink-0 cursor-pointer">
+              <img src="/logo.avif" alt="Logo" className="h-20 w-30" />
+            </button>
+          </div>
+
+          {/* Right: Links */}
+          <div className="nav-right-links flex items-center gap-10 font-sans text-base tracking-[0.15em] text-white font-bold">
+            <button onClick={() => navigate('/works')} className="hover:opacity-70 transition-opacity duration-300 cursor-pointer">WORKS</button>
+            <button onClick={() => navigate('/community')} className="hover:opacity-70 transition-opacity duration-300 underline decoration-white underline-offset-4 decoration-2 cursor-pointer">COMMUNITY</button>
+          </div>
+        </div>
+      </nav>
 
       <div className="pt-28 pb-8 px-6 md:px-12 relative z-10 w-full max-w-6xl mx-auto flex flex-col justify-center flex-grow">
         
@@ -48,7 +68,7 @@ export default function CommunityPage() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-text-secondary font-mono text-[10px] sm:text-xs tracking-[0.2em] uppercase max-w-2xl leading-relaxed"
+            className="text-zinc-500 font-mono text-[10px] sm:text-xs tracking-[0.2em] uppercase max-w-2xl leading-relaxed"
           >
             A private network linking international concert filmmakers, photographers, and music marketing creatives.
           </motion.p>
@@ -64,35 +84,35 @@ export default function CommunityPage() {
             className="md:col-span-5 flex flex-col gap-6"
           >
             <div>
-              <span className="text-[10px] font-mono tracking-[0.25em] text-accent-metallic uppercase font-bold">01 / ACCESS & BENEFITS</span>
+              <span className="text-[10px] font-mono tracking-[0.25em] text-red-500 uppercase">01 / ACCESS & BENEFITS</span>
             </div>
 
             <div className="flex flex-col gap-6">
               <div className="flex gap-4">
-                <span className="text-accent-metallic font-mono text-xs font-bold">01.</span>
+                <span className="text-red-500 font-mono text-xs">01.</span>
                 <div>
-                  <h3 className="text-text-primary font-mono text-xs tracking-widest uppercase mb-1">Insider Diaries</h3>
-                  <p className="text-text-secondary text-[11px] sm:text-xs leading-relaxed font-serif">
+                  <h3 className="text-zinc-200 font-mono text-xs tracking-widest uppercase mb-1">Insider Diaries</h3>
+                  <p className="text-zinc-500 text-[11px] sm:text-xs leading-relaxed font-serif">
                     Raw post-production breakdowns, festival media sheets, and tour diaries.
                   </p>
                 </div>
               </div>
 
               <div className="flex gap-4">
-                <span className="text-accent-metallic font-mono text-xs font-bold">02.</span>
+                <span className="text-red-500 font-mono text-xs">02.</span>
                 <div>
-                  <h3 className="text-text-primary font-mono text-xs tracking-widest uppercase mb-1">Priority Claims</h3>
-                  <p className="text-text-secondary text-[11px] sm:text-xs leading-relaxed font-serif">
+                  <h3 className="text-zinc-200 font-mono text-xs tracking-widest uppercase mb-1">Priority Claims</h3>
+                  <p className="text-zinc-500 text-[11px] sm:text-xs leading-relaxed font-serif">
                     First claims on limited merchandise, preset packs, and asset archives.
                   </p>
                 </div>
               </div>
 
               <div className="flex gap-4">
-                <span className="text-accent-metallic font-mono text-xs font-bold">03.</span>
+                <span className="text-red-500 font-mono text-xs">03.</span>
                 <div>
-                  <h3 className="text-text-primary font-mono text-xs tracking-widest uppercase mb-1">WhatsApp Workspace</h3>
-                  <p className="text-text-secondary text-[11px] sm:text-xs leading-relaxed font-serif">
+                  <h3 className="text-zinc-200 font-mono text-xs tracking-widest uppercase mb-1">WhatsApp Workspace</h3>
+                  <p className="text-zinc-500 text-[11px] sm:text-xs leading-relaxed font-serif">
                     Direct access to our private network of active creators on tour.
                   </p>
                 </div>
@@ -119,54 +139,54 @@ export default function CommunityPage() {
                     className="flex flex-col gap-5"
                   >
                     <div>
-                      <span className="text-[10px] font-mono tracking-[0.25em] text-accent-metallic uppercase font-bold">02 / APPLICATION</span>
-                      <h2 className="text-xl font-bold font-mono tracking-wider text-text-primary mt-1 uppercase">Request Admission</h2>
+                      <span className="text-[10px] font-mono tracking-[0.25em] text-red-500 uppercase">02 / APPLICATION</span>
+                      <h2 className="text-xl font-bold font-mono tracking-wider text-zinc-200 mt-1 uppercase">Request Admission</h2>
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-[9px] tracking-[0.15em] font-mono text-text-secondary uppercase">EMAIL ADDRESS</label>
+                      <label className="text-[9px] tracking-[0.15em] font-mono text-zinc-500 uppercase">EMAIL ADDRESS</label>
                       <input 
                         type="email" 
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="bg-transparent border-b border-border-color focus:border-accent-metallic py-2 text-text-primary focus:outline-none transition-colors font-mono text-xs tracking-wider"
+                        className="bg-transparent border-b border-zinc-800 focus:border-red-600 py-2 text-white focus:outline-none transition-colors font-mono text-xs tracking-wider"
                         placeholder="you@domain.com"
                       />
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-[9px] tracking-[0.15em] font-mono text-text-secondary uppercase">PORTFOLIO URL</label>
+                      <label className="text-[9px] tracking-[0.15em] font-mono text-zinc-500 uppercase">PORTFOLIO URL</label>
                       <input 
                         type="url" 
                         required
                         value={portfolio}
                         onChange={(e) => setPortfolio(e.target.value)}
-                        className="bg-transparent border-b border-border-color focus:border-accent-metallic py-2 text-text-primary focus:outline-none transition-colors font-mono text-xs tracking-wider"
+                        className="bg-transparent border-b border-zinc-800 focus:border-red-600 py-2 text-white focus:outline-none transition-colors font-mono text-xs tracking-wider"
                         placeholder="https://your-work.com"
                       />
                     </div>
 
                     <div className="grid grid-cols-2 gap-6">
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-[9px] tracking-[0.15em] font-mono text-text-secondary uppercase">COUNTRY</label>
+                        <label className="text-[9px] tracking-[0.15em] font-mono text-zinc-500 uppercase">COUNTRY</label>
                         <input 
                           type="text" 
                           required
                           value={country}
                           onChange={(e) => setCountry(e.target.value)}
-                          className="bg-transparent border-b border-border-color focus:border-accent-metallic py-2 text-text-primary focus:outline-none transition-colors font-mono text-xs tracking-wider"
+                          className="bg-transparent border-b border-zinc-800 focus:border-red-600 py-2 text-white focus:outline-none transition-colors font-mono text-xs tracking-wider"
                           placeholder="e.g. USA"
                         />
                       </div>
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-[9px] tracking-[0.15em] font-mono text-text-secondary uppercase">CITY</label>
+                        <label className="text-[9px] tracking-[0.15em] font-mono text-zinc-500 uppercase">CITY</label>
                         <input 
                           type="text" 
                           required
                           value={city}
                           onChange={(e) => setCity(e.target.value)}
-                          className="bg-transparent border-b border-border-color focus:border-accent-metallic py-2 text-text-primary focus:outline-none transition-colors font-mono text-xs tracking-wider"
+                          className="bg-transparent border-b border-zinc-800 focus:border-red-600 py-2 text-white focus:outline-none transition-colors font-mono text-xs tracking-wider"
                           placeholder="e.g. Los Angeles"
                         />
                       </div>
@@ -174,7 +194,7 @@ export default function CommunityPage() {
 
                     <button 
                       type="submit"
-                      className="mt-4 bg-text-primary text-bg-primary font-bold tracking-[0.2em] font-mono py-3.5 px-6 hover:bg-text-secondary/90 transition-colors flex items-center justify-between group cursor-pointer text-xs"
+                      className="mt-4 bg-white text-black font-bold tracking-[0.2em] font-mono py-3.5 px-6 hover:bg-zinc-200 transition-colors flex items-center justify-between group cursor-pointer text-xs"
                     >
                       SUBMIT APPLICATION
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
@@ -187,11 +207,11 @@ export default function CommunityPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     className="flex flex-col gap-5 py-6 text-left"
                   >
-                    <CheckCircle2 className="w-10 h-10 text-accent-metallic" />
+                    <CheckCircle2 className="w-10 h-10 text-red-500" />
                     
                     <div>
-                      <h2 className="text-lg font-bold font-mono tracking-widest text-text-primary uppercase">Application Submitted</h2>
-                      <p className="text-text-secondary font-mono text-xs mt-2 uppercase tracking-wider leading-relaxed">
+                      <h2 className="text-lg font-bold font-mono tracking-widest text-zinc-200 uppercase">Application Submitted</h2>
+                      <p className="text-zinc-500 font-mono text-xs mt-2 uppercase tracking-wider leading-relaxed">
                         Awaiting curatorial sign-off. Approved members will receive an invite token to their registered email.
                       </p>
                     </div>

@@ -6,7 +6,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AaryaPolaroidGrid from './components/AaryaPolaroidGrid';
 import { AaryaNavigationDrawer } from './components/AaryaNavigationDrawer';
 import { AaryaLensReveal } from './components/AaryaLensReveal';
-import AaryaNavbar from './components/AaryaNavbar';
 // import { AaryaHero } from './components/AaryaHero';
 // import VhsRecorder from './components/VhsRecorder';
 import { AnimatedCarousel } from './components/ui/logo-carousel';
@@ -110,7 +109,7 @@ const AaryaCinematicPortfolio = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] min-h-screen selection:bg-[var(--color-accent-metallic)] selection:text-[var(--color-bg-primary)] rounded-b-[3rem] overflow-x-hidden transition-colors duration-500">
+    <div ref={containerRef} className="bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] min-h-screen selection:bg-[var(--color-accent-metallic)] selection:text-[var(--color-bg-primary)] overflow-x-hidden transition-colors duration-500">
 
       {/* Solid Black Page Transition Mask Overlay for Dark Fade-in */}
       <div className="hero-fade-overlay fixed inset-0 bg-[#000000] z-[100000] pointer-events-none" />
@@ -124,8 +123,29 @@ const AaryaCinematicPortfolio = () => {
 
       <ScrollProgressIndicator />
 
-      {/* Desktop Navigation */}
-      <AaryaNavbar isHome={true} />
+      {/* Desktop Navigation — always visible, animates in on load */}
+      <nav className="desktop-nav hidden md:flex justify-center fixed top-0 left-0 w-full z-[10000] py-8 px-12 items-center pointer-events-auto" style={{ transition: 'none' }}>
+        <div className="flex items-center gap-8 md:gap-12">
+          {/* Left: Links */}
+          <div className="nav-left-links flex items-center gap-10 font-sans text-base tracking-[0.15em] text-white font-bold" style={{ opacity: 0 }}>
+            <button onClick={() => navigate('/about')} className="hover:opacity-70 transition-opacity duration-300">ABOUT</button>
+            <button onClick={() => navigate('/photography')} className="hover:opacity-70 transition-opacity duration-300">PHOTOGRAPHY</button>
+          </div>
+          
+          {/* Center: Logo */}
+          <div className="nav-logo flex justify-center items-center" style={{ opacity: 0 }}>
+            <button onClick={() => navigate('/')} className="hover:scale-110 transition-transform duration-300 shrink-0">
+              <img src="/logo.avif" alt="Logo" className="h-20 w-30" />
+            </button>
+          </div>
+
+          {/* Right: Links */}
+          <div className="nav-right-links flex items-center gap-10 font-sans text-base tracking-[0.15em] text-white font-bold" style={{ opacity: 0 }}>
+            <button onClick={() => navigate('/works')} className="hover:opacity-70 transition-opacity duration-300">WORKS</button>
+            <button onClick={() => navigate('/community')} className="hover:opacity-70 transition-opacity duration-300">COMMUNITY</button>
+          </div>
+        </div>
+      </nav>
 
       {/* 2. The Hero Section (Lens Reveal) */}
       <div id="section-hero-top">

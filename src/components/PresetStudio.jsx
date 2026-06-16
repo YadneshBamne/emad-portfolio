@@ -78,7 +78,7 @@ export const PresetStudio = () => {
   });
 
   return (
-    <section className="w-full bg-bg-primary py-16 px-4 md:px-8 font-sans flex items-center justify-center min-h-[90vh] transition-colors duration-500">
+    <section className="w-full bg-black py-16 px-4 md:px-8 font-sans flex items-center justify-center min-h-[90vh]">
       <div 
         className="w-full max-w-[1400px] h-[85vh] bg-[#111111] rounded-2xl border border-zinc-800 flex flex-col overflow-hidden shadow-2xl relative"
         style={{ transform: 'translateZ(0)' }} // Enforce WebKit corner clipping
