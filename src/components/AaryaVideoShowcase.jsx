@@ -16,15 +16,24 @@ const AaryaVideoShowcase = () => {
   const scrollContainerRef = useRef(null);
   const activeItemRef = useRef(null);
 
+  const isInitialMount = useRef(true);
+
   useEffect(() => {
-    // Only scroll if it's a mobile view (using a simple check or just applying it since desktop hides the container)
-    // The container is hidden on desktop, so scrollIntoView will safely do nothing or just scroll the hidden container.
+    // Center active item horizontally inside scrollContainer without triggering window scroll
     if (activeItemRef.current && scrollContainerRef.current) {
-      activeItemRef.current.scrollIntoView({
-        behavior: 'smooth',
-        inline: 'center',
-        block: 'nearest'
-      });
+      const container = scrollContainerRef.current;
+      const item = activeItemRef.current;
+      const scrollLeft = item.offsetLeft - (container.clientWidth / 2) + (item.clientWidth / 2);
+
+      if (isInitialMount.current) {
+        isInitialMount.current = false;
+        container.scrollLeft = scrollLeft;
+      } else {
+        container.scrollTo({
+          left: scrollLeft,
+          behavior: 'smooth'
+        });
+      }
     }
   }, [activeArtist]);
 
