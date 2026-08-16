@@ -1,151 +1,5 @@
-import React, { useState, useEffect, Suspense, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { useGLTF, useTexture, Center, Environment } from '@react-three/drei';
-import * as THREE from 'three';
-
-class ThreeErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.error("ThreeErrorBoundary caught an error:", error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return this.props.fallback;
-    }
-    return this.props.children;
-  }
-}
-
-
-
-const START_COLOR = new THREE.Color('#0D0D0C');
-const END_COLOR = new THREE.Color('#ffffff');
-const tempColor = new THREE.Color();
-
-function CameraModel() {
-  const { scene } = useGLTF('/scene.gltf');
-  const texture = useTexture('/textures/cam2_u1_v1_diffuse.jpeg');
-  const { viewport } = useThree();
-  const groupRef = useRef();
-  const fadeOpacity = useRef(0); // Track fade-in progress
-
-  useEffect(() => {
-    if (scene && texture) {
-      // Configure texture parameters for GLTF UV alignment and color space
-      texture.flipY = false;
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.needsUpdate = true;
-
-      // 1. Reset scale and position first to get clean bounds
-      scene.scale.set(1, 1, 1);
-      scene.position.set(0, 0, 0);
-      scene.rotation.set(0, 0, 0);
-
-      // 2. Configure mesh properties and force-assign the diffuse map
-      scene.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-          child.receiveShadow = true;
-          
-          if (child.material) {
-            child.material.side = THREE.DoubleSide;
-            child.material.map = texture;
-            
-            // PBR configurations to make the camera body completely matte with no shininess
-            child.material.roughness = 0.95; // High roughness = fully diffuse, non-reflective finish
-            child.material.metalness = 0.0;  // Zero metalness = flat matte composite body
-            
-            // Set starting color to match background (#0D0D0C) for a clean color fade-in
-            child.material.color.copy(START_COLOR);
-
-            // Enable transparency and start at 0 opacity for a smooth fade-in
-            child.material.transparent = true;
-            child.material.opacity = 0.0;
-            
-            child.material.needsUpdate = true;
-          }
-        }
-      });
-
-      // 3. Compute bounding bounds using mesh nodes only to ignore helpers or scanners
-      const box = new THREE.Box3();
-      let hasMesh = false;
-      scene.traverse((child) => {
-        if (child.isMesh) {
-          if (!hasMesh) {
-            box.setFromObject(child);
-            hasMesh = true;
-          } else {
-            box.expandByObject(child);
-          }
-        }
-      });
-
-      if (hasMesh) {
-        const size = new THREE.Vector3();
-        box.getSize(size);
-        const maxDim = Math.max(size.x, size.y, size.z);
-        
-        // Dynamically scale model target size based on aspect ratio to prevent clipping on mobile portrait viewports
-        const responsiveTargetSize = Math.min(2.4, viewport.width * 0.7);
-        const scaleFactor = responsiveTargetSize / (maxDim || 1);
-        
-        scene.scale.setScalar(scaleFactor);
-
-        // Position model center exactly at origin (0, 0, 0)
-        const center = new THREE.Vector3();
-        box.getCenter(center);
-        scene.position.copy(center).multiplyScalar(-scaleFactor);
-      }
-    }
-  }, [scene, texture, viewport.width]);
-
-  useFrame((state, delta) => {
-    if (groupRef.current) {
-      // 2.2 rad/s (faster dynamic spin to showcase reflective metallic details)
-      groupRef.current.rotation.y += delta * 2.2;
-      
-      // Floating wobble animation to make the camera feel suspended in space
-      const elapsed = state.clock.getElapsedTime();
-      groupRef.current.position.y = Math.sin(elapsed * 1.8) * 0.08;
-    }
-
-    // Smoothly fade in all camera meshes on load/mount
-    if (scene && fadeOpacity.current < 1.0) {
-      // Fade-in duration of ~0.6 seconds (delta * 1.6)
-      fadeOpacity.current = Math.min(1.0, fadeOpacity.current + delta * 1.6);
-      
-      // Interpolate material color from starting bg color (#0D0D0C) to standard white (#ffffff)
-      tempColor.lerpColors(START_COLOR, END_COLOR, fadeOpacity.current);
-
-      scene.traverse((child) => {
-        if (child.isMesh && child.material) {
-          child.material.color.copy(tempColor);
-          child.material.opacity = fadeOpacity.current;
-        }
-      });
-    }
-  });
-
-  return (
-    <group ref={groupRef}>
-      <primitive object={scene} />
-    </group>
-  );
-}
-
-useGLTF.preload('/scene.gltf');
-useTexture.preload('/textures/cam2_u1_v1_diffuse.jpeg');
 
 const words1 = ["CINEMATIC", "AESTHETIC", "DYNAMIC", "BEAUTIFUL"];
 const words2 = ["ARTISTRY", "MOTION", "DESIGN", "CRAFT"];
@@ -166,7 +20,6 @@ const CyclingWord = ({ words, interval = 2500, offset = 0, align = "center" }) =
     return () => clearTimeout(timer);
   }, [words, interval, offset]);
 
-  // Adjust alignment class based on prop to keep text from jumping
   const alignClass = align === "left" ? "justify-start md:justify-start" : align === "right" ? "justify-end md:justify-end" : "justify-center";
 
   return (
@@ -225,29 +78,30 @@ export default function Preloader({ children }) {
   useEffect(() => {
     if (showContent) return; // Don't run animation if we're skipping
     
-    let currentProgress = 0;
-    let lastTime = performance.now();
+    const duration = 4000; // Smooth 4-second progress transition
+    const startTime = performance.now();
     let animationFrameId;
 
-    const updateProgress = (time) => {
-      const deltaTime = time - lastTime;
-      lastTime = time;
+    const animate = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progressRatio = Math.min(elapsed / duration, 1);
       
-      // Increments by 18% per second (reaches 100% in ~5.5 seconds, ensuring other page assets load in the background)
-      const increment = 18 * (deltaTime / 1000); 
+      // Smooth cubic ease-out curve for fluid acceleration and gentle deceleration
+      const easedProgress = (1 - Math.pow(1 - progressRatio, 2.5)) * 100;
+      const nextVal = Math.min(Math.round(easedProgress), 100);
 
-      currentProgress = Math.min(currentProgress + increment, 100);
-      setProgress(currentProgress);
+      // Only update state when integer value changes to maintain 60fps smoothness without dropped frames
+      setProgress((prev) => (prev !== nextVal ? nextVal : prev));
 
-      if (currentProgress < 100) {
-        animationFrameId = requestAnimationFrame(updateProgress);
+      if (progressRatio < 1) {
+        animationFrameId = requestAnimationFrame(animate);
       }
     };
 
-    animationFrameId = requestAnimationFrame(updateProgress);
+    animationFrameId = requestAnimationFrame(animate);
 
     return () => cancelAnimationFrame(animationFrameId);
-  }, []);
+  }, [showContent]);
 
   useEffect(() => {
     if (progress === 100) {
@@ -266,6 +120,8 @@ export default function Preloader({ children }) {
   return (
     <div className={`fixed inset-0 z-50 flex items-center justify-center bg-[#0D0D0C] transition-opacity duration-1000 ${loadingComplete ? 'opacity-0' : 'opacity-100'} overflow-hidden`}>
       <style dangerouslySetInnerHTML={{__html: `
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400&display=swap');
+        
         @keyframes noiseShift {
           0% { transform: translate(0, 0); }
           10% { transform: translate(-1%, -1%); }
@@ -319,58 +175,23 @@ export default function Preloader({ children }) {
       
       <div className="relative w-full max-w-[800px] h-[60vh] md:h-[500px] flex items-center justify-center px-4 z-10">
         
-        {/* 3D Camera Model Canvas */}
-        <div 
-          className="absolute inset-0 w-full h-full pointer-events-none flex items-center justify-center"
-        >
-          <Canvas 
-            camera={{ position: [0, 0, 4.2], fov: 45 }}
-            gl={{ 
-              antialias: true, 
-              alpha: true,
-              toneMapping: THREE.ACESFilmicToneMapping,
-              toneMappingExposure: 1.5
+        {/* Central Ultra-Smooth Counting Percentage Display */}
+        <div className="flex items-center justify-center pointer-events-none select-none">
+          <div 
+            className="text-white/25 text-[25vw] sm:text-[22vw] md:text-[180px] lg:text-[220px] font-thin tracking-tighter leading-none flex items-baseline"
+            style={{ 
+              fontFamily: "'Outfit', sans-serif",
+              fontWeight: 100,
+              transform: 'scaleY(1.3)',
+              fontVariantNumeric: 'tabular-nums',
+              textShadow: '0 0 30px rgba(255,255,255,0.06)'
             }}
-            style={{ background: 'transparent', width: '100%', height: '100%' }}
           >
-            <ambientLight intensity={1.0} />
-            {/* Rich studio lighting + cinematic red rim lights to match portfolio colors */}
-            <directionalLight position={[5, 5, 5]} intensity={1.8} color="#ffffff" />
-            <directionalLight position={[-5, 3, 5]} intensity={0.8} color="#e2ebff" />
-            <directionalLight position={[0, 5, -5]} intensity={2.2} color="#ffffff" />
-            <directionalLight position={[0, -5, 0]} intensity={0.5} color="#dce2e2" />
-            
-            {/* Colored PBR Rim Lights - Red Theme */}
-            <directionalLight position={[-4, 4, -4]} intensity={3.5} color="#FF0000" /> {/* Left Red Rim */}
-            <directionalLight position={[4, -2, -2]} intensity={2.5} color="#FF0000" /> {/* Right Red Rim */}
-            
-            {/* Red Back-Light Point Light to create a glowing silhouette halo */}
-            <pointLight position={[0, 0, -1.8]} intensity={15.0} color="#FF0000" distance={6} decay={1.2} />
-            
-            <Suspense fallback={null}>
-              <ThreeErrorBoundary fallback={null}>
-                <CameraModel />
-              </ThreeErrorBoundary>
-            </Suspense>
-          </Canvas>
-        </div>
-
-        {/* Minimalist Progress Counter and Thin Red Loading Line below the model */}
-        <div className="absolute bottom-6 flex flex-col items-center gap-2.5 pointer-events-none">
-          <span className="text-white/50 text-[10px] font-light tracking-[0.4em] uppercase" style={{ fontVariantNumeric: 'tabular-nums' }}>
-            {Math.round(progress)}%
-          </span>
-          <div className="w-24 h-[1px] bg-white/10 relative overflow-hidden rounded-full">
-            <div 
-              className="absolute top-0 left-0 h-full bg-[#FF0000] shadow-[0_0_8px_#FF0000]" 
-              style={{ 
-                width: `${progress}%`,
-                transition: 'width 100ms ease-out' 
-              }}
-            />
+            <span>{progress}</span>
+            <span className="text-[0.55em] font-extralight ml-1 opacity-70">%</span>
           </div>
         </div>
-        
+
       </div>
     </div>
   );
