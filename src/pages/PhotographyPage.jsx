@@ -9,7 +9,7 @@ import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from
 const PHOTO_ITEMS = [
   {
     id: 1,
-    src: 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=1200',
+    src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/sequenceCredits@emadshaikh03_KM-43%20(1).jpg?updatedAt=1787199247781',
     code: 'N · 0 0 1',
     orientation: 'portrait',
     aperture: 'f/1.4',
@@ -19,7 +19,7 @@ const PHOTO_ITEMS = [
   },
   {
     id: 2,
-    src: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1200',
+    src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/credits_@emadshaikh03-34.jpg?updatedAt=1787199321895',
     code: 'N · 0 1 7',
     orientation: 'portrait',
     aperture: 'f/1.2',
@@ -29,7 +29,7 @@ const PHOTO_ITEMS = [
   },
   {
     id: 3,
-    src: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?q=80&w=1200',
+    src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/Credits_@emadshaikh03-31.jpg?updatedAt=1787199255482',
     code: 'N · 8 6 6',
     orientation: 'landscape',
     aperture: 'f/2.8',
@@ -39,7 +39,7 @@ const PHOTO_ITEMS = [
   },
   {
     id: 4,
-    src: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=1200',
+    src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/DSC-48%20(1).jpg?updatedAt=1787199008444',
     code: 'N · 5 1 2',
     orientation: 'landscape',
     aperture: 'f/1.8',
@@ -49,7 +49,7 @@ const PHOTO_ITEMS = [
   },
   {
     id: 5,
-    src: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1200',
+    src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/DSC01914.jpg?updatedAt=1787199300412',
     code: 'N · 1 1 8',
     orientation: 'portrait',
     aperture: 'f/1.4',
@@ -59,7 +59,7 @@ const PHOTO_ITEMS = [
   },
   {
     id: 6,
-    src: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1200',
+    src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/DSC-40(1).jpg?updatedAt=1787198959091',
     code: 'N · 2 0 4',
     orientation: 'portrait',
     aperture: 'f/1.2',
@@ -69,7 +69,7 @@ const PHOTO_ITEMS = [
   },
   {
     id: 7,
-    src: 'https://images.unsplash.com/photo-1487180142328-054b783fc471?q=80&w=1200',
+    src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/DSC-9.jpg?updatedAt=1787198996020',
     code: 'N · 7 7 4',
     orientation: 'portrait',
     aperture: 'f/1.8',
@@ -79,7 +79,7 @@ const PHOTO_ITEMS = [
   },
   {
     id: 8,
-    src: 'https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=1200',
+    src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/20251209_184430.jpg?updatedAt=1787198957580',
     code: 'N · 7 0 3',
     orientation: 'landscape',
     aperture: 'f/2.8',
@@ -89,7 +89,7 @@ const PHOTO_ITEMS = [
   },
   {
     id: 9,
-    src: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=1200',
+    src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/DSC-20(1).jpg?updatedAt=1787198955000',
     code: 'N · 9 9 1',
     orientation: 'landscape',
     aperture: 'f/2.0',
@@ -99,7 +99,7 @@ const PHOTO_ITEMS = [
   },
   {
     id: 10,
-    src: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1200',
+    src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/VOGUE-2.jpg?updatedAt=1787199298801',
     code: 'N · 3 4 1',
     orientation: 'landscape',
     aperture: 'f/1.4',
@@ -109,7 +109,7 @@ const PHOTO_ITEMS = [
   },
   {
     id: 11,
-    src: 'https://images.unsplash.com/photo-1482440308425-276ad0f28b19?q=80&w=1200',
+    src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/DSC-8.jpg?updatedAt=1787198975283',
     code: 'N · 6 0 5',
     orientation: 'landscape',
     aperture: 'f/2.8',
@@ -119,7 +119,7 @@ const PHOTO_ITEMS = [
   },
   {
     id: 12,
-    src: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=1200',
+    src: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/hanumankind_02.jpg?updatedAt=1787198869718',
     code: 'N · 4 8 2',
     orientation: 'portrait',
     aperture: 'f/1.2',
@@ -203,7 +203,6 @@ const PolaroidCard = ({ item, index, onSelect }) => {
         {/* _photoWrap Container */}
         <div className={`relative w-full ${imageAspect} bg-zinc-950 overflow-hidden shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]`}>
           {/* _shimmer Loading animation */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_2.5s_infinite] z-10 pointer-events-none" />
           
           <img
             src={item.src}

@@ -217,7 +217,7 @@ export default function DynamicIslandNavbar({ activePath = '/' }) {
                   {/* Header */}
                   <div className="flex items-center justify-between border-b border-white/10 pb-3">
                     <div className="flex items-center gap-2.5">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_#34d399]" />
+                      
                       <h4 className="text-xs font-bold font-sans uppercase tracking-wider text-white">EMAD SHAIKH</h4>
                     </div>
 
