@@ -15,6 +15,8 @@ import AaryaVideoShowcase from './components/AaryaVideoShowcase';
 import { ScrollProgressIndicator } from './components/ScrollProgressIndicator';
 import AaryaCategoryAccordion from './components/AaryaCategoryAccordion';
 
+import DynamicIslandNavbar from './components/DynamicIslandNavbar';
+
 gsap.registerPlugin(ScrollTrigger);
 // Optimize GSAP globally for better performance
 gsap.defaults({ overwrite: 'auto' });
@@ -45,45 +47,6 @@ const AaryaCinematicPortfolio = () => {
   };
 
   useEffect(() => {
-    // Nav is hidden on the lens reveal hero section and slides in
-    // once the user scrolls past it — then stays visible permanently.
-    gsap.set('.nav-left-links', { x: -40, opacity: 0 });
-    gsap.set('.nav-right-links', { x: 40, opacity: 0 });
-    gsap.set('.nav-logo', { y: -30, opacity: 0 });
-
-    let hasAppeared = false;
-    let rafId = null;
-
-    const showNav = () => {
-      if (hasAppeared) return;
-      hasAppeared = true;
-      gsap.timeline()
-        .to('.nav-logo',        { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out', force3D: true })
-        .to('.nav-left-links',  { x: 0, opacity: 1, duration: 0.5, ease: 'power3.out', force3D: true }, '-=0.3')
-        .to('.nav-right-links', { x: 0, opacity: 1, duration: 0.5, ease: 'power3.out', force3D: true }, '-=0.45');
-      // No longer need the scroll listener once nav is visible
-      window.removeEventListener('scroll', onScroll);
-    };
-
-    const onScroll = () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(() => {
-        // Lens reveal is pinned for ~1.5× viewport height (end: +=120% in ScrollTrigger)
-        // Show nav once user has scrolled past the hero pin region
-        if (window.scrollY > window.innerHeight * 0.9) {
-          showNav();
-        }
-      });
-    };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, []);
-
-  useEffect(() => {
     // We create a GSAP context to ensure proper cleanup in React strict mode
     const ctx = gsap.context(() => {
       // If we are mid-route-transition, instantly hide the black overlay
@@ -103,9 +66,9 @@ const AaryaCinematicPortfolio = () => {
           }
         });
       }
-    }, containerRef); // Scope to container
+    }, containerRef); // Cleanup!
 
-    return () => ctx.revert(); // Cleanup!
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -114,8 +77,6 @@ const AaryaCinematicPortfolio = () => {
       {/* Solid Black Page Transition Mask Overlay for Dark Fade-in */}
       <div className="hero-fade-overlay fixed inset-0 bg-[#000000] z-[100000] pointer-events-none" />
 
-
-
       {/* Global Slide-Out Navigation (Framer Motion) - Mobile Only */}
       <div className="block md:hidden">
         <AaryaNavigationDrawer />
@@ -123,29 +84,8 @@ const AaryaCinematicPortfolio = () => {
 
       <ScrollProgressIndicator />
 
-      {/* Desktop Navigation — always visible, animates in on load */}
-      <nav className="desktop-nav hidden md:flex justify-center fixed top-0 left-0 w-full z-[10000] py-8 px-12 items-center pointer-events-auto" style={{ transition: 'none' }}>
-        <div className="flex items-center gap-8 md:gap-12">
-          {/* Left: Links */}
-          <div className="nav-left-links flex items-center gap-10 font-sans text-base tracking-[0.15em] text-white font-bold" style={{ opacity: 0 }}>
-            <button onClick={() => navigate('/about')} className="hover:opacity-70 transition-opacity duration-300">ABOUT</button>
-            <button onClick={() => navigate('/photography')} className="hover:opacity-70 transition-opacity duration-300">PHOTOGRAPHY</button>
-          </div>
-          
-          {/* Center: Logo */}
-          <div className="nav-logo flex justify-center items-center" style={{ opacity: 0 }}>
-            <button onClick={() => navigate('/')} className="hover:scale-110 transition-transform duration-300 shrink-0">
-              <img src="/logo.avif" alt="Logo" className="h-20 w-30" />
-            </button>
-          </div>
-
-          {/* Right: Links */}
-          <div className="nav-right-links flex items-center gap-10 font-sans text-base tracking-[0.15em] text-white font-bold" style={{ opacity: 0 }}>
-            <button onClick={() => navigate('/works')} className="hover:opacity-70 transition-opacity duration-300">WORKS</button>
-            <button onClick={() => navigate('/community')} className="hover:opacity-70 transition-opacity duration-300">COMMUNITY</button>
-          </div>
-        </div>
-      </nav>
+      {/* Dynamic Island Navigation Bar (Desktop & Mobile) */}
+      <DynamicIslandNavbar activePath="/" />
 
       {/* 2. The Hero Section (Lens Reveal) */}
       <div id="section-hero-top">
