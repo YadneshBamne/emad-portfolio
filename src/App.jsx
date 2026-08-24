@@ -2,7 +2,7 @@ import React from 'react'
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
 import AaryaCinematicPortfolio from './AaryaCinematicPortfolio'
 import DemoOne from './demo'
-import AaryaDotMatrixFooter from './components/AaryaDotMatrixFooter'
+import AnimatedFooter from './components/ui/animated-footer'
 import './App.css'
 import VhsRecorder from './components/VhsRecorder'
 import Preloader from './components/Preloader'
@@ -12,12 +12,23 @@ import WorksPage from './pages/WorksPage'
 import CommunityPage from './pages/CommunityPage'
 import { TransitionProvider } from './context/TransitionContext'
 
-// Root Layout wrapping all pages to supply the TransitionProvider and AaryaDotMatrixFooter
+import { useLocation } from 'react-router-dom'
+
+// Root Layout wrapping all pages to supply the TransitionProvider and AnimatedFooter
 const Layout = () => {
+  const location = useLocation()
+  const isFullScreenPage = location.pathname === '/photography'
   return (
     <TransitionProvider>
       <Outlet />
-      <AaryaDotMatrixFooter />
+      {!isFullScreenPage && (
+        <AnimatedFooter 
+          charColor="#e11d48"
+          hoverColor="#ef4444"
+          accentColor="#e11d48"
+          background="#000000"
+        />
+      )}
     </TransitionProvider>
   )
 }
@@ -32,6 +43,7 @@ const router = createBrowserRouter([
       { path: 'about', element: <AboutPage /> },
       { path: 'photography', element: <PhotographyPage /> },
       { path: 'works', element: <WorksPage /> },
+      { path: 'works/:id', element: <WorksPage /> },
       { path: 'community', element: <CommunityPage /> },
       { path: 'gallery', element: <DemoOne /> },
       { path: 'demo', element: <VhsRecorder /> },

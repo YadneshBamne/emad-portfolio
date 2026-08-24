@@ -14,28 +14,71 @@ const AaryaVideoShowcase = () => {
   const [activeArtist, setActiveArtist] = useState(ARTISTS[0]);
   const [hoveredArtist, setHoveredArtist] = useState(null);
   const scrollContainerRef = useRef(null);
-  const activeItemRef = useRef(null);
+  const itemRefs = useRef({});
+  const isProgrammaticScroll = useRef(false);
+  const scrollTimeoutRef = useRef(null);
 
   const isInitialMount = useRef(true);
 
-  useEffect(() => {
-    // Center active item horizontally inside scrollContainer without triggering window scroll
-    if (activeItemRef.current && scrollContainerRef.current) {
-      const container = scrollContainerRef.current;
-      const item = activeItemRef.current;
-      const scrollLeft = item.offsetLeft - (container.clientWidth / 2) + (item.clientWidth / 2);
+  // Center an artist in the mobile reel container
+  const scrollToArtist = (artist, smooth = true) => {
+    const container = scrollContainerRef.current;
+    const item = itemRefs.current[artist.id];
+    if (container && item) {
+      isProgrammaticScroll.current = true;
+      const targetScroll = item.offsetLeft - (container.clientWidth / 2) + (item.offsetWidth / 2);
+      
+      container.scrollTo({
+        left: targetScroll,
+        behavior: smooth ? 'smooth' : 'auto'
+      });
 
-      if (isInitialMount.current) {
-        isInitialMount.current = false;
-        container.scrollLeft = scrollLeft;
-      } else {
-        container.scrollTo({
-          left: scrollLeft,
-          behavior: 'smooth'
-        });
-      }
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = setTimeout(() => {
+        isProgrammaticScroll.current = false;
+      }, smooth ? 450 : 50);
+    }
+  };
+
+  // Scroll to active artist on initial mount or when active artist changes from desktop
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      // Slight delay to ensure DOM dimensions are ready
+      const t = setTimeout(() => {
+        scrollToArtist(activeArtist, false);
+      }, 100);
+      return () => clearTimeout(t);
+    } else if (!isProgrammaticScroll.current) {
+      scrollToArtist(activeArtist, true);
     }
   }, [activeArtist]);
+
+  // Handle user scroll on mobile: whichever item is closest to middle becomes active
+  const handleScroll = () => {
+    if (isProgrammaticScroll.current || !scrollContainerRef.current) return;
+    const container = scrollContainerRef.current;
+    const containerCenter = container.scrollLeft + (container.clientWidth / 2);
+
+    let closestArtist = activeArtist;
+    let minDistance = Infinity;
+
+    ARTISTS.forEach((artist) => {
+      const el = itemRefs.current[artist.id];
+      if (el) {
+        const itemCenter = el.offsetLeft + (el.offsetWidth / 2);
+        const distance = Math.abs(containerCenter - itemCenter);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestArtist = artist;
+        }
+      }
+    });
+
+    if (closestArtist && closestArtist.id !== activeArtist.id) {
+      setActiveArtist(closestArtist);
+    }
+  };
 
   // The currently displayed artist is the hovered one, falling back to the active one
   const displayArtist = hoveredArtist || activeArtist;
@@ -128,36 +171,50 @@ const AaryaVideoShowcase = () => {
             </motion.div>
           </AnimatePresence>
 
-          {/* Mobile Overlay: Horizontal Scrollable Selector */}
-          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black via-black/60 to-transparent pt-12 pb-6 px-4 z-20 md:hidden flex flex-col gap-3">
-            <div className="text-[9px] font-mono tracking-[0.3em] text-red-500 uppercase text-center opacity-70">
+          {/* Mobile Overlay: Horizontal Centered Reel Wheel Selector */}
+          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black via-black/70 to-transparent pt-12 pb-5 px-2 z-20 md:hidden flex flex-col gap-2.5">
+            <div className="text-[9px] font-mono tracking-[0.3em] text-red-500 uppercase text-center opacity-80">
               SELECT DIRECT REEL
             </div>
-            <div 
-              ref={scrollContainerRef}
-              className="w-full flex overflow-x-auto gap-5 items-center justify-start py-2 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-            >
-              {/* Left padding spacer for centering */}
-              <div className="w-[35vw] shrink-0"></div>
-              {ARTISTS.map((artist) => {
-                const isActive = activeArtist.id === artist.id;
-                return (
-                  <button
-                    key={artist.id}
-                    ref={isActive ? activeItemRef : null}
-                    onClick={() => setActiveArtist(artist)}
-                    className={`snap-center shrink-0 font-mono text-[10px] tracking-[0.2em] font-bold uppercase transition-all duration-300 py-1.5 px-4 rounded-full border ${
-                      isActive 
-                        ? 'text-white border-white bg-white/10 backdrop-blur-sm scale-105' 
-                        : 'text-white/40 border-transparent hover:text-white/70'
-                    }`}
-                  >
-                    {artist.name}
-                  </button>
-                );
-              })}
-              {/* Right padding spacer for centering */}
-              <div className="w-[35vw] shrink-0"></div>
+
+            {/* Container with Fixed Center Highlight Pill */}
+            <div className="relative w-full flex items-center justify-center">
+              {/* Fixed Highlight Capsule in the exact Middle */}
+              <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[130px] h-[34px] rounded-full border border-white/80 bg-white/10 backdrop-blur-md z-0 shadow-[0_0_16px_rgba(255,255,255,0.2)]" />
+
+              {/* Horizontal Scroll Track */}
+              <div 
+                ref={scrollContainerRef}
+                onScroll={handleScroll}
+                className="w-full flex overflow-x-auto gap-4 items-center justify-start py-1 snap-x snap-mandatory relative z-10 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+              >
+                {/* Left padding spacer to allow first item to be centered */}
+                <div className="w-[calc(50%-65px)] shrink-0 pointer-events-none" />
+
+                {ARTISTS.map((artist) => {
+                  const isActive = activeArtist.id === artist.id;
+                  return (
+                    <button
+                      key={artist.id}
+                      ref={(el) => (itemRefs.current[artist.id] = el)}
+                      onClick={() => {
+                        setActiveArtist(artist);
+                        scrollToArtist(artist, true);
+                      }}
+                      className={`snap-center shrink-0 w-[130px] font-mono text-[10px] tracking-[0.2em] font-bold uppercase transition-all duration-300 py-1.5 px-2 text-center rounded-full select-none ${
+                        isActive 
+                          ? 'text-white scale-100 opacity-100 font-black' 
+                          : 'text-zinc-400 scale-95 opacity-50 hover:opacity-80'
+                      }`}
+                    >
+                      {artist.name}
+                    </button>
+                  );
+                })}
+
+                {/* Right padding spacer to allow last item to be centered */}
+                <div className="w-[calc(50%-65px)] shrink-0 pointer-events-none" />
+              </div>
             </div>
           </div>
         </div>
