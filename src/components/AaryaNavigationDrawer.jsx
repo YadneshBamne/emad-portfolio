@@ -155,9 +155,9 @@ export function AaryaNavigationDrawer() {
                 initial="closed"
                 animate="open"
                 exit="closed"
-                className="absolute top-0 right-0 h-full w-[70%] bg-zinc-900 rounded-l-[2rem] border-l border-white/5 shadow-2xl z-30 flex flex-col justify-center px-8 md:px-16 overflow-y-auto"
+                className="absolute top-0 right-0 h-full w-[75%] sm:w-[70%] bg-zinc-900 rounded-l-[2rem] border-l border-white/5 shadow-2xl z-30 flex flex-col justify-center py-16 px-8 sm:px-12 md:px-16 overflow-y-auto"
               >
-                <ul className="flex flex-col gap-4">
+                <ul className="flex flex-col gap-6 sm:gap-8 py-6">
                   {/* Global Home Link */}
                   <motion.li variants={linkVariants} className="">
                     <button
@@ -195,13 +195,6 @@ export function AaryaNavigationDrawer() {
                     </motion.li>
                   ))}
                 </ul>
-
-                {/* Footer Info inside Menu */}
-                <motion.div variants={linkVariants} className="mt-20 flex flex-col gap-2 text-zinc-500 font-mono text-xs uppercase tracking-widest">
-                  <p>CRAFTED WITH ❤ BY EMAD</p>
-                  <p>SOCIALS: <a href="#" className="hover:text-zinc-300 transition-colors">INSTAGRAM</a> / <a href="#" className="hover:text-zinc-300 transition-colors">LINKEDIN</a></p>
-                  <p className="mt-4 text-zinc-600">© 2026 EMAD. ALL RIGHTS RESERVED.</p>
-                </motion.div>
               </motion.nav>
             </motion.div>
           )}

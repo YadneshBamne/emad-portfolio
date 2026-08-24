@@ -2,6 +2,72 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { useTransitionNavigate } from '../context/TransitionContext';
 
+const STAGGER = 0.025;
+
+const TextRoll = ({ children, center = false }) => {
+  return (
+    <motion.span
+      initial="initial"
+      whileHover="hovered"
+      className="relative inline-block overflow-hidden"
+      style={{
+        lineHeight: 1.15,
+      }}
+    >
+      <span className="flex items-center">
+        {children.split('').map((l, i) => {
+          const delay = center
+            ? STAGGER * Math.abs(i - (children.length - 1) / 2)
+            : STAGGER * i;
+
+          return (
+            <motion.span
+              variants={{
+                initial: { y: 0 },
+                hovered: { y: '-100%' },
+              }}
+              transition={{
+                duration: 0.32,
+                ease: [0.33, 1, 0.68, 1],
+                delay,
+              }}
+              className="inline-block"
+              key={i}
+            >
+              {l === ' ' ? '\u00A0' : l}
+            </motion.span>
+          );
+        })}
+      </span>
+      <span className="absolute inset-0 flex items-center">
+        {children.split('').map((l, i) => {
+          const delay = center
+            ? STAGGER * Math.abs(i - (children.length - 1) / 2)
+            : STAGGER * i;
+
+          return (
+            <motion.span
+              variants={{
+                initial: { y: '100%' },
+                hovered: { y: 0 },
+              }}
+              transition={{
+                duration: 0.32,
+                ease: [0.33, 1, 0.68, 1],
+                delay,
+              }}
+              className="inline-block"
+              key={i}
+            >
+              {l === ' ' ? '\u00A0' : l}
+            </motion.span>
+          );
+        })}
+      </span>
+    </motion.span>
+  );
+};
+
 export default function DynamicIslandNavbar({ activePath = '/' }) {
   const navigate = useTransitionNavigate();
   const [isContracted, setIsContracted] = useState(false);
@@ -99,19 +165,19 @@ export default function DynamicIslandNavbar({ activePath = '/' }) {
           >
             <button
               onClick={() => handleNavigate('/about')}
-              className={`hover:opacity-70 transition-opacity duration-300 cursor-pointer ${
+              className={`cursor-pointer ${
                 activePath === '/about' ? 'underline decoration-white underline-offset-4 decoration-2' : ''
               }`}
             >
-              ABOUT
+              <TextRoll>ABOUT</TextRoll>
             </button>
             <button
               onClick={() => handleNavigate('/photography')}
-              className={`hover:opacity-70 transition-opacity duration-300 cursor-pointer ${
+              className={`cursor-pointer ${
                 activePath === '/photography' ? 'underline decoration-white underline-offset-4 decoration-2' : ''
               }`}
             >
-              PHOTOGRAPHY
+              <TextRoll>PHOTOGRAPHY</TextRoll>
             </button>
           </motion.div>
 
@@ -132,19 +198,19 @@ export default function DynamicIslandNavbar({ activePath = '/' }) {
           >
             <button
               onClick={() => handleNavigate('/works')}
-              className={`hover:opacity-70 transition-opacity duration-300 cursor-pointer ${
+              className={`cursor-pointer ${
                 activePath === '/works' ? 'underline decoration-white underline-offset-4 decoration-2' : ''
               }`}
             >
-              WORKS
+              <TextRoll>WORKS</TextRoll>
             </button>
             <button
               onClick={() => handleNavigate('/community')}
-              className={`hover:opacity-70 transition-opacity duration-300 cursor-pointer ${
+              className={`cursor-pointer ${
                 activePath === '/community' ? 'underline decoration-white underline-offset-4 decoration-2' : ''
               }`}
             >
-              COMMUNITY
+              <TextRoll>COMMUNITY</TextRoll>
             </button>
           </motion.div>
 

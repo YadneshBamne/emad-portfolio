@@ -188,7 +188,7 @@ export default function Preloader({ children }) {
             }}
           >
             <span>{progress}</span>
-            <span className="text-[0.55em] font-extralight ml-1 text-red-600 opacity-90">%</span>
+            <span className="text-[0.55em] font-extralight ml-1 text-red-600/35">%</span>
           </div>
         </div>
 

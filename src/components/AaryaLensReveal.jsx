@@ -325,8 +325,8 @@ export function AaryaLensReveal() {
             muted
             playsInline
             className="w-full h-full object-cover opacity-90"
-          >
-            <source src="https://www.pexels.com/download/video/37898716/" type="video/mp4" />
+          > 
+            {/* <source src="https://www.pexels.com/download/video/37898716/" type="video/mp4" /> */}
           </video>
 
           {/* Dark overlay — PERF: removed mix-blend-multiply which forces the browser

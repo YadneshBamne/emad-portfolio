@@ -508,10 +508,10 @@ export default function WorksPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full min-h-screen pt-28 sm:pt-36 pb-24 px-6 sm:px-10 md:px-16 lg:px-24 flex flex-col"
+            className="w-full min-h-screen pt-6 sm:pt-8 md:pt-20 pb-20 px-4 sm:px-8 md:px-14 lg:px-20 flex flex-col"
           >
             {/* Top Return Button with Horizontal Reveal */}
-            <div className="w-full flex items-center justify-between mb-8 sm:mb-12 border-b border-white/10 pb-4">
+            <div className="w-full flex items-center justify-between mb-4 sm:mb-6 border-b border-white/10 pb-3">
               <HorizontalReveal direction="left" delay={0.05} duration={0.8}>
                 <button 
                   onClick={handleBackToGallery}
@@ -530,10 +530,10 @@ export default function WorksPage() {
             </div>
 
             {/* Big Headline Header with Cinematic Horizontal Reveal */}
-            <div className="w-full mb-8 sm:mb-12">
+            <div className="w-full mb-6 sm:mb-8">
               <HorizontalReveal direction="left" delay={0.12} duration={1.1}>
                 <h1 
-                  className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-light tracking-[0.03em] uppercase text-white leading-none mb-4"
+                  className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light tracking-[0.03em] uppercase text-white leading-none mb-3"
                   style={{ fontFamily: "'Syne', 'Inter', sans-serif" }}
                 >
                   {selectedProject.title}
