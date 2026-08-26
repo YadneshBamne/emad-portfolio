@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useLayoutEffect, useRef } 
 import { useBlocker, useLocation, useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { getHasSeenHeroIntro, setHasSeenHeroIntro } from '../utils/heroState';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -76,6 +77,7 @@ export const TransitionProvider = ({ children }) => {
     if (blocker.state === 'blocked') {
       isTransitioningRef.current = true;
       window.isRouteTransition = true;
+      setHasSeenHeroIntro(true);
 
       // Set browser theme color to match the red transition overlay immediately
       updateBrowserThemeColor('#FF0000');
@@ -102,7 +104,11 @@ export const TransitionProvider = ({ children }) => {
         onComplete: () => {
           // Proceed with the blocked navigation once the viewport is completely covered
           blocker.proceed();
-          window.scrollTo(0, 0);
+          if (blocker.location?.pathname === '/' && getHasSeenHeroIntro()) {
+            window.scrollTo(0, window.innerHeight * 1.3);
+          } else {
+            window.scrollTo(0, 0);
+          }
         }
       });
 

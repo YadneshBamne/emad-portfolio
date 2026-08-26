@@ -125,11 +125,13 @@ export default function DynamicIslandNavbar({ activePath = '/' }) {
   const handleNavigate = (path) => {
     if (path === '/') {
       if (window.location.pathname === '/') {
-        const el = document.getElementById('section-work') || document.getElementById('section-about');
+        const el = document.getElementById('section-hero-top');
         if (el) {
           el.scrollIntoView({ behavior: 'smooth' });
-          return;
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+        return;
       }
     }
     navigate(path);

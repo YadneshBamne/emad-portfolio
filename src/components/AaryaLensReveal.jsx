@@ -1,7 +1,8 @@
-import React, { useLayoutEffect, useRef, useEffect } from 'react';
+import React, { useLayoutEffect, useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight } from 'lucide-react';
+import { getHasSeenHeroIntro, setHasSeenHeroIntro } from '../utils/heroState';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -81,6 +82,7 @@ export function AaryaLensReveal() {
       // desktop mousewheels/trackpads and mobile touch swipes.
       const tl = gsap.timeline({
         scrollTrigger: {
+          id: 'hero-lens-trigger',
           trigger: containerRef.current,
           start: 'top top',
           end: '+=130%',
@@ -88,6 +90,14 @@ export function AaryaLensReveal() {
           scrub: 0.8,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onLeave: () => {
+            setHasSeenHeroIntro(true);
+          },
+          onUpdate: (self) => {
+            if (self.progress > 0.85) {
+              setHasSeenHeroIntro(true);
+            }
+          }
         }
       });
 
@@ -157,6 +167,16 @@ export function AaryaLensReveal() {
         force3D: true,
       }, 0);
 
+      // If returning to the homepage, position directly at the revealed section
+      if (getHasSeenHeroIntro()) {
+        const targetScroll = window.innerHeight * 1.3;
+        window.scrollTo(0, targetScroll);
+        if (tl.scrollTrigger) {
+          tl.scrollTrigger.scroll(targetScroll);
+        }
+        tl.progress(1);
+      }
+
       // ─── Mouse Parallax (Desktop Only to ensure zero mobile stutter) ──────
       const container = containerRef.current;
       let rafId = null;
@@ -198,7 +218,10 @@ export function AaryaLensReveal() {
 
     }, containerRef);
 
-    return () => ctx.revert();
+    return () => {
+      setHasSeenHeroIntro(true);
+      ctx.revert();
+    };
   }, []);
 
   return (
@@ -223,9 +246,6 @@ export function AaryaLensReveal() {
               className="text-[24vw] md:text-[17vw] leading-[0.8] font-black text-[#FF0000]"
               style={{
                 fontFamily: "'Impact', 'Oswald', 'Anton', sans-serif",
-                // PERF: CSS filter:drop-shadow() on an animated element creates a
-                // new stacking context and forces software rasterization every frame.
-                // textShadow is compositor-friendly and achieves the identical glow look.
                 textShadow: '0px 0px 15px rgba(255, 0, 0, 0.45), 0px 0px 30px rgba(255, 0, 0, 0.18)',
               }}
             >
@@ -266,8 +286,6 @@ export function AaryaLensReveal() {
             <span>50MM LENS</span>
             <span>f/1.4 APERTURE</span>
           </div>
-          {/* PERF: Removed backdrop-blur-sm — blur filters create separate compositor
-              layers and re-composite on every repaint. Solid bg looks identical. */}
           <div className="hidden md:flex items-center gap-2 text-[#FF0000] font-bold bg-black/60 px-2 py-1 rounded z-10">
             <div className="w-2.5 h-2.5 rounded-full bg-[#FF0000] animate-pulse" />
             <span>[REC]</span>

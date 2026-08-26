@@ -14,6 +14,7 @@ import { PresetStudio } from './components/PresetStudio';
 import AaryaVideoShowcase from './components/AaryaVideoShowcase';
 import { ScrollProgressIndicator } from './components/ScrollProgressIndicator';
 import AaryaCategoryAccordion from './components/AaryaCategoryAccordion';
+import { getHasSeenHeroIntro } from './utils/heroState';
 
 import DynamicIslandNavbar from './components/DynamicIslandNavbar';
 import CommissionContactSection from './components/CommissionContactSection';
@@ -50,8 +51,8 @@ const AaryaCinematicPortfolio = () => {
   useEffect(() => {
     // We create a GSAP context to ensure proper cleanup in React strict mode
     const ctx = gsap.context(() => {
-      // If we are mid-route-transition, instantly hide the black overlay
-      if (window.isRouteTransition) {
+      // If we are mid-route-transition or returning to homepage after intro, instantly hide the black overlay
+      if (window.isRouteTransition || getHasSeenHeroIntro()) {
         gsap.set('.hero-fade-overlay', { display: 'none' });
       } else {
         // Otherwise, this is a clean initial site load, play the smooth fade-in

@@ -54,11 +54,13 @@ export function AaryaNavigationDrawer() {
     setIsOpen(false);
     if (href === '/') {
       if (window.location.pathname === '/') {
-        const el = document.getElementById('section-work') || document.getElementById('section-about');
+        const el = document.getElementById('section-hero-top');
         if (el) {
           el.scrollIntoView({ behavior: 'smooth' });
-          return;
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+        return;
       }
     }
     navigate(href);
