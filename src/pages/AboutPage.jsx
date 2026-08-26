@@ -355,7 +355,7 @@ export default function AboutPage() {
               }
             ].map((item, idx) => (
               <HorizontalReveal key={item.num} direction="left" delay={0.15 + idx * 0.07} duration={0.9}>
-                <div className="p-6 border border-white/10 rounded-none bg-zinc-950/60 hover:border-white/30 transition-all duration-300 space-y-3 group">
+                <div className="about-discipline-card p-6 border border-white/10 rounded-none bg-zinc-950/60 hover:border-white/30 transition-all duration-300 space-y-3 group">
                   <span className="font-mono text-xs text-[#b81d24] font-bold block">{item.num} /</span>
                   <h3 className="font-mono text-xs sm:text-sm tracking-wider text-white font-bold group-hover:text-red-400 transition-colors">
                     {item.title}
@@ -389,7 +389,7 @@ export default function AboutPage() {
               'SONY MUSIC'
             ].map((brand, idx) => (
               <HorizontalReveal key={brand} direction="left" delay={0.1 + idx * 0.05} duration={0.8}>
-                <div className="py-5 px-3 border border-white/10 rounded-none bg-zinc-950/40 hover:bg-white/5 transition-colors">
+                <div className="about-collaborator-chip py-5 px-3 border border-white/10 rounded-none bg-zinc-950/40 hover:bg-white/5 transition-colors">
                   <span className="font-mono text-xs tracking-[0.15em] text-zinc-300 font-bold block">
                     {brand}
                   </span>
@@ -412,7 +412,7 @@ export default function AboutPage() {
                   05 — COMMISSIONS &amp; CONTACT
                 </span>
                 <h2 className="text-2xl sm:text-4xl font-light uppercase tracking-tight text-white mb-4" style={{ fontFamily: "'Syne', sans-serif" }}>
-                  LET'S CREATE SOMETHING REAL.
+                  LET'S MAKE SOMETHING WORTH WATCHING.
                 </h2>
               </HorizontalReveal>
             </div>
@@ -490,7 +490,7 @@ export default function AboutPage() {
           </div>
 
           {/* Right Column: Editorial Contact Form */}
-          <div className="lg:col-span-7 bg-zinc-950 border border-white/10 p-6 sm:p-8 md:p-10 rounded-none">
+          <div className="about-contact-form-container lg:col-span-7 bg-zinc-950 border border-white/10 p-6 sm:p-8 md:p-10 rounded-none">
             <AnimatePresence mode="wait">
               {isSubmitted ? (
                 <motion.div

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AaryaNavigationDrawer } from '../components/AaryaNavigationDrawer';
 import DynamicIslandNavbar from '../components/DynamicIslandNavbar';
 import InfiniteCanvas from '../components/ui/InfiniteCanvas';
 import { motion, AnimatePresence } from 'framer-motion';
+import { X, ChevronLeft, ChevronRight, Camera } from 'lucide-react';
 
 export const PHOTO_ITEMS = [
   {
@@ -251,6 +252,18 @@ export const PHOTO_ITEMS = [
 
 export default function PhotographyPage() {
   const [activePhotoIndex, setActivePhotoIndex] = useState(null);
+  const thumbnailRefs = useRef([]);
+
+  // Auto-scroll the carousel track so the active photo is always centered
+  useEffect(() => {
+    if (activePhotoIndex !== null && thumbnailRefs.current[activePhotoIndex]) {
+      thumbnailRefs.current[activePhotoIndex]?.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest'
+      });
+    }
+  }, [activePhotoIndex]);
 
   // Keyboard navigation for full screen view
   useEffect(() => {
@@ -306,7 +319,7 @@ export default function PhotographyPage() {
         />
       </main>
 
-      {/* PURE MINIMALIST FULL-SCREEN LIGHTBOX MODAL */}
+      {/* MAXIMIZED FULL-SCREEN IMAGE-VIEW INTERACTION */}
       <AnimatePresence>
         {activePhotoIndex !== null && activePhoto && (
           <motion.div
@@ -314,20 +327,127 @@ export default function PhotographyPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="fixed inset-0 z-[100000] bg-black/85 backdrop-blur-2xl flex items-center justify-center p-4 sm:p-8 md:p-12 cursor-pointer select-none"
+            className="photo-maximized-modal fixed inset-0 z-[100000] bg-black/90 backdrop-blur-2xl flex flex-col items-center justify-between p-3 sm:p-5 md:p-6 select-none"
             onClick={() => setActivePhotoIndex(null)}
           >
-            <motion.img
-              initial={{ scale: 0.94, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.94, opacity: 0 }}
-              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-              src={activePhoto.src}
-              alt={activePhoto.title || activePhoto.code || "Photo"}
-              draggable={false}
-              className="max-h-[92vh] max-w-[92vw] w-auto h-auto object-contain rounded-none shadow-[0_30px_90px_rgba(0,0,0,0.95)] pointer-events-auto cursor-pointer"
-              onClick={() => setActivePhotoIndex(null)}
-            />
+            {/* Top Bar: Counter + Close Button */}
+            <div 
+              className="w-full flex items-center justify-between z-20 pointer-events-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="photo-modal-header flex items-center gap-3 text-xs font-mono tracking-widest text-zinc-400">
+                <span className="text-red-500 font-bold">●</span>
+                <span className="photo-modal-code font-bold text-white">{activePhoto.code || `PHOTO ${activePhotoIndex + 1}`}</span>
+                <span className="text-zinc-600">/</span>
+                <span className="photo-modal-counter text-zinc-400">
+                  {String(activePhotoIndex + 1).padStart(2, '0')} — {String(PHOTO_ITEMS.length).padStart(2, '0')}
+                </span>
+              </div>
+
+              <button
+                onClick={() => setActivePhotoIndex(null)}
+                className="photo-modal-close-btn w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white transition-all cursor-pointer"
+                aria-label="Close Maximized View"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Center Area: Image with Prev/Next Navigation Controls */}
+            <div 
+              className="relative flex-1 w-full flex items-center justify-center my-1 sm:my-2 min-h-0"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Previous Image Button */}
+              <button
+                onClick={() => setActivePhotoIndex((prev) => (prev - 1 + PHOTO_ITEMS.length) % PHOTO_ITEMS.length)}
+                className="photo-modal-nav-btn absolute left-2 sm:left-4 z-20 w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-black/60 hover:bg-black/90 border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-all cursor-pointer backdrop-blur-md"
+                aria-label="Previous Photo"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+
+              {/* Maximized Image */}
+              <motion.img
+                key={activePhoto.src}
+                initial={{ scale: 0.94, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.94, opacity: 0 }}
+                transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                src={activePhoto.src}
+                alt={activePhoto.title || activePhoto.code || "Photo"}
+                draggable={false}
+                className="photo-modal-img max-h-[66vh] sm:max-h-[68vh] max-w-[88vw] w-auto h-auto object-contain rounded-none shadow-[0_30px_90px_rgba(0,0,0,0.95)] select-none"
+              />
+
+              {/* Next Image Button */}
+              <button
+                onClick={() => setActivePhotoIndex((prev) => (prev + 1) % PHOTO_ITEMS.length)}
+                className="photo-modal-nav-btn absolute right-2 sm:right-4 z-20 w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-black/60 hover:bg-black/90 border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-all cursor-pointer backdrop-blur-md"
+                aria-label="Next Photo"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Micro-Filmstrip Carousel Indicator */}
+            <div 
+              className="photo-carousel-track w-full max-w-3xl mx-auto py-2 px-3 flex items-center justify-start sm:justify-center gap-2 sm:gap-2.5 overflow-x-auto no-scrollbar z-20 pointer-events-auto select-none"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {PHOTO_ITEMS.map((item, idx) => {
+                const isActive = idx === activePhotoIndex;
+                return (
+                  <button
+                    key={item.id || idx}
+                    ref={(el) => (thumbnailRefs.current[idx] = el)}
+                    onClick={() => setActivePhotoIndex(idx)}
+                    className={`photo-carousel-item relative shrink-0 transition-all duration-300 cursor-pointer overflow-hidden rounded-none ${
+                      isActive 
+                        ? 'w-9 h-12 sm:w-11 sm:h-15 ring-2 ring-[#b81d24] opacity-100 scale-105 z-10 shadow-lg' 
+                        : 'w-7 h-10 sm:w-9 sm:h-12 opacity-40 hover:opacity-85 hover:scale-102'
+                    }`}
+                    aria-label={`Jump to photo ${idx + 1}: ${item.title || item.code}`}
+                  >
+                    <img
+                      src={item.src}
+                      alt={item.title || item.code}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      draggable={false}
+                    />
+                    {isActive && (
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#b81d24]" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Bottom Bar: Title & Camera EXIF Specs */}
+            <div 
+              className="photo-modal-footer w-full flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3 pt-2 pb-1 border-t border-white/10 z-20 pointer-events-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="text-center sm:text-left">
+                <h3 className="photo-modal-title font-sans font-bold text-sm sm:text-base text-white tracking-wide">
+                  {activePhoto.title || 'EMAD SHAIKH ARCHIVE'}
+                </h3>
+              </div>
+
+              {/* EXIF Specs */}
+              <div className="photo-modal-specs flex items-center gap-3 sm:gap-6 font-mono text-[10px] sm:text-xs text-zinc-400">
+                {activePhoto.lens && (
+                  <span className="flex items-center gap-1.5">
+                    <Camera className="w-3.5 h-3.5 text-zinc-500" />
+                    <span>{activePhoto.lens}</span>
+                  </span>
+                )}
+                {activePhoto.aperture && <span>{activePhoto.aperture}</span>}
+                {activePhoto.shutter && <span>{activePhoto.shutter}</span>}
+                {activePhoto.iso && <span>ISO {activePhoto.iso}</span>}
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

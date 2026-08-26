@@ -16,6 +16,7 @@ import { ScrollProgressIndicator } from './components/ScrollProgressIndicator';
 import AaryaCategoryAccordion from './components/AaryaCategoryAccordion';
 
 import DynamicIslandNavbar from './components/DynamicIslandNavbar';
+import CommissionContactSection from './components/CommissionContactSection';
 
 gsap.registerPlugin(ScrollTrigger);
 // Optimize GSAP globally for better performance
@@ -93,11 +94,11 @@ const AaryaCinematicPortfolio = () => {
       </div>
 
       {/* 4. The Navigation / Divider Bar */}
-      <div className="w-full border-t border-[var(--color-border-color)] bg-[var(--color-bg-secondary)] py-5 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center text-xs md:text-sm font-mono text-[var(--color-text-secondary)] z-20 relative shadow-2xl transition-colors duration-500" style={{ fontFamily: "'Space Mono', monospace" }}>
+      <div className="w-full border-t border-[var(--color-border-color)] bg-[var(--color-bg-secondary)] py-5 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center text-xs md:text-sm font-mono text-[var(--color-text-secondary)] z-20 relative transition-colors duration-500" style={{ fontFamily: "'Space Mono', monospace" }}>
         <div className="mb-3 md:mb-0 tracking-widest text-[var(--color-text-secondary)]">02 — SELECT WORK</div>
         <div className="mb-3 md:mb-0 text-center tracking-widest text-[var(--color-text-primary)]">REEL — EMAD SHAIKH — MULTIDISCIPLINARY CREATIVE</div>
         <div className="flex items-center gap-3">
-          <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-accent-metallic)] shadow-[0_0_8px_var(--color-accent-glow)] animate-pulse"></span>
+          <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-accent-metallic)] animate-pulse"></span>
           <span className="tracking-widest text-[var(--color-text-primary)]">REC — HD01</span>
         </div>
       </div>
@@ -158,6 +159,9 @@ const AaryaCinematicPortfolio = () => {
       <div id="section-studio">
         <PresetStudio />
       </div>
+
+      {/* 8. Commission & Inquiries Contact Form */}
+      <CommissionContactSection />
 
       {/* Custom Styles for animations */}
       <style dangerouslySetInnerHTML={{

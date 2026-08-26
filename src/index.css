@@ -36,6 +36,455 @@
   --blueprint-grid-color: rgba(255, 255, 255, 0.05);
 }
 
+/* ========================================================================= */
+/* EDITORIAL LUXURY LIGHT THEME (Warm Linen, Deep Espresso, Crimson Wine & Terracotta) */
+/* ========================================================================= */
+
+html.light, [data-theme="light"] {
+  --bg-primary: #f5f3ec;
+  --bg-secondary: #ede7dc;
+  --text-primary: #12100e;
+  --text-secondary: #5c3d2e;
+  --border-color: rgba(184, 29, 36, 0.22);
+  --accent-metallic: #801418;
+  --accent-glow: #b81d24;
+  --sensor-grid-color: rgba(184, 29, 36, 0.05);
+  --blueprint-grid-color: rgba(92, 61, 46, 0.08);
+}
+
+/* ========================================================================= */
+/* UNIVERSAL BUTTER-SMOOTH THEME DISSOLVE TRANSITION */
+/* ========================================================================= */
+
+html,
+body,
+#root,
+header,
+nav,
+main,
+section,
+footer,
+div,
+button,
+a,
+span,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input,
+textarea,
+svg,
+path {
+  transition: background-color 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              color 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              fill 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              stroke 0.7s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+html.light body {
+  background-color: #f5f3ec;
+  color: #12100e;
+}
+
+/* Background Canvas Inversions (Warm Ivory & Porcelain) */
+html.light .bg-black,
+html.light .bg-\[\#000000\],
+html.light .bg-\[\#050505\],
+html.light .bg-\[\#0a0a0a\],
+html.light .bg-\[\#070707\] {
+  background-color: #f5f3ec !important;
+  color: #12100e;
+}
+
+html.light .bg-zinc-950,
+html.light .bg-\[\#0d0d0d\],
+html.light .bg-\[\#111114\] {
+  background-color: #fdfcf9 !important;
+}
+
+html.light .bg-zinc-900,
+html.light .bg-\[\#141414\] {
+  background-color: #ede7dc !important;
+}
+
+html.light .bg-zinc-800 {
+  background-color: #e2dbcd !important;
+}
+
+/* Typography Hierarchy (Deep Onyx Ink, Rich Umber, Warm Crimson Terracotta) */
+html.light .text-white,
+html.light .text-zinc-100,
+html.light .text-zinc-200 {
+  color: #12100e !important;
+}
+
+html.light .text-zinc-300,
+html.light .text-zinc-400 {
+  color: #5c3d2e !important;
+}
+
+html.light .text-zinc-500,
+html.light .text-zinc-600 {
+  color: #801418 !important;
+}
+
+/* Brand Crimson & Warm Bronze Hairline Borders (No cold greys) */
+html.light .border-white\/10,
+html.light .border-white\/15,
+html.light .border-white\/20,
+html.light .border-white\/25,
+html.light .border-white\/30,
+html.light .border-white\/40,
+html.light .border-zinc-800,
+html.light .border-zinc-900 {
+  border-color: rgba(184, 29, 36, 0.2) !important;
+}
+
+html.light .border-white {
+  border-color: #12100e !important;
+}
+
+html.light .border-zinc-600,
+html.light .border-zinc-700 {
+  border-color: rgba(92, 61, 46, 0.28) !important;
+}
+
+/* Subtle Badges, Pills & Translucent Containers */
+html.light .bg-white\/5,
+html.light .bg-white\/10 {
+  background-color: rgba(184, 29, 36, 0.06) !important;
+}
+
+html.light .bg-white\/15,
+html.light .bg-white\/20 {
+  background-color: rgba(184, 29, 36, 0.12) !important;
+}
+
+html.light .bg-black\/40,
+html.light .bg-black\/50,
+html.light .bg-black\/60,
+html.light .bg-black\/70,
+html.light .bg-black\/80 {
+  background-color: rgba(245, 243, 236, 0.88) !important;
+  backdrop-filter: blur(12px);
+}
+
+/* Form Inputs & Interactive Controls */
+html.light input,
+html.light textarea {
+  background-color: #ede7dc !important;
+  color: #12100e !important;
+  border-color: rgba(184, 29, 36, 0.28) !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #8c6a58 !important;
+}
+
+html.light input:focus,
+html.light textarea:focus {
+  border-color: #b81d24 !important;
+  background-color: #fdfcf9 !important;
+}
+
+/* Filled Primary Action Buttons */
+html.light .bg-white.text-black {
+  background-color: #12100e !important;
+  color: #f5f3ec !important;
+}
+
+html.light .bg-white.text-black:hover {
+  background-color: #b81d24 !important;
+  color: #ffffff !important;
+}
+
+/* Grid & Viewfinder Blueprint Overlays in Warm Ink */
+html.light .bg-page-sensor-grid {
+  background-size: 80px 80px;
+  background-image: 
+    linear-gradient(to right, rgba(184, 29, 36, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(92, 61, 46, 0.05) 1px, transparent 1px) !important;
+}
+
+/* ========================================================================= */
+/* PRESET STUDIO COMPLETE LIGHT MODE TRANSFORMATION */
+/* ========================================================================= */
+html.light .preset-studio-section {
+  background-color: #f5f3ec !important;
+}
+
+html.light .preset-studio-container {
+  background-color: #ffffff !important;
+  border-color: rgba(184, 29, 36, 0.22) !important;
+  box-shadow: 0 25px 50px -12px rgba(18, 16, 14, 0.15) !important;
+}
+
+html.light .preset-studio-header {
+  background-color: #ede7dc !important;
+  border-color: rgba(184, 29, 36, 0.2) !important;
+}
+
+html.light .preset-studio-title {
+  color: #12100e !important;
+}
+
+html.light .preset-studio-sidebar {
+  background-color: #fdfcf9 !important;
+  border-color: rgba(184, 29, 36, 0.18) !important;
+}
+
+html.light .preset-studio-canvas {
+  background-color: #ede7dc !important;
+}
+
+html.light .preset-studio-controls {
+  background-color: #fdfcf9 !important;
+  border-color: rgba(184, 29, 36, 0.18) !important;
+}
+
+html.light .preset-studio-bottom {
+  background-color: #ede7dc !important;
+  border-color: rgba(184, 29, 36, 0.2) !important;
+}
+
+html.light .preset-slider-label {
+  color: #5c3d2e !important;
+}
+
+html.light .preset-slider-val {
+  color: #12100e !important;
+}
+
+html.light .preset-slider-track {
+  background-color: #dfd7c8 !important;
+}
+
+html.light .preset-slider-thumb {
+  background-color: #12100e !important;
+}
+
+html.light .preset-studio-swatch {
+  border-color: rgba(184, 29, 36, 0.2) !important;
+  background-color: #fdfcf9 !important;
+}
+
+html.light .preset-studio-swatch span {
+  color: #12100e !important;
+  background-color: rgba(245, 243, 236, 0.85) !important;
+  border: 1px solid rgba(184, 29, 36, 0.2) !important;
+}
+
+/* Photography Infinite Canvas Light Mode Overrides */
+html.light .infinite-canvas-tile {
+  background-color: #fdfcf9 !important;
+  border-color: rgba(184, 29, 36, 0.22) !important;
+  box-shadow: 0 10px 30px -8px rgba(18, 16, 14, 0.12) !important;
+}
+
+html.light .infinite-canvas-tile .bg-\[\#0a0a0c\] {
+  background-color: #ede7dc !important;
+}
+
+/* ========================================================================= */
+/* HERO LENS REVEAL LIGHT MODE SYNCHRONIZATION */
+/* ========================================================================= */
+html.light .hero-lens-section {
+  background-color: #f5f3ec !important;
+  color: #12100e !important;
+}
+
+html.light .hero-lens-section .viewfinder-ui {
+  color: #5c3d2e !important;
+}
+
+html.light .hero-lens-section .viewfinder-ui .border-dashed {
+  border-color: rgba(184, 29, 36, 0.22) !important;
+}
+
+html.light .hero-lens-section .viewfinder-ui .bg-black\/60 {
+  background-color: #ede7dc !important;
+  border: 1px solid rgba(184, 29, 36, 0.22) !important;
+}
+
+html.light .hero-lens-vignette {
+  opacity: 0.15 !important;
+}
+
+html.light .hero-lens-section .scroll-center-text circle {
+  stroke: #12100e !important;
+}
+
+html.light .hero-lens-section .scroll-center-text text {
+  fill: #12100e !important;
+  text-shadow: none !important;
+}
+
+html.light .hero-lens-section svg text {
+  fill: #5c3d2e !important;
+}
+
+/* ========================================================================= */
+/* ABOUT PAGE LIGHT MODE EDITORIAL LUXURY SYNC */
+/* ========================================================================= */
+
+html.light .about-discipline-card {
+  background-color: #fdfcf9 !important;
+  border-color: rgba(184, 29, 36, 0.22) !important;
+  box-shadow: 0 4px 20px -4px rgba(92, 61, 46, 0.08) !important;
+}
+
+html.light .about-discipline-card:hover {
+  background-color: #ede7dc !important;
+  border-color: rgba(184, 29, 36, 0.45) !important;
+}
+
+html.light .about-discipline-card h3 {
+  color: #12100e !important;
+}
+
+html.light .about-discipline-card p {
+  color: #5c3d2e !important;
+}
+
+html.light .about-collaborator-chip {
+  background-color: #ede7dc !important;
+  border-color: rgba(184, 29, 36, 0.22) !important;
+}
+
+html.light .about-collaborator-chip:hover {
+  background-color: #fdfcf9 !important;
+  border-color: rgba(184, 29, 36, 0.45) !important;
+}
+
+html.light .about-collaborator-chip span {
+  color: #12100e !important;
+}
+
+html.light .about-contact-form-container {
+  background-color: #fdfcf9 !important;
+  border-color: rgba(184, 29, 36, 0.22) !important;
+}
+
+html.light .about-contact-form-container input,
+html.light .about-contact-form-container textarea {
+  background-color: #ede7dc !important;
+  border-color: rgba(184, 29, 36, 0.22) !important;
+  color: #12100e !important;
+}
+
+html.light .about-contact-form-container input::placeholder,
+html.light .about-contact-form-container textarea::placeholder {
+  color: #8c6a58 !important;
+}
+
+/* ========================================================================= */
+/* MAXIMIZED PHOTOGRAPHY MODAL LIGHT MODE OVERHAUL */
+/* ========================================================================= */
+
+html.light .photo-maximized-modal {
+  background-color: rgba(245, 243, 236, 0.96) !important;
+  color: #12100e !important;
+}
+
+html.light .photo-modal-header {
+  color: #5c3d2e !important;
+}
+
+html.light .photo-modal-code {
+  color: #12100e !important;
+}
+
+html.light .photo-modal-counter {
+  color: #5c3d2e !important;
+}
+
+html.light .photo-modal-close-btn {
+  background-color: #fdfcf9 !important;
+  border-color: rgba(184, 29, 36, 0.25) !important;
+  color: #12100e !important;
+  box-shadow: 0 4px 14px rgba(18, 16, 14, 0.08) !important;
+}
+
+html.light .photo-modal-close-btn:hover {
+  background-color: #ede7dc !important;
+  border-color: rgba(184, 29, 36, 0.5) !important;
+}
+
+html.light .photo-modal-nav-btn {
+  background-color: #fdfcf9 !important;
+  border-color: rgba(184, 29, 36, 0.25) !important;
+  color: #12100e !important;
+  box-shadow: 0 4px 14px rgba(18, 16, 14, 0.1) !important;
+}
+
+html.light .photo-modal-nav-btn:hover {
+  background-color: #ede7dc !important;
+  border-color: rgba(184, 29, 36, 0.5) !important;
+}
+
+html.light .photo-modal-img {
+  box-shadow: 0 25px 60px -10px rgba(18, 16, 14, 0.25) !important;
+}
+
+html.light .photo-modal-footer {
+  border-color: rgba(184, 29, 36, 0.22) !important;
+}
+
+html.light .photo-modal-title {
+  color: #12100e !important;
+}
+
+html.light .photo-modal-specs {
+  color: #5c3d2e !important;
+}
+
+html.light .photo-modal-specs span {
+  color: #5c3d2e !important;
+  font-weight: 600 !important;
+}
+
+html.light .photo-modal-specs svg {
+  color: #b81d24 !important;
+}
+
+html.light .photo-carousel-item {
+  border: 1px solid rgba(184, 29, 36, 0.22);
+  background-color: #ede7dc;
+}
+
+html.light .photo-carousel-item:hover {
+  border-color: rgba(184, 29, 36, 0.6);
+}
+
+.photo-carousel-track {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.photo-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Preserve Raw Photography, Video Streams & Brand Red */
+html.light img,
+html.light video,
+html.light canvas,
+html.light .text-red-500,
+html.light .text-red-600,
+html.light .text-\[\#b81d24\],
+html.light .bg-red-600,
+html.light .bg-\[\#b81d24\],
+html.light .border-\[\#b81d24\] {
+  filter: none;
+}
+
 /* ========================================
    PERFORMANCE OPTIMIZATIONS
    ======================================== */

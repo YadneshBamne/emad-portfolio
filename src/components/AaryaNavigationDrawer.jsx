@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTransitionNavigate } from '../context/TransitionContext';
+import ThemeToggle from './ui/ThemeToggle';
 
 const navLinks = [
   { id: 'about', title: 'ABOUT', href: '/about' },
@@ -51,14 +52,26 @@ export function AaryaNavigationDrawer() {
 
   const handleNavigation = (href) => {
     setIsOpen(false);
+    if (href === '/') {
+      if (window.location.pathname === '/') {
+        const el = document.getElementById('section-work') || document.getElementById('section-about');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+          return;
+        }
+      }
+    }
     navigate(href);
   };
 
   return (
     <>
       {/* Fixed Toggle Button Container */}
-      <div className="fixed top-6 right-6 z-[100] flex items-center gap-4 pointer-events-auto">
+      <div className="fixed top-6 right-6 z-[100] flex items-center gap-3 sm:gap-4 pointer-events-auto">
         
+        {/* Global Light / Dark Mode Switch */}
+        <ThemeToggle className="w-12 h-12" />
+
         {/* Playful 'click me' hint */}
         <AnimatePresence>
           {!isOpen && (

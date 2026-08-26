@@ -76,117 +76,94 @@ export function AaryaLensReveal() {
         { opacity: 0.8, duration: 2, ease: 'power2.out', delay: 0.5 }
       );
 
-      // A separate timeline for the lens that is triggered by scroll but plays
-      // automatically over 2.5 seconds, so the lens disappears smoothly without scrubbing.
-      const lensTimeline = gsap.timeline({ paused: true });
-      lensTimeline
-        .to(lensUIRef.current, {
-          scale: 3.2,
-          opacity: 0,
-          duration: 2.5,
-          ease: 'power2.inOut',
-          force3D: true,
-        })
-        .to('.lens-glass-layer', {
-          opacity: 0,
-          duration: 1.75,
-          ease: 'power2.inOut',
-          force3D: true,
-        }, '<')
-        .to('.viewfinder-ui', {
-          opacity: 0,
-          duration: 1.5,
-          ease: 'power2.inOut',
-          force3D: true,
-        }, '<');
-
-      let lensFaded = false;
-
-      // ─── Main ScrollTrigger timeline ────────────────────────────────────
-      // scrub: 0.5 → half-second catchup = highly responsive scroll control.
-      // pin: true → pins the hero section during the scroll reveal.
+      // ─── Unified Synchronized ScrollTrigger Timeline ──────────────────────
+      // scrub: 0.8 provides silky-smooth, natural momentum response across both
+      // desktop mousewheels/trackpads and mobile touch swipes.
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: 'top top',
-          end: '+=120%',
+          end: '+=130%',
           pin: true,
-          scrub: 0.5,
+          scrub: 0.8,
           anticipatePin: 1,
-          onUpdate: (self) => {
-            // Trigger the lens zoom/fade automatically over 2.5 seconds when scroll starts
-            if (self.progress > 0.05) {
-              if (!lensFaded) {
-                lensFaded = true;
-                gsap.killTweensOf(lensTimeline);
-                gsap.to(lensTimeline, { progress: 1, duration: 2.5, ease: 'power1.out', overwrite: 'auto' });
-              }
-            } else {
-              // Revert the lens back to original state if scrolled back to the top (brings the lens back in over 0.5 seconds)
-              if (lensFaded) {
-                lensFaded = false;
-                gsap.killTweensOf(lensTimeline);
-                gsap.to(lensTimeline, { progress: 0, duration: 0.5, ease: 'power1.out', overwrite: 'auto' });
-              }
-            }
-          }
+          invalidateOnRefresh: true,
         }
       });
 
-      // 1. The Reveal — clip-path circle expanding (GPU-composited via will-change)
-      tl.fromTo(videoContainerRef.current, {
-        clipPath: 'circle(25.8vmin at 50% 50%)',
-        opacity: 0.85,
-      }, {
-        clipPath: 'circle(150vmin at 50% 50%)',
-        opacity: 1,
-        duration: 1,
-        ease: 'sine.inOut',
-        force3D: true,
-      }, '<0.3')
-
-      // 2. Center scroll text rises up
-      .to('.scroll-center-text', {
-        y: -1000,
+      // 1. Initial gentle fade of "SCROLL TO BEGIN" and Viewfinder UI
+      tl.to('.scroll-center-text', {
         opacity: 0,
-        duration: 0.9,
-        ease: 'sine.inOut',
+        y: -40,
+        duration: 0.2,
+        ease: 'power1.out',
         force3D: true,
-      }, '<0')
-
-      // 3. EMAD flies upward — function-based dynamic pixel value guarantees resize responsiveness
-      .to(textLeftRef.current, {
-        y: () => -(window.innerHeight * 1.2),
+      }, 0)
+      .to('.viewfinder-ui', {
         opacity: 0,
-        filter: 'blur(20px)',
-        duration: 0.55,
-        ease: 'power2.in',
+        duration: 0.35,
+        ease: 'power1.out',
         force3D: true,
       }, 0)
 
-      // 3b. SHAIKH flies downward — function-based dynamic pixel value
-      .to(textRightRef.current, {
-        y: () => window.innerHeight * 1.2,
+      // 2. Video Sensor Circle Reveal (matches lens opening in perfect sync)
+      .fromTo(videoContainerRef.current, {
+        clipPath: 'circle(25.8vmin at 50% 50%)',
+        opacity: 0.9,
+      }, {
+        clipPath: 'circle(145vmin at 50% 50%)',
+        opacity: 1,
+        duration: 1,
+        ease: 'power2.inOut',
+        force3D: true,
+      }, 0)
+
+      // 3. Lens Zoom & Fade
+      .to(lensUIRef.current, {
+        scale: 3.8,
         opacity: 0,
-        filter: 'blur(20px)',
-        duration: 0.55,
-        ease: 'power2.in',
+        duration: 1,
+        ease: 'power2.inOut',
+        force3D: true,
+      }, 0)
+      .to('.lens-glass-layer', {
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power1.inOut',
+        force3D: true,
+      }, 0)
+      .to('.lens-details-to-hide', {
+        opacity: 0,
+        duration: 0.45,
+        ease: 'power1.inOut',
+        force3D: true,
+      }, 0)
+
+      // 4. EMAD & SHAIKH Typography smooth cinematic exit
+      .to(textLeftRef.current, {
+        y: () => -(window.innerHeight * 0.9),
+        opacity: 0,
+        filter: 'blur(14px)',
+        duration: 0.75,
+        ease: 'power1.inOut',
+        force3D: true,
+      }, 0)
+      .to(textRightRef.current, {
+        y: () => window.innerHeight * 0.9,
+        opacity: 0,
+        filter: 'blur(14px)',
+        duration: 0.75,
+        ease: 'power1.inOut',
         force3D: true,
       }, 0);
 
-      // 7. Cleanup — We intentionally do not use .set(..., { visibility: 'hidden' })
-      //    or clear the will-change properties on completion. By avoiding abrupt visibility
-      //    toggles and keeping GPU layers promoted, the animation remains perfectly smooth
-      //    with zero style-recalculation lag when scrolling in and out in both directions.
-
-      // ─── Mouse Parallax ─────────────────────────────────────────────────
+      // ─── Mouse Parallax (Desktop Only to ensure zero mobile stutter) ──────
       const container = containerRef.current;
       let rafId = null;
       const st = tl.scrollTrigger;
+      const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 
       const handleMouseMove = (e) => {
-        // Kill parallax once scroll animation starts — prevents two animation
-        // systems fighting each other on the same elements
         if (st && st.progress > 0.05) return;
         if (rafId) cancelAnimationFrame(rafId);
         rafId = requestAnimationFrame(() => {
@@ -206,15 +183,17 @@ export function AaryaLensReveal() {
         });
       };
 
-      container.addEventListener('mousemove', handleMouseMove, { passive: true });
-      container.addEventListener('mouseleave', handleMouseLeave);
+      if (!isTouch && container) {
+        container.addEventListener('mousemove', handleMouseMove, { passive: true });
+        container.addEventListener('mouseleave', handleMouseLeave);
+      }
 
       return () => {
         if (rafId) cancelAnimationFrame(rafId);
-        container.removeEventListener('mousemove', handleMouseMove);
-        container.removeEventListener('mouseleave', handleMouseLeave);
-        gsap.killTweensOf(lensTimeline);
-        lensTimeline.kill();
+        if (container) {
+          container.removeEventListener('mousemove', handleMouseMove);
+          container.removeEventListener('mouseleave', handleMouseLeave);
+        }
       };
 
     }, containerRef);
@@ -225,7 +204,7 @@ export function AaryaLensReveal() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-screen bg-[#090909] overflow-hidden text-white font-sans selection:bg-red-600 selection:text-white"
+      className="hero-lens-section relative w-full h-screen bg-[#090909] overflow-hidden text-white font-sans selection:bg-red-600 selection:text-white"
       style={{
         // contain:layout+style+paint isolates this section as a self-contained
         // rendering root — scroll/style changes inside don't cascade out to
@@ -405,7 +384,13 @@ export function AaryaLensReveal() {
               Emad Shaikh
             </h1>
             {/* PERF: removed backdrop-blur-sm — see viewfinder note above */}
-            <button className="flex items-center gap-2 px-6 py-2 rounded-full bg-black/40 border border-white/10 text-white font-sans text-xs md:text-sm font-semibold tracking-widest hover:bg-black/60 transition-all duration-300 uppercase shadow-lg">
+            <button 
+              onClick={() => {
+                const el = document.getElementById('section-contact') || document.getElementById('section-work');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="flex items-center gap-2 px-6 py-2 rounded-full bg-black/40 border border-white/10 text-white font-sans text-xs md:text-sm font-semibold tracking-widest hover:bg-black/60 transition-all duration-300 uppercase shadow-lg cursor-pointer pointer-events-auto"
+            >
               LET'S CREATE <ArrowUpRight className="w-4 h-4 md:w-5 md:h-5" />
             </button>
           </div>
@@ -573,11 +558,8 @@ export function AaryaLensReveal() {
           </svg>
         </div>
 
-        {/* Vignette overlay — PERF: removed mix-blend-multiply.
-            mix-blend-multiply forces the browser to execute a full compositor
-            blend pass on every repaint of anything underneath. Since the blend
-            color is pure black, the visual result is identical without it. */}
-        <div className="absolute inset-0 z-45 pointer-events-none shadow-[inset_0_0_100px_rgba(0,0,0,0.7)] opacity-90" />
+        {/* Vignette overlay */}
+        <div className="hero-lens-vignette absolute inset-0 z-45 pointer-events-none shadow-[inset_0_0_100px_rgba(0,0,0,0.7)] opacity-90" />
 
         {/* Film grain — contained + slowed cadence for lower compositing budget */}
         <div className="absolute inset-0 z-45 pointer-events-none overflow-hidden" style={{ contain: 'strict' }}>

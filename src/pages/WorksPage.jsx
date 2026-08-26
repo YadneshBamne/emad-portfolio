@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useParams, useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
@@ -190,12 +190,27 @@ const HorizontalReveal = ({
   );
 };
 
+const CATEGORIES = [
+  'ALL',
+  'AUTOMOTIVE',
+  'LUXURY & BEAUTY',
+  'AERIAL & DOC',
+  'FASHION & EDITORIAL',
+  'BRAND CAMPAIGN'
+];
+
 export default function WorksPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   // Active project state (either from URL param or state)
   const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('ALL');
+  const [activeIndexState, setActiveIndexState] = useState(0);
+
+  const activeIndexRef = useRef(0);
+  const singleSetWidthRef = useRef(0);
+  const repeatsRef = useRef(4);
 
   // Sync with URL param if navigated to /works/:id
   useEffect(() => {
@@ -210,8 +225,36 @@ export default function WorksPage() {
     }
   }, [id]);
 
+  // Filtered projects
+  const filteredProjects = useMemo(() => {
+    if (selectedCategory === 'ALL') return PROJECTS;
+    return PROJECTS.filter((p) => {
+      const cat = (p.category || '').toUpperCase();
+      if (selectedCategory === 'AUTOMOTIVE') return cat.includes('AUTOMOTIVE');
+      if (selectedCategory === 'LUXURY & BEAUTY') return cat.includes('BEAUTY') || cat.includes('PRODUCT') || cat.includes('LUXURY');
+      if (selectedCategory === 'AERIAL & DOC') return cat.includes('AERIAL') || cat.includes('DOC') || cat.includes('EXPEDITION');
+      if (selectedCategory === 'FASHION & EDITORIAL') return cat.includes('FASHION') || cat.includes('EDITORIAL');
+      if (selectedCategory === 'BRAND CAMPAIGN') return cat.includes('CAMPAIGN') || cat.includes('BRAND') || cat.includes('COMMERCIAL');
+      return cat.includes(selectedCategory.toUpperCase());
+    });
+  }, [selectedCategory]);
+
+  // Display items repeated for seamless infinite scrolling
+  const displayItems = useMemo(() => {
+    if (filteredProjects.length === 0) return [];
+    const reps = Math.max(4, Math.ceil(12 / filteredProjects.length));
+    repeatsRef.current = reps;
+    const list = [];
+    for (let r = 0; r < reps; r++) {
+      filteredProjects.forEach((proj, pIdx) => {
+        list.push({ ...proj, originalIndex: pIdx, instanceKey: `${proj.id}-rep-${r}-${pIdx}` });
+      });
+    }
+    return list;
+  }, [filteredProjects]);
+
   // =========================================================================
-  // HIGH-PERFORMANCE GSAP PHYSICS ENGINE (IDENTICAL TO PHOTOGRAPHY PAGE)
+  // HIGH-PERFORMANCE INFINITE GSAP PHYSICS ENGINE
   // =========================================================================
   const containerRef = useRef(null);
   const trackRef = useRef(null);
@@ -224,18 +267,20 @@ export default function WorksPage() {
   const hasMovedRef = useRef(false);
   const dragStartRef = useRef({ x: 0, targetX: 0, time: 0 });
   const lastPointerRef = useRef({ x: 0, time: 0 });
-  const maxDragRef = useRef(0);
   const reqIdRef = useRef(null);
 
-  // Measure container and scroll bounds
+  // Measure container and set widths
   const updateBounds = useCallback(() => {
-    if (containerRef.current && trackRef.current) {
-      const containerWidth = containerRef.current.offsetWidth;
-      const trackWidth = trackRef.current.scrollWidth;
-      const maxDrag = Math.max(0, trackWidth - containerWidth + 60);
-      maxDragRef.current = maxDrag;
+    if (trackRef.current && filteredProjects.length > 0) {
+      const totalWidth = trackRef.current.scrollWidth;
+      const singleSet = totalWidth / repeatsRef.current;
+      singleSetWidthRef.current = singleSet;
+      if ((targetXRef.current === 0 || Math.abs(targetXRef.current) < 5) && singleSet > 0) {
+        targetXRef.current = -singleSet;
+        currentXRef.current = -singleSet;
+      }
     }
-  }, []);
+  }, [filteredProjects]);
 
   useEffect(() => {
     updateBounds();
@@ -243,7 +288,7 @@ export default function WorksPage() {
     return () => window.removeEventListener('resize', updateBounds);
   }, [updateBounds, selectedProject]);
 
-  // RequestAnimationFrame physics loop with friction decay, weighted lerp & rubber-banding
+  // RequestAnimationFrame infinite physics loop
   useEffect(() => {
     if (selectedProject) return; // Pause loop when in detail view
     const trackEl = trackRef.current;
@@ -256,28 +301,42 @@ export default function WorksPage() {
       const dt = Math.min(32, now - lastTime) / 16.67;
       lastTime = now;
 
-      const maxDrag = maxDragRef.current;
-
       if (!isDraggingRef.current) {
-        // Friction decay on momentum release
         velXRef.current *= Math.pow(0.93, dt);
         if (Math.abs(velXRef.current) < 0.005) velXRef.current = 0;
-
         targetXRef.current += velXRef.current * dt;
+      }
 
-        // Rubber-band elastic snapback when out of bounds
-        if (targetXRef.current > 0) {
-          targetXRef.current += (0 - targetXRef.current) * 0.14 * dt;
-        } else if (targetXRef.current < -maxDrag) {
-          targetXRef.current += (-maxDrag - targetXRef.current) * 0.14 * dt;
+      // Infinite wrapping
+      const singleSet = singleSetWidthRef.current;
+      if (singleSet > 0) {
+        while (targetXRef.current <= -singleSet * 2) {
+          targetXRef.current += singleSet;
+          currentXRef.current += singleSet;
+          dragStartRef.current.targetX += singleSet;
+        }
+        while (targetXRef.current >= -singleSet) {
+          targetXRef.current -= singleSet;
+          currentXRef.current -= singleSet;
+          dragStartRef.current.targetX -= singleSet;
         }
       }
 
-      // Smooth weighted linear interpolation (creates the signature physical inertia and delay)
+      // Smooth weighted linear interpolation
       const lerpFactor = isDraggingRef.current ? 0.095 * dt : 0.085 * dt;
       currentXRef.current += (targetXRef.current - currentXRef.current) * lerpFactor;
-
       quickSetX(currentXRef.current);
+
+      // Track active index for bottom detail carousel pagination
+      if (singleSet > 0 && filteredProjects.length > 0) {
+        const normalizedX = ((-currentXRef.current % singleSet) + singleSet) % singleSet;
+        const progress = normalizedX / singleSet;
+        const activeIdx = Math.floor(progress * filteredProjects.length) % filteredProjects.length;
+        if (activeIdx !== activeIndexRef.current) {
+          activeIndexRef.current = activeIdx;
+          setActiveIndexState(activeIdx);
+        }
+      }
 
       reqIdRef.current = requestAnimationFrame(tick);
     };
@@ -287,11 +346,11 @@ export default function WorksPage() {
     return () => {
       if (reqIdRef.current) cancelAnimationFrame(reqIdRef.current);
     };
-  }, [selectedProject]);
+  }, [selectedProject, filteredProjects]);
 
-  // Pointer event listeners with smooth drag capture & window tracking
+  // Pointer event listeners with smooth drag capture & infinite window tracking
   const handlePointerDown = (e) => {
-    if (e.button !== 0 && e.pointerType === 'mouse') return; // Left click only
+    if (e.button !== 0 && e.pointerType === 'mouse') return;
     isDraggingRef.current = true;
     hasMovedRef.current = false;
     dragStartRef.current = {
@@ -310,16 +369,7 @@ export default function WorksPage() {
         hasMovedRef.current = true;
       }
 
-      const maxDrag = maxDragRef.current;
-      let nextTarget = dragStartRef.current.targetX + dx;
-
-      // Elastic resistance when dragging past boundaries
-      if (nextTarget > 0) {
-        nextTarget = nextTarget * 0.35;
-      } else if (nextTarget < -maxDrag) {
-        const over = nextTarget - (-maxDrag);
-        nextTarget = -maxDrag + over * 0.35;
-      }
+      const nextTarget = dragStartRef.current.targetX + dx;
 
       // Measure instantaneous physical velocity
       const now = performance.now();
@@ -336,7 +386,6 @@ export default function WorksPage() {
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointercancel', onPointerUp);
-      // Small timeout to reset hasMoved so click handler can evaluate it cleanly
       setTimeout(() => {
         hasMovedRef.current = false;
       }, 50);
@@ -349,12 +398,19 @@ export default function WorksPage() {
 
   const handleWheel = (e) => {
     const delta = e.deltaX !== 0 ? e.deltaX : e.deltaY;
-    const maxDrag = maxDragRef.current;
-    targetXRef.current = Math.max(-maxDrag - 40, Math.min(40, targetXRef.current - delta * 0.85));
+    targetXRef.current -= delta * 0.85;
+  };
+
+  const handleJumpToProject = (pIdx) => {
+    if (filteredProjects.length === 0 || !singleSetWidthRef.current) return;
+    const singleSet = singleSetWidthRef.current;
+    const targetOffset = -singleSet - (pIdx / filteredProjects.length) * singleSet;
+    targetXRef.current = targetOffset;
+    velXRef.current = 0;
   };
 
   const handleOpenProject = (project) => {
-    if (hasMovedRef.current) return; // Ignore click if user was dragging
+    if (hasMovedRef.current) return;
     setSelectedProject(project);
     navigate(`/works/${project.id}`, { replace: false });
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -449,10 +505,41 @@ export default function WorksPage() {
                   </p>
                 </HorizontalReveal>
               </div>
+
+              {/* CATEGORY FILTER BAR */}
+              <div className="w-full flex items-center justify-between flex-wrap gap-4 mt-8 sm:mt-10 pb-3 border-b border-white/10">
+                <div className="flex items-center gap-2 text-[10px] sm:text-xs font-mono tracking-[0.2em] text-zinc-400 uppercase">
+                  <span className="text-[#b81d24] font-bold">01 /</span>
+                  <span>PROJECT CATEGORY</span>
+                </div>
+
+                <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+                  {CATEGORIES.map((cat) => {
+                    const isActive = selectedCategory === cat;
+                    return (
+                      <button
+                        key={cat}
+                        onClick={() => {
+                          setSelectedCategory(cat);
+                          targetXRef.current = 0;
+                          currentXRef.current = 0;
+                        }}
+                        className={`px-3 py-1 text-[10px] sm:text-xs font-mono tracking-wider uppercase border transition-all duration-200 cursor-pointer rounded-none whitespace-nowrap ${
+                          isActive
+                            ? 'bg-white text-black border-white font-bold'
+                            : 'bg-white/5 text-zinc-400 border-white/10 hover:border-white/30 hover:text-white'
+                        }`}
+                      >
+                        {cat}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </section>
 
             {/* ========================================================================= */}
-            {/* SILKY SMOOTH LERP DRAGGABLE GALLERY TRACK */}
+            {/* SILKY SMOOTH INFINITE LERP DRAGGABLE GALLERY TRACK */}
             {/* ========================================================================= */}
             <motion.section 
               initial={{ opacity: 0, y: 30 }}
@@ -461,15 +548,15 @@ export default function WorksPage() {
               ref={containerRef}
               onPointerDown={handlePointerDown}
               onWheel={handleWheel}
-              className="w-full mt-8 sm:mt-12 md:mt-16 overflow-hidden pb-8 pt-2 cursor-grab active:cursor-grabbing relative touch-none select-none"
+              className="w-full mt-4 sm:mt-6 overflow-hidden pb-4 pt-2 cursor-grab active:cursor-grabbing relative touch-none select-none"
             >
               <div
                 ref={trackRef}
                 className="flex items-center h-[320px] sm:h-[370px] md:h-[420px] lg:h-[450px] gap-6 sm:gap-8 md:gap-10 lg:gap-12 min-w-max select-none will-change-transform"
               >
-                {PROJECTS.map((project, idx) => (
+                {displayItems.map((project) => (
                   <div 
-                    key={project.id} 
+                    key={project.instanceKey} 
                     onClick={() => handleOpenProject(project)}
                     className={`flex flex-col justify-end shrink-0 select-none group cursor-pointer ${project.align}`}
                   >
@@ -483,19 +570,48 @@ export default function WorksPage() {
                       />
                     </div>
 
-                    {/* Minimal Underlined Label Directly Below Card with Horizontal Reveal */}
-                    <HorizontalReveal direction="left" delay={0.5 + idx * 0.06} duration={0.8}>
-                      <div className="mt-2.5 flex items-center justify-between w-full">
-                        <span className="text-[11px] sm:text-xs md:text-sm font-sans tracking-tight text-zinc-300 group-hover:text-white border-b border-white pb-0.5 transition-colors">
-                          {project.title}
-                        </span>
-                        <ArrowUpRight className="w-3 h-3 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all opacity-0 group-hover:opacity-100" />
-                      </div>
-                    </HorizontalReveal>
+                    {/* Minimal Underlined Label Directly Below Card — REVEAL ONLY ON HOVER */}
+                    <div className="mt-2.5 flex items-center justify-between w-full opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out pointer-events-none">
+                      <span className="text-[11px] sm:text-xs md:text-sm font-sans tracking-tight text-zinc-200 group-hover:text-white border-b border-white pb-0.5 transition-colors">
+                        {project.title}
+                      </span>
+                      <ArrowUpRight className="w-3 h-3 text-zinc-400 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                    </div>
                   </div>
                 ))}
               </div>
             </motion.section>
+
+            {/* ========================================================================= */}
+            {/* BOTTOM DETAIL-CAROUSEL PAGINATION SCRUB (Ref: pensatori-irrazionali.com/work) */}
+            {/* ========================================================================= */}
+            <div className="w-full flex flex-col items-center justify-center mt-6 sm:mt-10 mb-2 z-20 pointer-events-auto">
+              <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-black/50 border border-white/10 backdrop-blur-md">
+                {filteredProjects.map((p, pIdx) => {
+                  const isActive = activeIndexState === pIdx;
+                  return (
+                    <button
+                      key={`detail-pag-${p.id}-${pIdx}`}
+                      onClick={() => handleJumpToProject(pIdx)}
+                      className="group/indicator relative h-6 sm:h-7 px-1 flex items-center justify-center cursor-pointer transition-all duration-300"
+                      aria-label={`Jump to ${p.title}`}
+                    >
+                      <div 
+                        className={`transition-all duration-300 rounded-none ${
+                          isActive 
+                            ? 'w-5 sm:w-6 h-5 sm:h-6 border border-white bg-white/20' 
+                            : 'w-1.5 sm:w-2 h-3.5 sm:h-4 border border-white/20 bg-white/5 hover:border-white/60 hover:bg-white/15'
+                        }`} 
+                      />
+                      {/* Tooltip on hover */}
+                      <span className="absolute -top-7 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-black border border-white/20 text-[9px] font-mono tracking-widest text-white whitespace-nowrap opacity-0 group-hover/indicator:opacity-100 transition-opacity pointer-events-none z-30">
+                        {p.title}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
           </motion.main>
         ) : (

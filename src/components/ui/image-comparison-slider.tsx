@@ -57,7 +57,7 @@ export const ImageComparison = ({
             ref={containerRef}
             className={`relative w-full h-full select-none overflow-hidden ${className}`}
             onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseUp} // Stop dragging if mouse leaves the container
+            onMouseLeave={handleMouseUp}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
         >
@@ -67,9 +67,12 @@ export const ImageComparison = ({
                 alt={altBefore}
                 className="absolute inset-0 block h-full w-full object-cover"
                 draggable="false"
+                onError={(e) => {
+                  e.currentTarget.src = 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=800&auto=format&fit=crop';
+                }}
             />
 
-            {/* After Image (Top Layer) - Its visibility is controlled by the clip-path */}
+            {/* After Image (Top Layer) - Controlled by clip-path */}
             <div
                 className="absolute top-0 left-0 h-full w-full overflow-hidden"
                 style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
@@ -79,30 +82,33 @@ export const ImageComparison = ({
                     alt={altAfter}
                     className="absolute inset-0 h-full w-full object-cover"
                     draggable="false"
+                    onError={(e) => {
+                      e.currentTarget.src = 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800&auto=format&fit=crop';
+                    }}
                 />
             </div>
 
             {/* Labels - Before and After */}
             <div className="absolute top-4 left-4 z-10 pointer-events-none">
-                <span className="bg-black/50 text-white/70 text-[10px] font-mono tracking-widest px-2 py-1 rounded-sm backdrop-blur-sm uppercase">Before</span>
+                <span className="bg-black/60 text-white/90 text-[10px] font-mono tracking-widest px-2.5 py-1 rounded-none border border-white/10 backdrop-blur-md uppercase">Before</span>
             </div>
             
             <div className="absolute top-4 right-4 z-10 pointer-events-none">
-                <span className="bg-black/50 text-white/70 text-[10px] font-mono tracking-widest px-2 py-1 rounded-sm backdrop-blur-sm uppercase">After</span>
+                <span className="bg-black/60 text-white/90 text-[10px] font-mono tracking-widest px-2.5 py-1 rounded-none border border-white/10 backdrop-blur-md uppercase">After</span>
             </div>
 
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 pointer-events-none opacity-50">
-                <span className="bg-black/60 border border-white/10 text-white/70 text-[9px] font-mono tracking-[0.2em] px-3 py-1.5 rounded backdrop-blur-sm uppercase">DRAG TO COMPARE</span>
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 pointer-events-none opacity-70">
+                <span className="bg-black/70 border border-white/15 text-white/90 text-[9px] font-mono tracking-[0.2em] px-3 py-1.5 rounded-none backdrop-blur-md uppercase shadow-lg">DRAG TO COMPARE</span>
             </div>
 
             {/* Slider Handle */}
             <div
-                className="absolute top-0 bottom-0 w-[1px] bg-white/50 cursor-ew-resize flex items-center justify-center z-20"
+                className="absolute top-0 bottom-0 w-[1px] bg-white cursor-ew-resize flex items-center justify-center z-20"
                 style={{ left: `calc(${sliderPosition}%)` }} 
                 onMouseDown={handleMouseDown}
                 onTouchStart={handleTouchStart}
             >
-                <div className={`bg-white rounded-full h-7 w-7 flex items-center justify-center shadow-lg transition-transform duration-200 ease-in-out ${isDragging ? 'scale-110 shadow-xl bg-gray-100' : ''}`}>
+                <div className={`bg-white rounded-full h-7 w-7 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.6)] transition-transform duration-200 ease-in-out cursor-ew-resize ${isDragging ? 'scale-110 shadow-2xl' : ''}`}>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-black">
                         <path d="M15 18l-6-6 6-6" />
                         <path d="M9 18l6-6-6-6" />

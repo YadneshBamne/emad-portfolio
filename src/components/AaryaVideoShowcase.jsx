@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from '../context/ThemeContext';
 
 const ARTISTS = [
   { id: '1', name: 'TYLA', url: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/tyla%20live%202.mp4' },
@@ -11,6 +12,9 @@ const ARTISTS = [
 ];
 
 const AaryaVideoShowcase = () => {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
+
   const [activeArtist, setActiveArtist] = useState(ARTISTS[0]);
   const [hoveredArtist, setHoveredArtist] = useState(null);
   const scrollContainerRef = useRef(null);
@@ -180,7 +184,11 @@ const AaryaVideoShowcase = () => {
             {/* Container with Fixed Center Highlight Pill */}
             <div className="relative w-full flex items-center justify-center">
               {/* Fixed Highlight Capsule in the exact Middle */}
-              <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[130px] h-[34px] rounded-full border border-white/80 bg-white/10 backdrop-blur-md z-0 shadow-[0_0_16px_rgba(255,255,255,0.2)]" />
+              <div className={`pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[130px] h-[34px] rounded-full z-0 backdrop-blur-md ${
+                isLight
+                  ? 'border border-black/30 bg-black/5 shadow-[0_0_12px_rgba(0,0,0,0.06)]'
+                  : 'border border-white/80 bg-white/10 shadow-[0_0_16px_rgba(255,255,255,0.2)]'
+              }`} />
 
               {/* Horizontal Scroll Track */}
               <div 
@@ -203,8 +211,8 @@ const AaryaVideoShowcase = () => {
                       }}
                       className={`snap-center shrink-0 w-[130px] font-mono text-[10px] tracking-[0.2em] font-bold uppercase transition-all duration-300 py-1.5 px-2 text-center rounded-full select-none ${
                         isActive 
-                          ? 'text-white scale-100 opacity-100 font-black' 
-                          : 'text-zinc-400 scale-95 opacity-50 hover:opacity-80'
+                          ? (isLight ? 'text-[#12100e] scale-100 opacity-100 font-black' : 'text-white scale-100 opacity-100 font-black')
+                          : (isLight ? 'text-[#8c7b70] scale-95 opacity-60 hover:opacity-95' : 'text-zinc-400 scale-95 opacity-50 hover:opacity-80')
                       }`}
                     >
                       {artist.name}
@@ -237,15 +245,17 @@ const AaryaVideoShowcase = () => {
                 key={artist.id}
                 onClick={() => setActiveArtist(artist)}
                 onMouseEnter={() => setHoveredArtist(artist)}
-                className="relative group w-fit focus:outline-none pr-8 py-1"
+                className="relative group w-fit focus:outline-none pr-8 py-1 cursor-pointer"
                 aria-label={`Select ${artist.name}`}
               >
                 <motion.span
                   animate={{
-                    color: isHighlighted ? '#FFFFFF' : '#52525B', // zinc-600
-                    scale: isHighlighted ? 1.1 : 1,
+                    color: isHighlighted 
+                      ? (isLight ? '#12100e' : '#FFFFFF') 
+                      : (isLight ? '#8c7b70' : '#52525B'),
+                    scale: isHighlighted ? 1.08 : 1,
                   }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ duration: 0.25 }}
                   className="block text-3xl md:text-5xl font-black uppercase origin-right"
                   style={{ fontFamily: "'Anton', 'Impact', sans-serif" }}
                 >

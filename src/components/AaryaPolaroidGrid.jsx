@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { useTransitionNavigate } from '../context/TransitionContext';
 
 // Sample polaroid data
 const polaroidItems = [
@@ -28,7 +29,7 @@ const scatterConfig = [
   { rotate: 7, x: 12, y: -12 },    // 10 bottom right
 ];
 
-const PolaroidCard = ({ item, config }) => {
+const PolaroidCard = ({ item, config, onCardClick }) => {
   const cardRef = useRef(null);
 
   const x = useMotionValue(0);
@@ -64,6 +65,7 @@ const PolaroidCard = ({ item, config }) => {
   return (
     <motion.div
       ref={cardRef}
+      onClick={onCardClick}
       // overflow-visible lets the 3D translated children extend past the card frame without clipping
       className="relative aspect-3/4 w-full max-w-70 bg-[#faf9f5] overflow-visible cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
       onMouseMove={handleMouseMove}
@@ -109,10 +111,12 @@ const PolaroidCard = ({ item, config }) => {
 };
 
 const AaryaPolaroidGrid = () => {
+  const navigate = useTransitionNavigate();
+
   return (
     <section className="relative w-full bg-black py-24 border-t border-zinc-900 transition-colors duration-500 overflow-hidden">
       {/* Header Section */}
-      <div className="w-full border-b border-zinc-900 bg-black/50 py-5 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center text-xs md:text-sm font-mono text-zinc-500 mb-20 shadow-2xl relative z-10">
+      <div className="w-full border-b border-zinc-900 bg-black/50 py-5 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center text-xs md:text-sm font-mono text-zinc-500 mb-20 relative z-10">
         <div className="mb-3 md:mb-0 tracking-widest flex items-center gap-4">
            <span className="text-red-600 font-bold">04</span>
            <span className="w-12 h-px bg-zinc-600"></span>
@@ -120,7 +124,7 @@ const AaryaPolaroidGrid = () => {
         </div>
         <div className="mb-3 md:mb-0 text-center tracking-widest font-bold text-zinc-200">POLAROID COLLECTION</div>
         <div className="flex items-center gap-3">
-          <span className="w-2.5 h-2.5 rounded-full bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.8)] animate-pulse"></span>
+          <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse"></span>
           <span className="tracking-widest text-zinc-200">LIVE</span>
         </div>
       </div>
@@ -129,7 +133,11 @@ const AaryaPolaroidGrid = () => {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-12 place-items-center">
           {polaroidItems.map((item, index) => (
              <div key={item.id} className="relative z-10 w-full flex justify-center items-center" style={{ zIndex: 10 }}>
-                <PolaroidCard item={item} config={scatterConfig[index]} />
+                <PolaroidCard 
+                  item={item} 
+                  config={scatterConfig[index]} 
+                  onCardClick={() => navigate('/photography')} 
+                />
              </div>
           ))}
         </div>

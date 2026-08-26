@@ -11,22 +11,28 @@ import PhotographyPage from './pages/PhotographyPage'
 import WorksPage from './pages/WorksPage'
 import CommunityPage from './pages/CommunityPage'
 import { TransitionProvider } from './context/TransitionContext'
+import { ThemeProvider } from './context/ThemeContext'
 
+import { useTheme } from './context/ThemeContext'
 import { useLocation } from 'react-router-dom'
 
 // Root Layout wrapping all pages to supply the TransitionProvider and AnimatedFooter
 const Layout = () => {
   const location = useLocation()
+  const { theme } = useTheme()
   const isFullScreenPage = location.pathname === '/photography'
+  const isLight = theme === 'light'
+
   return (
     <TransitionProvider>
       <Outlet />
       {!isFullScreenPage && (
         <AnimatedFooter 
-          charColor="#e11d48"
-          hoverColor="#ef4444"
-          accentColor="#e11d48"
-          background="#000000"
+          charColor={isLight ? "#b81d24" : "#e11d48"}
+          hoverColor={isLight ? "#801418" : "#ef4444"}
+          accentColor="#b81d24"
+          textColor={isLight ? "#12100e" : "#ffffff"}
+          background={isLight ? "#f5f3ec" : "#000000"}
         />
       )}
     </TransitionProvider>
@@ -53,9 +59,11 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <Preloader>
-      <RouterProvider router={router} />
-    </Preloader>
+    <ThemeProvider>
+      <Preloader>
+        <RouterProvider router={router} />
+      </Preloader>
+    </ThemeProvider>
   )
 }
 

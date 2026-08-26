@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { useTransitionNavigate } from '../context/TransitionContext';
+import ThemeToggle from './ui/ThemeToggle';
 
 const STAGGER = 0.025;
 
@@ -122,6 +123,15 @@ export default function DynamicIslandNavbar({ activePath = '/' }) {
   }, []);
 
   const handleNavigate = (path) => {
+    if (path === '/') {
+      if (window.location.pathname === '/') {
+        const el = document.getElementById('section-work') || document.getElementById('section-about');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+          return;
+        }
+      }
+    }
     navigate(path);
   };
 
@@ -214,6 +224,11 @@ export default function DynamicIslandNavbar({ activePath = '/' }) {
             </button>
           </motion.div>
 
+        </div>
+
+        {/* Floating Right HUD Theme Toggle - Perfectly centered with navbar axis */}
+        <div className="absolute right-8 sm:right-12 top-1/2 -translate-y-1/2 z-30 pointer-events-auto flex items-center">
+          <ThemeToggle />
         </div>
       </nav>
     </div>

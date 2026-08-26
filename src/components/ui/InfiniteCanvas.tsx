@@ -263,20 +263,13 @@ export default function InfiniteCanvas({
     velRef.current = { x: 0, y: 0 }
   }, [])
 
-  // Tile pointer up handler — checks distance moved to trigger click accurately
+  // Tile pointer up handler
   const handleTilePointerUp = useCallback(
-    (e: React.PointerEvent, item: CanvasItem, index: number) => {
-      const dist = Math.hypot(e.clientX - dragStartRef.current.x, e.clientY - dragStartRef.current.y)
-      const duration = Date.now() - dragStartRef.current.time
-
+    () => {
       isDraggingRef.current = false
       setIsDraggingState(false)
-
-      if (dist < 8 && duration < 600) {
-        onItemClick?.(item, index)
-      }
     },
-    [onItemClick]
+    []
   )
 
   const handleTileClick = useCallback(
@@ -305,7 +298,7 @@ export default function InfiniteCanvas({
         touchAction: "none",
         userSelect: "none",
         cursor: isDraggingState ? "grabbing" : "grab",
-        backgroundColor: "#070707",
+        backgroundColor: "var(--bg-primary, #050505)",
         ...style,
       }}
       className={`relative w-full h-full select-none ${className}`}
@@ -336,7 +329,7 @@ export default function InfiniteCanvas({
                 contain: "layout paint",
                 pointerEvents: "auto",
               }}
-              className="group cursor-pointer rounded-none overflow-hidden bg-[#111114] border border-white/5 hover:border-white/25 transition-colors duration-200"
+              className="group cursor-pointer rounded-none overflow-hidden bg-[#111114] border border-white/5 hover:border-white/25 transition-colors duration-200 infinite-canvas-tile"
             >
               {/* Sharp image container (exact aspect ratio, clean sharp corners) */}
               <div className="relative w-full h-full overflow-hidden bg-[#0a0a0c]">
@@ -354,22 +347,7 @@ export default function InfiniteCanvas({
                   </div>
                 )}
 
-                {/* Subtle dark ambient gradient overlay on hover */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-
-                {/* Minimalist HUD bottom label on hover */}
-                {item.code && (
-                  <div className="absolute bottom-2.5 left-2.5 right-2.5 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                    <span className="font-mono text-[9px] tracking-widest text-white/90 bg-black/70 backdrop-blur-sm px-2 py-0.5 rounded-none border border-white/10">
-                      {item.code}
-                    </span>
-                    {item.lens && (
-                      <span className="font-mono text-[8.5px] tracking-wider text-zinc-300 bg-black/70 backdrop-blur-sm px-2 py-0.5 rounded-none border border-white/10 hidden sm:inline">
-                        {item.lens}
-                      </span>
-                    )}
-                  </div>
-                )}
+                {/* Clean hover elevation and subtle zoom without popping badges */}
               </div>
             </div>
           )

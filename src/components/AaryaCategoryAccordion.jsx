@@ -145,14 +145,14 @@ const AaryaCategoryAccordion = () => {
             <img
               src="https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/ISF-14.jpg"
               alt="Photography"
-              className="absolute inset-0 w-full h-full object-cover scale-102 opacity-50"
+              className="absolute inset-0 w-full h-full object-cover scale-102 opacity-70"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/20 to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent z-10 pointer-events-none" />
             <div className="relative z-20">
-              <span className="font-mono text-[9px] text-red-500 tracking-wider uppercase block mb-1">01 // STILLS.RAW</span>
+              <span className="font-mono text-[9px] text-red-500 tracking-wider uppercase block mb-1 font-bold">01 // STILLS.RAW</span>
               <h3 className="text-2xl font-black text-white uppercase" style={{ fontFamily: "'Anton', sans-serif" }}>PHOTOGRAPHY</h3>
               {activeMobilePane === 0 && (
-                <p className="text-zinc-400 text-xs mt-2 leading-relaxed max-w-md animate-[fadeIn_0.5s_ease]">
+                <p className="text-zinc-200 text-xs mt-2 leading-relaxed max-w-md animate-[fadeIn_0.5s_ease]">
                   Capturing details in raw light. Editorial shoots, portraits, and low-light street captures.
                 </p>
               )}
@@ -178,14 +178,14 @@ const AaryaCategoryAccordion = () => {
               loop
               muted
               playsInline
-              className="absolute inset-0 w-full h-full object-cover opacity-50 scale-102"
+              className="absolute inset-0 w-full h-full object-cover opacity-75 scale-102"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/20 to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent z-10 pointer-events-none" />
             <div className="relative z-20">
-              <span className="font-mono text-[9px] text-red-500 tracking-wider uppercase block mb-1">02 // MOTION.CINE</span>
+              <span className="font-mono text-[9px] text-red-500 tracking-wider uppercase block mb-1 font-bold">02 // MOTION.CINE</span>
               <h3 className="text-2xl font-black text-white uppercase" style={{ fontFamily: "'Anton', sans-serif" }}>VIDEOGRAPHY</h3>
               {activeMobilePane === 1 && (
-                <p className="text-zinc-400 text-xs mt-2 leading-relaxed max-w-md animate-[fadeIn_0.5s_ease]">
+                <p className="text-zinc-200 text-xs mt-2 leading-relaxed max-w-md animate-[fadeIn_0.5s_ease]">
                   Storytelling through moving images. Music videos, cinematic ads, and narrative shorts.
                 </p>
               )}
@@ -208,14 +208,14 @@ const AaryaCategoryAccordion = () => {
             <img
               src="https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/credits_BARICCI_ES-75.jpg"
               alt="Graphic Design"
-              className="absolute inset-0 w-full h-full object-cover scale-102 opacity-50"
+              className="absolute inset-0 w-full h-full object-cover scale-102 opacity-75"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/20 to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent z-10 pointer-events-none" />
             <div className="relative z-20">
-              <span className="font-mono text-[9px] text-red-500 tracking-wider uppercase block mb-1">03 // VECTOR.DPI</span>
+              <span className="font-mono text-[9px] text-red-500 tracking-wider uppercase block mb-1 font-bold">03 // VECTOR.DPI</span>
               <h3 className="text-2xl font-black text-white uppercase" style={{ fontFamily: "'Anton', sans-serif" }}>GRAPHIC DESIGN</h3>
               {activeMobilePane === 2 && (
-                <p className="text-zinc-400 text-xs mt-2 leading-relaxed max-w-md animate-[fadeIn_0.5s_ease]">
+                <p className="text-zinc-200 text-xs mt-2 leading-relaxed max-w-md animate-[fadeIn_0.5s_ease]">
                   Geometric and typographic visual identities. Typographic systems, layout branding, posters.
                 </p>
               )}
@@ -244,44 +244,40 @@ const AaryaCategoryAccordion = () => {
               alt="Photography"
               className={`absolute inset-0 w-full h-full object-cover origin-center z-0
                 ${hoveredPane === 'left' 
-                  ? 'scale-108 opacity-80 brightness-110' 
-                  : 'scale-103 opacity-40 brightness-50 mix-blend-luminosity hover:opacity-50'
+                  ? 'scale-108 opacity-90 brightness-105' 
+                  : 'scale-103 opacity-60 brightness-75 hover:opacity-75'
                 }
               `}
               style={{ transition: 'transform 1.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1), filter 1.0s cubic-bezier(0.16, 1, 0.3, 1)' }}
             />
-            {/* Color Hue & Gradient Fades */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/30 to-transparent opacity-90 z-10 pointer-events-none" />
-            <div 
-              className={`absolute inset-0 bg-[#050505] mix-blend-color pointer-events-none transition-opacity z-10 ${hoveredPane === 'left' ? 'opacity-0' : 'opacity-30'}`}
-              style={{ transition: 'opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1)' }}
-            />
+            {/* Crisp Dark Vignette for Razor-Sharp Text Contrast */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent opacity-90 z-10 pointer-events-none" />
 
             {/* Viewfinder Frame overlay (Top & Bottom borders & focus boxes) */}
             <div 
-              className={`absolute inset-0 border border-white/5 z-20 pointer-events-none ${hoveredPane === 'left' ? 'opacity-100' : 'opacity-35'}`}
+              className={`absolute inset-0 border border-white/10 z-20 pointer-events-none ${hoveredPane === 'left' ? 'opacity-100' : 'opacity-40'}`}
               style={{ transition: 'opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1)' }}
             >
-              <div className="absolute top-4 left-4 w-3.5 h-3.5 border-t border-l border-white/30" />
-              <div className="absolute top-4 right-4 w-3.5 h-3.5 border-t border-r border-white/30" />
-              <div className="absolute bottom-4 left-4 w-3.5 h-3.5 border-b border-l border-white/30" />
-              <div className="absolute bottom-4 right-4 w-3.5 h-3.5 border-b border-r border-white/30" />
+              <div className="absolute top-4 left-4 w-3.5 h-3.5 border-t border-l border-white/40" />
+              <div className="absolute top-4 right-4 w-3.5 h-3.5 border-t border-r border-white/40" />
+              <div className="absolute bottom-4 left-4 w-3.5 h-3.5 border-b border-l border-white/40" />
+              <div className="absolute bottom-4 right-4 w-3.5 h-3.5 border-b border-r border-white/40" />
             </div>
 
 
 
             {/* Top Info Tags */}
-            <div className="absolute top-4 left-4 font-mono text-[9px] text-zinc-500 z-25 pointer-events-none flex items-center gap-1.5">
-              <Camera className="w-3.5 h-3.5 text-zinc-400" />
+            <div className="absolute top-4 left-4 font-mono text-[9px] text-zinc-300 z-25 pointer-events-none flex items-center gap-1.5 drop-shadow-md">
+              <Camera className="w-3.5 h-3.5 text-zinc-300" />
               <span>FEED: STILLS_CAM_A</span>
             </div>
 
-            <div className="absolute top-4 right-4 font-mono text-[9px] text-zinc-500 z-25 pointer-events-none">
+            <div className="absolute top-4 right-4 font-mono text-[9px] text-zinc-300 z-25 pointer-events-none drop-shadow-md">
               <span>LENS: FE 50MM F/1.2 GM</span>
             </div>
 
             {/* Bottom HUD Telemetry details */}
-            <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between font-mono text-[8px] tracking-wider text-zinc-500 pointer-events-none">
+            <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between font-mono text-[8px] tracking-wider text-zinc-300 pointer-events-none drop-shadow-md">
               <div>RAW.DNG // 14-BIT</div>
               <div>M // 1/250S // F1.2 // ISO 100</div>
             </div>
@@ -293,9 +289,9 @@ const AaryaCategoryAccordion = () => {
               `}
               style={{ transition: 'transform 1.0s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1)' }}
             >
-              <span className="font-mono text-[9px] text-red-500 tracking-[0.2em] uppercase block mb-1">01 // PHOTOGRAPHY</span>
-              <h3 className="text-3xl font-black text-white uppercase mb-2 tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>STILLS PORTFOLIO</h3>
-              <p className="text-zinc-300 font-sans text-xs max-w-sm mb-4 leading-relaxed">
+              <span className="font-mono text-[9px] text-red-500 tracking-[0.2em] uppercase block mb-1 font-bold">01 // PHOTOGRAPHY</span>
+              <h3 className="text-3xl font-black text-white uppercase mb-2 tracking-tight drop-shadow-md" style={{ fontFamily: "'Anton', sans-serif" }}>STILLS PORTFOLIO</h3>
+              <p className="text-zinc-200 font-sans text-xs max-w-sm mb-4 leading-relaxed drop-shadow-sm">
                 Capturing details in raw light. Specializing in high-fashion editorial portraits, street essays, and low-light capturing.
               </p>
               <button 
@@ -329,43 +325,39 @@ const AaryaCategoryAccordion = () => {
                 playsInline
                 className={`absolute inset-0 w-full h-full object-cover origin-center z-0 scale-102
                   ${hoveredPane === 'right-top' 
-                    ? 'opacity-85 brightness-110' 
-                    : 'opacity-40 brightness-50 mix-blend-luminosity hover:opacity-50'
+                    ? 'opacity-95 brightness-105' 
+                    : 'opacity-65 brightness-75 hover:opacity-80'
                   }
                 `}
                 style={{ transition: 'transform 1.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1), filter 1.0s cubic-bezier(0.16, 1, 0.3, 1)' }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/30 to-transparent opacity-95 z-10 pointer-events-none" />
-              <div 
-                className={`absolute inset-0 bg-[#050505] mix-blend-color pointer-events-none transition-opacity z-10 ${hoveredPane === 'right-top' ? 'opacity-0' : 'opacity-30'}`}
-                style={{ transition: 'opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1)' }}
-              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent opacity-90 z-10 pointer-events-none" />
 
               {/* Viewfinder Overlay Frame */}
               <div 
-                className={`absolute inset-0 border border-white/5 z-20 pointer-events-none ${hoveredPane === 'right-top' ? 'opacity-100' : 'opacity-35'}`}
+                className={`absolute inset-0 border border-white/10 z-20 pointer-events-none ${hoveredPane === 'right-top' ? 'opacity-100' : 'opacity-40'}`}
                 style={{ transition: 'opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1)' }}
               >
-                <div className="absolute top-4 left-4 w-3.5 h-3.5 border-t border-l border-white/30" />
-                <div className="absolute top-4 right-4 w-3.5 h-3.5 border-t border-r border-white/30" />
-                <div className="absolute bottom-4 left-4 w-3.5 h-3.5 border-b border-l border-white/30" />
-                <div className="absolute bottom-4 right-4 w-3.5 h-3.5 border-b border-r border-white/30" />
+                <div className="absolute top-4 left-4 w-3.5 h-3.5 border-t border-l border-white/40" />
+                <div className="absolute top-4 right-4 w-3.5 h-3.5 border-t border-r border-white/40" />
+                <div className="absolute bottom-4 left-4 w-3.5 h-3.5 border-b border-l border-white/40" />
+                <div className="absolute bottom-4 right-4 w-3.5 h-3.5 border-b border-r border-white/40" />
               </div>
 
 
               {/* Top Viewport details */}
-              <div className="absolute top-4 left-4 font-mono text-[9px] text-zinc-500 z-25 pointer-events-none flex items-center gap-1.5">
-                <Video className="w-3.5 h-3.5 text-zinc-400" />
+              <div className="absolute top-4 left-4 font-mono text-[9px] text-zinc-300 z-25 pointer-events-none flex items-center gap-1.5 drop-shadow-md">
+                <Video className="w-3.5 h-3.5 text-zinc-300" />
                 <span>FEED: CINEMA_CAM_B</span>
               </div>
 
-              <div className="absolute top-4 right-4 font-mono text-[9px] text-zinc-500 z-25 pointer-events-none flex items-center gap-1 text-red-500 font-bold">
+              <div className="absolute top-4 right-4 font-mono text-[9px] z-25 pointer-events-none flex items-center gap-1 text-red-500 font-bold drop-shadow-md">
                 <span className="w-1.5 h-1.5 bg-red-600 rounded-full animate-pulse"></span>
                 <span>REC LIVE</span>
               </div>
 
               {/* Bottom Telemetry indicators */}
-              <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between font-mono text-[8px] tracking-wider text-zinc-500 pointer-events-none">
+              <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between font-mono text-[8px] tracking-wider text-zinc-300 pointer-events-none drop-shadow-md">
                 <div>ProRes 4444 // UHD</div>
                 <div>CINE // 24FPS // T2.0 // ISO 800</div>
               </div>
@@ -377,9 +369,9 @@ const AaryaCategoryAccordion = () => {
                 `}
                 style={{ transition: 'transform 1.0s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1)' }}
               >
-                <span className="font-mono text-[9px] text-red-500 tracking-[0.2em] uppercase block mb-1">02 // VIDEOGRAPHY</span>
-                <h3 className="text-3xl font-black text-white uppercase mb-2 tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>CINEMATIC REEL</h3>
-                <p className="text-zinc-300 font-sans text-xs max-w-sm mb-4 leading-relaxed">
+                <span className="font-mono text-[9px] text-red-500 tracking-[0.2em] uppercase block mb-1 font-bold">02 // VIDEOGRAPHY</span>
+                <h3 className="text-3xl font-black text-white uppercase mb-2 tracking-tight drop-shadow-md" style={{ fontFamily: "'Anton', sans-serif" }}>CINEMATIC REEL</h3>
+                <p className="text-zinc-200 font-sans text-xs max-w-sm mb-4 leading-relaxed drop-shadow-sm">
                   Narrative filmmaking & music videos. Directing, filming, and grading with heavy light play and anamorphic textures.
                 </p>
                 <button 
@@ -404,13 +396,13 @@ const AaryaCategoryAccordion = () => {
                 alt="Graphic Design"
                 className={`absolute inset-0 w-full h-full object-cover origin-center z-0
                   ${hoveredPane === 'right-bottom' 
-                    ? 'scale-108 opacity-80 brightness-110' 
-                    : 'scale-103 opacity-40 brightness-50 mix-blend-luminosity hover:opacity-50'
+                    ? 'scale-108 opacity-90 brightness-105' 
+                    : 'scale-103 opacity-60 brightness-75 hover:opacity-75'
                   }
                 `}
                 style={{ transition: 'transform 1.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1), filter 1.0s cubic-bezier(0.16, 1, 0.3, 1)' }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/30 to-transparent opacity-95 z-10 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent opacity-90 z-10 pointer-events-none" />
               <div 
                 className={`absolute inset-0 bg-[#050505] mix-blend-color pointer-events-none transition-opacity z-10 ${hoveredPane === 'right-bottom' ? 'opacity-0' : 'opacity-30'}`}
                 style={{ transition: 'opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1)' }}
