@@ -95,7 +95,7 @@ export function AaryaNavigationDrawer() {
         {/* The Main Toggle Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center justify-center bg-zinc-900/80 backdrop-blur-md border border-white/10 hover:bg-zinc-800 transition-colors text-zinc-100 w-12 h-12 rounded-full shadow-2xl overflow-hidden group"
+          className="drawer-toggle-btn flex items-center justify-center bg-zinc-900/80 backdrop-blur-md border border-white/10 hover:bg-zinc-800 transition-colors text-zinc-100 w-12 h-12 rounded-full shadow-2xl overflow-hidden group cursor-pointer"
           aria-label="Toggle Navigation"
         >
           {/* Menu / Close Icon */}

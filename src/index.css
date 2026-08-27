@@ -271,14 +271,17 @@ html.light .preset-slider-thumb {
 }
 
 html.light .preset-studio-swatch {
-  border-color: rgba(184, 29, 36, 0.2) !important;
-  background-color: #fdfcf9 !important;
+  border-color: rgba(184, 29, 36, 0.25) !important;
+}
+
+html.light .preset-studio-swatch.border-red-600 {
+  border-color: #b81d24 !important;
 }
 
 html.light .preset-studio-swatch span {
-  color: #12100e !important;
-  background-color: rgba(245, 243, 236, 0.85) !important;
-  border: 1px solid rgba(184, 29, 36, 0.2) !important;
+  color: #ffffff !important;
+  background-color: transparent !important;
+  border: none !important;
 }
 
 /* Photography Infinite Canvas Light Mode Overrides */
@@ -483,6 +486,33 @@ html.light .bg-red-600,
 html.light .bg-\[\#b81d24\],
 html.light .border-\[\#b81d24\] {
   filter: none;
+}
+
+/* Navbar Eye Logo Dark Inversion in Light Mode */
+html.light .navbar-logo-img {
+  filter: brightness(0) !important;
+}
+
+/* Mobile Drawer Hamburger Button Light Mode Theme Alignment */
+html.light .drawer-toggle-btn {
+  background-color: #ede7dc !important;
+  border-color: rgba(184, 29, 36, 0.25) !important;
+  color: #12100e !important;
+  box-shadow: 0 4px 14px rgba(18, 16, 14, 0.1) !important;
+}
+
+html.light .drawer-toggle-btn:hover {
+  background-color: #fdfcf9 !important;
+  border-color: rgba(184, 29, 36, 0.5) !important;
+}
+
+/* Preserve Crisp White Contrast on Dark Media & Video Overlays */
+html.light .about-video-overlay-text h1 {
+  color: #ffffff !important;
+}
+
+html.light .about-video-overlay-text p {
+  color: #e4e4e7 !important;
 }
 
 /* ========================================

@@ -133,7 +133,7 @@ const AaryaCategoryAccordion = () => {
       {/* DASHBOARD GRID CONTAINER (Desktop layout vs Mobile layout) */}
       {isMobile ? (
         /* MOBILE VIEW: Staggered commands panels, expands on tap */
-        <div className="flex flex-col divide-y divide-zinc-800/80 h-[700px]">
+        <div className="flex flex-col divide-y divide-zinc-800/80 h-[700px] bg-black">
           
           {/* Mobile Panel 1: Photography */}
           <div
@@ -147,12 +147,12 @@ const AaryaCategoryAccordion = () => {
               alt="Photography"
               className="absolute inset-0 w-full h-full object-cover scale-102 opacity-70"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent z-10 pointer-events-none" />
             <div className="relative z-20">
               <span className="font-mono text-[9px] text-red-500 tracking-wider uppercase block mb-1 font-bold">01 // STILLS.RAW</span>
-              <h3 className="text-2xl font-black text-white uppercase" style={{ fontFamily: "'Anton', sans-serif" }}>PHOTOGRAPHY</h3>
+              <h3 className="text-2xl font-black !text-white uppercase drop-shadow-md" style={{ fontFamily: "'Anton', sans-serif", color: '#ffffff' }}>PHOTOGRAPHY</h3>
               {activeMobilePane === 0 && (
-                <p className="text-zinc-200 text-xs mt-2 leading-relaxed max-w-md animate-[fadeIn_0.5s_ease]">
+                <p className="!text-zinc-200 text-xs mt-2 leading-relaxed max-w-md animate-[fadeIn_0.5s_ease] drop-shadow-sm" style={{ color: '#e4e4e7' }}>
                   Capturing details in raw light. Editorial shoots, portraits, and low-light street captures.
                 </p>
               )}
@@ -180,12 +180,12 @@ const AaryaCategoryAccordion = () => {
               playsInline
               className="absolute inset-0 w-full h-full object-cover opacity-75 scale-102"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent z-10 pointer-events-none" />
             <div className="relative z-20">
               <span className="font-mono text-[9px] text-red-500 tracking-wider uppercase block mb-1 font-bold">02 // MOTION.CINE</span>
-              <h3 className="text-2xl font-black text-white uppercase" style={{ fontFamily: "'Anton', sans-serif" }}>VIDEOGRAPHY</h3>
+              <h3 className="text-2xl font-black !text-white uppercase drop-shadow-md" style={{ fontFamily: "'Anton', sans-serif", color: '#ffffff' }}>VIDEOGRAPHY</h3>
               {activeMobilePane === 1 && (
-                <p className="text-zinc-200 text-xs mt-2 leading-relaxed max-w-md animate-[fadeIn_0.5s_ease]">
+                <p className="!text-zinc-200 text-xs mt-2 leading-relaxed max-w-md animate-[fadeIn_0.5s_ease] drop-shadow-sm" style={{ color: '#e4e4e7' }}>
                   Storytelling through moving images. Music videos, cinematic ads, and narrative shorts.
                 </p>
               )}
@@ -210,12 +210,12 @@ const AaryaCategoryAccordion = () => {
               alt="Graphic Design"
               className="absolute inset-0 w-full h-full object-cover scale-102 opacity-75"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent z-10 pointer-events-none" />
             <div className="relative z-20">
               <span className="font-mono text-[9px] text-red-500 tracking-wider uppercase block mb-1 font-bold">03 // VECTOR.DPI</span>
-              <h3 className="text-2xl font-black text-white uppercase" style={{ fontFamily: "'Anton', sans-serif" }}>GRAPHIC DESIGN</h3>
+              <h3 className="text-2xl font-black !text-white uppercase drop-shadow-md" style={{ fontFamily: "'Anton', sans-serif", color: '#ffffff' }}>GRAPHIC DESIGN</h3>
               {activeMobilePane === 2 && (
-                <p className="text-zinc-200 text-xs mt-2 leading-relaxed max-w-md animate-[fadeIn_0.5s_ease]">
+                <p className="!text-zinc-200 text-xs mt-2 leading-relaxed max-w-md animate-[fadeIn_0.5s_ease] drop-shadow-sm" style={{ color: '#e4e4e7' }}>
                   Geometric and typographic visual identities. Typographic systems, layout branding, posters.
                 </p>
               )}
@@ -267,17 +267,17 @@ const AaryaCategoryAccordion = () => {
 
 
             {/* Top Info Tags */}
-            <div className="absolute top-4 left-4 font-mono text-[9px] text-zinc-300 z-25 pointer-events-none flex items-center gap-1.5 drop-shadow-md">
-              <Camera className="w-3.5 h-3.5 text-zinc-300" />
+            <div className="absolute top-4 left-4 font-mono text-[9px] text-white/90 z-25 pointer-events-none flex items-center gap-1.5 drop-shadow-md" style={{ color: 'rgba(255,255,255,0.9)' }}>
+              <Camera className="w-3.5 h-3.5 text-white/90" />
               <span>FEED: STILLS_CAM_A</span>
             </div>
 
-            <div className="absolute top-4 right-4 font-mono text-[9px] text-zinc-300 z-25 pointer-events-none drop-shadow-md">
+            <div className="absolute top-4 right-4 font-mono text-[9px] text-white/90 z-25 pointer-events-none drop-shadow-md" style={{ color: 'rgba(255,255,255,0.9)' }}>
               <span>LENS: FE 50MM F/1.2 GM</span>
             </div>
 
             {/* Bottom HUD Telemetry details */}
-            <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between font-mono text-[8px] tracking-wider text-zinc-300 pointer-events-none drop-shadow-md">
+            <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between font-mono text-[8px] tracking-wider text-white/90 pointer-events-none drop-shadow-md" style={{ color: 'rgba(255,255,255,0.9)' }}>
               <div>RAW.DNG // 14-BIT</div>
               <div>M // 1/250S // F1.2 // ISO 100</div>
             </div>
@@ -290,8 +290,8 @@ const AaryaCategoryAccordion = () => {
               style={{ transition: 'transform 1.0s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1)' }}
             >
               <span className="font-mono text-[9px] text-red-500 tracking-[0.2em] uppercase block mb-1 font-bold">01 // PHOTOGRAPHY</span>
-              <h3 className="text-3xl font-black text-white uppercase mb-2 tracking-tight drop-shadow-md" style={{ fontFamily: "'Anton', sans-serif" }}>STILLS PORTFOLIO</h3>
-              <p className="text-zinc-200 font-sans text-xs max-w-sm mb-4 leading-relaxed drop-shadow-sm">
+              <h3 className="text-3xl font-black !text-white uppercase mb-2 tracking-tight drop-shadow-md" style={{ fontFamily: "'Anton', sans-serif", color: '#ffffff' }}>STILLS PORTFOLIO</h3>
+              <p className="!text-zinc-200 font-sans text-xs max-w-sm mb-4 leading-relaxed drop-shadow-sm" style={{ color: '#e4e4e7' }}>
                 Capturing details in raw light. Specializing in high-fashion editorial portraits, street essays, and low-light capturing.
               </p>
               <button 
@@ -346,8 +346,8 @@ const AaryaCategoryAccordion = () => {
 
 
               {/* Top Viewport details */}
-              <div className="absolute top-4 left-4 font-mono text-[9px] text-zinc-300 z-25 pointer-events-none flex items-center gap-1.5 drop-shadow-md">
-                <Video className="w-3.5 h-3.5 text-zinc-300" />
+              <div className="absolute top-4 left-4 font-mono text-[9px] text-white/90 z-25 pointer-events-none flex items-center gap-1.5 drop-shadow-md" style={{ color: 'rgba(255,255,255,0.9)' }}>
+                <Video className="w-3.5 h-3.5 text-white/90" />
                 <span>FEED: CINEMA_CAM_B</span>
               </div>
 
@@ -357,7 +357,7 @@ const AaryaCategoryAccordion = () => {
               </div>
 
               {/* Bottom Telemetry indicators */}
-              <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between font-mono text-[8px] tracking-wider text-zinc-300 pointer-events-none drop-shadow-md">
+              <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between font-mono text-[8px] tracking-wider text-white/90 pointer-events-none drop-shadow-md" style={{ color: 'rgba(255,255,255,0.9)' }}>
                 <div>ProRes 4444 // UHD</div>
                 <div>CINE // 24FPS // T2.0 // ISO 800</div>
               </div>
@@ -370,8 +370,8 @@ const AaryaCategoryAccordion = () => {
                 style={{ transition: 'transform 1.0s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1)' }}
               >
                 <span className="font-mono text-[9px] text-red-500 tracking-[0.2em] uppercase block mb-1 font-bold">02 // VIDEOGRAPHY</span>
-                <h3 className="text-3xl font-black text-white uppercase mb-2 tracking-tight drop-shadow-md" style={{ fontFamily: "'Anton', sans-serif" }}>CINEMATIC REEL</h3>
-                <p className="text-zinc-200 font-sans text-xs max-w-sm mb-4 leading-relaxed drop-shadow-sm">
+                <h3 className="text-3xl font-black !text-white uppercase mb-2 tracking-tight drop-shadow-md" style={{ fontFamily: "'Anton', sans-serif", color: '#ffffff' }}>CINEMATIC REEL</h3>
+                <p className="!text-zinc-200 font-sans text-xs max-w-sm mb-4 leading-relaxed drop-shadow-sm" style={{ color: '#e4e4e7' }}>
                   Narrative filmmaking & music videos. Directing, filming, and grading with heavy light play and anamorphic textures.
                 </p>
                 <button 
@@ -404,7 +404,7 @@ const AaryaCategoryAccordion = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent opacity-90 z-10 pointer-events-none" />
               <div 
-                className={`absolute inset-0 bg-[#050505] mix-blend-color pointer-events-none transition-opacity z-10 ${hoveredPane === 'right-bottom' ? 'opacity-0' : 'opacity-30'}`}
+                className={`absolute inset-0 bg-black/40 pointer-events-none transition-opacity z-10 ${hoveredPane === 'right-bottom' ? 'opacity-0' : 'opacity-30'}`}
                 style={{ transition: 'opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1)' }}
               />
 
@@ -426,14 +426,14 @@ const AaryaCategoryAccordion = () => {
               </div>
 
               {/* Top Details */}
-              <div className="absolute top-4 left-4 font-mono text-[9px] text-zinc-500 z-25 pointer-events-none flex items-center gap-1.5">
-                <Layers className="w-3.5 h-3.5 text-zinc-400" />
+              <div className="absolute top-4 left-4 font-mono text-[9px] text-white/90 z-25 pointer-events-none flex items-center gap-1.5 drop-shadow-md" style={{ color: 'rgba(255,255,255,0.9)' }}>
+                <Layers className="w-3.5 h-3.5 text-white/90" />
                 <span>RENDER: RASTER_GPU_01</span>
               </div>
 
-              <div className="absolute top-4 right-4 font-mono text-[9px] text-zinc-500 z-25 pointer-events-none flex items-center gap-1.5">
+              <div className="absolute top-4 right-4 font-mono text-[9px] text-white/90 z-25 pointer-events-none flex items-center gap-1.5 drop-shadow-md">
                 {/* Palette swatch displays */}
-                <div className="flex gap-1 items-center font-mono text-[8px] text-zinc-500">
+                <div className="flex gap-1 items-center font-mono text-[8px] text-zinc-300">
                   <span className="w-1.5 h-1.5 bg-[#FF0000] border border-white/10 rounded-sm"></span>
                   <span className="w-1.5 h-1.5 bg-[#FFFFFF] border border-white/10 rounded-sm"></span>
                   <span className="w-1.5 h-1.5 bg-[#94A3B8] border border-white/10 rounded-sm"></span>
@@ -442,7 +442,7 @@ const AaryaCategoryAccordion = () => {
               </div>
 
               {/* Bottom HUD metrics */}
-              <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between font-mono text-[8px] tracking-wider text-zinc-500 pointer-events-none">
+              <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between font-mono text-[8px] tracking-wider text-white/90 pointer-events-none drop-shadow-md" style={{ color: 'rgba(255,255,255,0.9)' }}>
                 <div>CMYK // vector.render</div>
                 <div>ENGINE: RGB-OPENGL // PATHS: OK</div>
               </div>
@@ -454,9 +454,9 @@ const AaryaCategoryAccordion = () => {
                 `}
                 style={{ transition: 'transform 1.0s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1)' }}
               >
-                <span className="font-mono text-[9px] text-red-500 tracking-[0.2em] uppercase block mb-1">03 // GRAPHIC DESIGN</span>
-                <h3 className="text-3xl font-black text-white uppercase mb-2 tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>VISUAL SYSTEMS</h3>
-                <p className="text-zinc-300 font-sans text-xs max-w-sm mb-4 leading-relaxed">
+                <span className="font-mono text-[9px] text-red-500 tracking-[0.2em] uppercase block mb-1 font-bold">03 // GRAPHIC DESIGN</span>
+                <h3 className="text-3xl font-black !text-white uppercase mb-2 tracking-tight drop-shadow-md" style={{ fontFamily: "'Anton', sans-serif", color: '#ffffff' }}>VISUAL SYSTEMS</h3>
+                <p className="!text-zinc-200 font-sans text-xs max-w-sm mb-4 leading-relaxed drop-shadow-sm" style={{ color: '#e4e4e7' }}>
                   Translating identities into layouts. Typographic structures, editorial design, poster artwork, and vector styling.
                 </p>
                 <button 

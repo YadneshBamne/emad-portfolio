@@ -8,44 +8,72 @@ import {
 } from 'lucide-react';
 import { ImageComparison } from './ui/image-comparison-slider';
 
-// Reliable high-contrast concert & editorial presets
+// Reliable high-contrast concert & editorial presets matching reference
 const PRESETS = [
   { 
     id: 'purple', 
-    name: 'PURPLE STAGE', 
-    img: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/DSC-8.jpg?updatedAt=1787198975283',
-    afterImg: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/Credits_@emadshaikh03-31.jpg?updatedAt=1787199255482'
+    name: 'PURPLE', 
+    orientation: 'portrait',
+    aspectRatio: '3/4',
+    filter: 'hue-rotate(45deg) saturate(160%) contrast(115%) brightness(105%)', 
+    img: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=800&auto=format&fit=crop' 
   },
   { 
     id: 'blue', 
-    name: 'BLUE NEON', 
-    img: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/DSC-40(1).jpg?updatedAt=1787198959091',
-    afterImg: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/DSC-48%20(1).jpg?updatedAt=1787199008444'
+    name: 'BLUE', 
+    orientation: 'portrait',
+    aspectRatio: '3/4',
+    filter: 'hue-rotate(-45deg) saturate(140%) contrast(120%)', 
+    img: 'https://images.unsplash.com/photo-1493225457124-a1a2a5f30777?q=80&w=800&auto=format&fit=crop' 
   },
   { 
     id: 'labyrinth', 
-    name: 'CINEMA 35', 
-    img: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/sequenceCredits@emadshaikh03_KM-43%20(1).jpg?updatedAt=1787199247781',
-    afterImg: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/credits_@emadshaikh03-34.jpg?updatedAt=1787199321895'
+    name: 'LABRINTH', 
+    orientation: 'landscape',
+    aspectRatio: '16/10',
+    filter: 'contrast(130%) brightness(85%) saturate(120%)', 
+    img: 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=800&auto=format&fit=crop' 
   },
   { 
     id: 'red', 
-    name: 'CRIMSON FLARE', 
-    img: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/hanumankind_02.jpg?updatedAt=1787198869718',
-    afterImg: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/DSC-9.jpg?updatedAt=1787198996020'
+    name: 'RED', 
+    orientation: 'portrait',
+    aspectRatio: '3/4',
+    filter: 'sepia(100%) saturate(320%) hue-rotate(-50deg) contrast(120%)', 
+    img: 'https://images.unsplash.com/photo-1542204165-65bf26472b9b?q=80&w=800&auto=format&fit=crop' 
   },
   { 
-    id: 'nordic', 
-    name: 'NORDIC GOLD', 
-    img: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/20251209_184430.jpg?updatedAt=1787198957580',
-    afterImg: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/ISF-14.jpg'
+    id: 'blue2', 
+    name: 'BLUE II', 
+    orientation: 'portrait',
+    aspectRatio: '3/4',
+    filter: 'hue-rotate(-90deg) contrast(160%) saturate(150%)', 
+    img: 'https://images.unsplash.com/photo-1521336575822-6da63fb45455?q=80&w=800&auto=format&fit=crop' 
   },
   { 
-    id: 'vogue', 
-    name: 'EDITORIAL B&W', 
-    img: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/work/VOGUE-2.jpg?updatedAt=1787199298801',
-    afterImg: 'https://ik.imagekit.io/4no4se4zt/Emad%20Shaikh/photos/credits_BARICCI_ES_75-6.jpg'
-  }
+    id: 'chappell', 
+    name: 'CHAPPELL ROAN', 
+    orientation: 'landscape',
+    aspectRatio: '16/10',
+    filter: 'saturate(220%) contrast(115%) brightness(110%)', 
+    img: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=800&auto=format&fit=crop' 
+  },
+  { 
+    id: 'purple2', 
+    name: 'PURPLE II', 
+    orientation: 'landscape',
+    aspectRatio: '16/10',
+    filter: 'hue-rotate(60deg) brightness(1.25) saturate(180%)', 
+    img: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800&auto=format&fit=crop' 
+  },
+  { 
+    id: 'pink', 
+    name: 'PINK', 
+    orientation: 'portrait',
+    aspectRatio: '3/4',
+    filter: 'hue-rotate(-30deg) saturate(180%) contrast(115%)', 
+    img: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=800&auto=format&fit=crop' 
+  },
 ];
 
 const CustomSlider = ({ label, value, min, max, onChange }) => {
@@ -82,6 +110,7 @@ const CustomSlider = ({ label, value, min, max, onChange }) => {
 
 export const PresetStudio = () => {
   const [activePreset, setActivePreset] = useState(PRESETS[0]);
+  const [naturalAspect, setNaturalAspect] = useState(null);
   
   const [exposure, setExposure] = useState(2);
   const [contrast, setContrast] = useState(0);
@@ -95,12 +124,50 @@ export const PresetStudio = () => {
   const [vibrance, setVibrance] = useState(12);
   const [saturation, setSaturation] = useState(6);
 
+  // Auto-detect image natural aspect ratio on active preset change
+  React.useEffect(() => {
+    if (!activePreset?.img) return;
+    const img = new window.Image();
+    img.src = activePreset.img;
+    img.onload = () => {
+      if (img.naturalWidth && img.naturalHeight) {
+        setNaturalAspect(img.naturalWidth / img.naturalHeight);
+      }
+    };
+  }, [activePreset?.img]);
+
+  // Reset sliders to default
+  const handleReset = () => {
+    setExposure(2);
+    setContrast(0);
+    setHighlights(-10);
+    setShadows(10);
+    setWhites(0);
+    setBlacks(0);
+    setTemp(6);
+    setTint(-8);
+    setVibrance(12);
+    setSaturation(6);
+  };
+
   // Normal distribution curve for histogram
   const histogramBars = Array.from({ length: 30 }, (_, i) => {
     const x = (i - 15) / 5;
     const height = Math.exp(-(x * x) / 2) * 100 + Math.random() * 20;
     return Math.min(100, Math.max(5, height));
   });
+
+  // Combine preset base filter with real-time sliders
+  const computedFilter = `
+    ${activePreset.filter || ''}
+    brightness(${100 + exposure + highlights * 0.4 + whites * 0.4}%)
+    contrast(${100 + contrast}%)
+    saturate(${100 + saturation + vibrance}%)
+    hue-rotate(${tint * 1.5}deg)
+    sepia(${temp > 0 ? temp * 0.7 : 0}%)
+  `.trim();
+
+  const isLandscape = (naturalAspect && naturalAspect > 1.1) || activePreset.orientation === 'landscape';
 
   return (
     <section className="preset-studio-section w-full bg-black py-16 px-4 md:px-8 font-sans flex items-center justify-center min-h-[90vh]">
@@ -169,13 +236,21 @@ export const PresetStudio = () => {
             </button>
           </div>
 
-          {/* Center Canvas (Image Comparison) */}
-          <div className="preset-studio-canvas flex-1 bg-[#0a0a0a] relative flex items-center justify-center overflow-hidden p-4 sm:p-6">
-             <div className="relative w-full h-full max-w-[580px] flex items-center justify-center shadow-2xl">
+          {/* Center Canvas (Image Comparison with Auto-Adjusting Orientation Dimensions) */}
+          <div className="preset-studio-canvas flex-1 bg-[#0a0a0a] relative flex items-center justify-center overflow-hidden p-3 sm:p-6">
+             <div 
+               className="relative h-full flex items-center justify-center shadow-2xl transition-all duration-500 ease-out overflow-hidden"
+               style={{ 
+                 aspectRatio: naturalAspect || (isLandscape ? 1.6 : 0.75),
+                 maxWidth: isLandscape ? '100%' : '520px',
+                 maxHeight: '94%',
+                 width: 'auto'
+               }}
+             >
                <ImageComparison 
                  beforeImage={activePreset.img}
-                 afterImage={activePreset.afterImg} 
-                 className="h-full w-full max-h-[92%]"
+                 afterFilter={computedFilter} 
+                 className="h-full w-full rounded-sm"
                />
              </div>
           </div>
@@ -222,28 +297,47 @@ export const PresetStudio = () => {
           </div>
         </div>
 
-        {/* Bottom Bar (Presets Swatches) */}
-        <div className="preset-studio-bottom h-24 border-t border-white/10 bg-[#141414] shrink-0 flex items-center px-4 justify-between rounded-b-2xl">
-          <div className="flex gap-3 overflow-x-auto h-full items-center py-2 no-scrollbar pr-4 flex-1">
+        {/* Bottom Bar (Presets Swatches Filmstrip + Action Button) */}
+        <div className="preset-studio-bottom h-20 sm:h-22 border-t border-white/10 bg-[#141414] shrink-0 flex items-center px-4 justify-between rounded-b-2xl">
+          <div className="flex gap-2 sm:gap-3 overflow-x-auto h-full items-center py-2 no-scrollbar pr-4 flex-1">
             {PRESETS.map((preset) => {
               const isSelected = activePreset.id === preset.id;
               return (
-                <div 
+                <button
+                  type="button"
                   key={preset.id}
                   onClick={() => setActivePreset(preset)}
-                  className={`preset-studio-swatch relative h-16 min-w-[110px] rounded-none overflow-hidden cursor-pointer shrink-0 border-2 transition-all duration-200 ${
-                    isSelected ? 'border-red-600 scale-102 shadow-lg' : 'border-white/10 hover:border-white/40'
+                  className={`preset-studio-swatch relative h-12 sm:h-14 w-[74px] sm:w-[84px] md:w-[92px] rounded-none overflow-hidden cursor-pointer shrink-0 border-2 transition-all duration-200 select-none ${
+                    isSelected 
+                      ? 'border-red-600 scale-105 shadow-[0_0_12px_rgba(220,38,38,0.6)] z-10' 
+                      : 'border-white/15 hover:border-white/40 opacity-75 hover:opacity-100'
                   }`}
                 >
-                  <img src={preset.img} alt={preset.name} className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-black/40 flex items-end p-1.5">
-                    <span className="text-[8px] font-mono text-white tracking-widest uppercase truncate w-full text-center drop-shadow-md">
+                  <img 
+                    src={preset.img} 
+                    alt={preset.name} 
+                    className="w-full h-full object-cover pointer-events-none" 
+                    style={{ filter: preset.filter }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex items-end justify-center p-1 pointer-events-none">
+                    <span className="text-[7.5px] sm:text-[8px] font-mono text-white tracking-widest uppercase font-bold text-center truncate w-full drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
                       {preset.name}
                     </span>
                   </div>
-                </div>
+                </button>
               );
             })}
+          </div>
+
+          {/* Action / Reset Button on the right as shown in reference */}
+          <div className="pl-4 shrink-0 border-l border-white/10 h-full flex items-center gap-2">
+            <button 
+              type="button"
+              onClick={handleReset}
+              className="bg-red-600 hover:bg-red-700 text-white font-mono text-[9px] sm:text-[10px] font-bold tracking-widest uppercase px-4 sm:px-5 py-2 sm:py-2.5 rounded shadow-[0_0_15px_rgba(220,38,38,0.3)] hover:shadow-[0_0_20px_rgba(220,38,38,0.5)] transition-all cursor-pointer select-none whitespace-nowrap"
+            >
+              RESET STORE
+            </button>
           </div>
         </div>
         

@@ -184,11 +184,7 @@ const AaryaVideoShowcase = () => {
             {/* Container with Fixed Center Highlight Pill */}
             <div className="relative w-full flex items-center justify-center">
               {/* Fixed Highlight Capsule in the exact Middle */}
-              <div className={`pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[130px] h-[34px] rounded-full z-0 backdrop-blur-md ${
-                isLight
-                  ? 'border border-black/30 bg-black/5 shadow-[0_0_12px_rgba(0,0,0,0.06)]'
-                  : 'border border-white/80 bg-white/10 shadow-[0_0_16px_rgba(255,255,255,0.2)]'
-              }`} />
+              <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[130px] h-[34px] rounded-full z-0 backdrop-blur-md border border-white/80 bg-white/10 shadow-[0_0_16px_rgba(255,255,255,0.2)]" />
 
               {/* Horizontal Scroll Track */}
               <div 
@@ -211,9 +207,10 @@ const AaryaVideoShowcase = () => {
                       }}
                       className={`snap-center shrink-0 w-[130px] font-mono text-[10px] tracking-[0.2em] font-bold uppercase transition-all duration-300 py-1.5 px-2 text-center rounded-full select-none ${
                         isActive 
-                          ? (isLight ? 'text-[#12100e] scale-100 opacity-100 font-black' : 'text-white scale-100 opacity-100 font-black')
-                          : (isLight ? 'text-[#8c7b70] scale-95 opacity-60 hover:opacity-95' : 'text-zinc-400 scale-95 opacity-50 hover:opacity-80')
+                          ? '!text-white scale-100 opacity-100 font-black drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]'
+                          : '!text-zinc-300 scale-95 opacity-70 hover:opacity-95'
                       }`}
+                      style={{ color: isActive ? '#ffffff' : '#d4d4d8' }}
                     >
                       {artist.name}
                     </button>

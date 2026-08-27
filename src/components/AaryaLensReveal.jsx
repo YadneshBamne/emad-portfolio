@@ -392,10 +392,11 @@ export function AaryaLensReveal() {
           {/* Hero typography inside the video sensor */}
           <div className="absolute inset-x-0 bottom-[15%] md:bottom-[10%] z-50 flex flex-col items-center justify-center pointer-events-auto px-4">
             <h1
-              className="text-[16vw] md:text-[9vw] leading-none text-white text-center mb-4 md:mb-6 pointer-events-none"
+              className="text-[16vw] md:text-[9vw] leading-none !text-white text-center mb-4 md:mb-6 pointer-events-none"
               style={{
                 fontFamily: "'Ephesis', cursive",
                 fontWeight: 400,
+                color: '#ffffff',
                 textShadow: '0px 4px 20px rgba(0, 0, 0, 0.8)'
               }}
             >
@@ -407,7 +408,8 @@ export function AaryaLensReveal() {
                 const el = document.getElementById('section-contact') || document.getElementById('section-work');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="flex items-center gap-2 px-6 py-2 rounded-full bg-black/40 border border-white/10 text-white font-sans text-xs md:text-sm font-semibold tracking-widest hover:bg-black/60 transition-all duration-300 uppercase shadow-lg cursor-pointer pointer-events-auto"
+              className="flex items-center gap-2 px-6 py-2 rounded-full bg-black/40 border border-white/10 !text-white font-sans text-xs md:text-sm font-semibold tracking-widest hover:bg-black/60 transition-all duration-300 uppercase shadow-lg cursor-pointer pointer-events-auto"
+              style={{ color: '#ffffff' }}
             >
               LET'S CREATE <ArrowUpRight className="w-4 h-4 md:w-5 md:h-5" />
             </button>

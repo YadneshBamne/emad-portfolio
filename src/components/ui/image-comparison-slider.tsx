@@ -1,9 +1,10 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 
-// This component takes two image URLs (before and after) and creates a slider to compare them.
+// This component takes two image URLs (or one image with a custom afterFilter) and creates a slider to compare them.
 export const ImageComparison = ({ 
     beforeImage, 
     afterImage, 
+    afterFilter,
     altBefore = 'Before', 
     altAfter = 'After',
     className = ""
@@ -61,7 +62,7 @@ export const ImageComparison = ({
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
         >
-            {/* Before Image (Bottom Layer) */}
+            {/* Before Image (Bottom Layer - Raw Original) */}
             <img
                 src={beforeImage}
                 alt={altBefore}
@@ -72,18 +73,19 @@ export const ImageComparison = ({
                 }}
             />
 
-            {/* After Image (Top Layer) - Controlled by clip-path */}
+            {/* After Image (Top Layer - Color Graded) - Controlled by clip-path */}
             <div
                 className="absolute top-0 left-0 h-full w-full overflow-hidden"
                 style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
             >
                 <img
-                    src={afterImage}
+                    src={afterImage || beforeImage}
                     alt={altAfter}
+                    style={afterFilter ? { filter: afterFilter } : undefined}
                     className="absolute inset-0 h-full w-full object-cover"
                     draggable="false"
                     onError={(e) => {
-                      e.currentTarget.src = 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800&auto=format&fit=crop';
+                      e.currentTarget.src = beforeImage || 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800&auto=format&fit=crop';
                     }}
                 />
             </div>

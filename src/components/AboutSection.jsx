@@ -43,11 +43,11 @@ const AboutSection = () => {
         </div>
         
         {/* Bottom Left Text Over Video */}
-        <div className="absolute bottom-0 left-0 p-6 md:p-12 z-10 bg-gradient-to-t from-black/80 to-transparent w-full">
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black   mb-4 drop-shadow-lg" style={{ fontFamily: "'Anton', sans-serif" }}>
+        <div className="about-video-overlay-text absolute bottom-0 left-0 p-6 md:p-12 z-10 bg-gradient-to-t from-black/80 via-black/40 to-transparent w-full pointer-events-none">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-4 drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] !text-white" style={{ fontFamily: "'Anton', sans-serif", color: '#ffffff' }}>
             EMAD<br />SHAIKH
           </h1>
-          <p className="font-mono text-[10px] md:text-xs tracking-[0.2em] text-zinc-300 drop-shadow-md">
+          <p className="font-mono text-[10px] md:text-xs tracking-[0.2em] !text-zinc-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]" style={{ color: '#e4e4e7' }}>
             PHOTOGRAPHER · VIDEOGRAPHER · CREATIVE
           </p>
         </div>

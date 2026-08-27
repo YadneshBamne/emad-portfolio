@@ -155,7 +155,7 @@ export default function DynamicIslandNavbar({ activePath = '/' }) {
             <img 
               src="/logo.avif" 
               alt="Logo" 
-              className="h-20 w-30 object-contain" 
+              className="navbar-logo-img h-20 w-30 object-contain transition-all" 
             />
           </button>
         </div>
